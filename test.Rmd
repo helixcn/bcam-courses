@@ -1,5 +1,5 @@
 ---
-title: "test"
+title: "test 2"
 author: "Dae-Jin Lee"
 date: "5 August 2015"
 output:
