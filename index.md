@@ -1,5 +1,5 @@
-# **Courses on introduction to Statistical Modeling**
-Dae-Jin Lee  
+# **Introduction to Statistical Modeling**
+*by Dae-Jin Lee, PhD. in Statistics*  
   
 
 
@@ -8,11 +8,28 @@ Dae-Jin Lee
 Welcome to the material of *Introduction to Statistical Modelling*, 
 
 I am researcher at the [**BCAM-Basque Center for Applied Mathematics**](http://www.bcamath.org)
-an research leader of the [*Applied Statistics Group*](http://www.bcamath.org/en/research/lines/AS)
+an research leader of the [*Applied Statistics Group*](http://www.bcamath.org/en/research/lines/AS).
 
-<img src="http://www.bcamath.org/public_images/logo_bcam.jpg" style="width: 120px;" align="right">
+I have been teaching several courses on *Generalized Linear Models*, *Mixed-effects models* and *Generalized Additive Models*. Here you can find the material I used for those lectures.
 
 
+
+
+### Latest courses
+
+* **2016** 
+      + *Neiker*: "Introduction to Generalized Linear Models and Mixed-effects Models with `R`" (material)
+      
+* **2015**
+      + *Azti*: "Introduction to Mixed-effects Models and Generalized Additive Models with `R`"
+      + *Azti*: "Introduction to Generalized Linear Models `R`"
+      + *BCAM*: "Introduction to Generalized Linear Models `R`"
+      
+* **2014**
+      + *BCAM-UPV/EHU*: "Introduction to Generalized Linear Models `R`"
+            
+      
+------------------------------------      
 
 ### Contact
 
@@ -26,7 +43,4 @@ Fax: +34 946 567 843
 
 **email:** dlee[at]bcamath.org
 
-### Latest courses
-
-* **2016** 
-      + *Neiker*: "Introduction to Generalized Linear Models and Mixed-effects Models with `R`" (material)
+<img src="http://www.bcamath.org/public_images/logo_bcam.jpg" style="width: 200px;" align="right">
