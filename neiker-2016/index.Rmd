@@ -107,3 +107,5 @@ install.packages(c("nlme","lme4","RLRsim","mgcv","gamair","lattice","latticeExtr
 * [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
 * [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
 
+
+----------------------------------------------------------------
