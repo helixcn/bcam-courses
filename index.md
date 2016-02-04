@@ -43,4 +43,4 @@ Fax: +34 946 567 843
 
 **email:** dlee[at]bcamath.org
 
-<img src="http://www.bcamath.org/public_images/logo_bcam.jpg" style="width: 200px;" align="right">
+<img src="http://www.bcamath.org/public_images/logo_bcam.jpg" style="width: 150px;" align="right">
