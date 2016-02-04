@@ -1,0 +1,84 @@
+---
+title: '**Neiker Course 2016**'
+author: '*by Dae-Jin Lee*'
+date: ''
+output:
+  html_document:
+    fig_caption: yes
+    highlight: haddock
+    keep_md: yes
+    theme: spacelab
+    toc: yes
+---
+
+
+----------------------------
+
+# Information and pre-requisites
+
+* **When:** February $14^{\rm th},21^{\rm st}$ and $28^{\rm th}$, 2016 from 9:00am to 2:00pm (total 24 hours)
+* **Where:** Azti Sukarrieta
+* **Requirements:**
+    * Latest version of `R` software (download it [here](www.r-project.org))
+    * [Rstudio](www.rstudio.com) installation is also recommended.
+    * Install the following libraries in `R` (copy the next commands to the `R` console).
+```{r,eval=FALSE}
+install.packages(c("nlme","lme4","RLRsim","mgcv","gamair","lattice","latticeExtra","grDevices","sm"))
+```
+
+\bigskip
+
+-------------------------------------------------
+
+## 0. Introduction to R 
+
+* [link](http://idaejin.github.io/bcam-courses/rbasics)
+* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
+* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
+
+--------------------------------------------------
+
+## 1. Introduction to Generalized Linear Models
+
+* [link](http://idaejin.github.io/bcam-courses/rbasics)
+* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
+* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
+
+
+### 1.1 Logistic regression
+
+* [link](http://idaejin.github.io/bcam-courses/rbasics)
+* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
+* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
+
+
+### 1.2. Multinomial regression
+
+* [link](http://idaejin.github.io/bcam-courses/rbasics)
+* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
+* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
+
+
+### 1.3. Ordinal regression
+
+* [link](http://idaejin.github.io/bcam-courses/rbasics)
+* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
+* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
+
+
+### 1.4. Poisson regression
+
+* [link](http://idaejin.github.io/bcam-courses/rbasics)
+* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
+* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
+
+
+### 1.5. Examples
+
+* [link](http://idaejin.github.io/bcam-courses/rbasics)
+* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
+* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
+
+-------------------------------------------------
+
+## 2. Mixed-effects Models with R

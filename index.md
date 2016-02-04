@@ -18,7 +18,7 @@ I have been teaching several courses on *Generalized Linear Models*, *Mixed-effe
 ### Latest courses
 
 * **2016** 
-      + *Neiker*: "Introduction to Generalized Linear Models and Mixed-effects Models with `R`" (material)
+      + *Neiker*: "Introduction to Generalized Linear Models and Mixed-effects Models with `R`" ([material](http://idaejin.github.io/bcam-courses/neiker-2016))
       
 * **2015**
       + *Azti*: "Introduction to Mixed-effects Models and Generalized Additive Models with `R`"
@@ -43,4 +43,5 @@ Fax: +34 946 567 843
 
 **email:** dlee[at]bcamath.org
 
+**Github** [idaejin](https://github.com/idaejin/bcam-courses)
 <img src="http://www.bcamath.org/public_images/logo_bcam.jpg" style="width: 150px;" align="right">
