@@ -166,7 +166,7 @@ levels(fstatus) <- c("student","engineer","unemployed","lawyer","economist","den
 Dat$status <- fstatus
 Dat
 
-## ------------------------------------------------------------------------
+## numeric and logical values
 a <- c(1,2,3,4,5)
 b <- c(TRUE,FALSE,FALSE,TRUE,FALSE)
 
@@ -174,7 +174,7 @@ max(a[b])
 
 sum(a[b])
 
-## ------------------------------------------------------------------------
+## missing data
 a <- c(1,2,3,4,NA)
 sum(a)
 sum(a,na.rm=TRUE)
@@ -182,68 +182,37 @@ sum(a,na.rm=TRUE)
 a <- c(1,2,3,4,NA)
 is.na(a)
 
-## ----results="hide"------------------------------------------------------
+## load mtcars data.frame
 mtcars
 ?mtcars       # or help(mtcars)
 
-## ------------------------------------------------------------------------
+## show first rows
 head(mtcars)
 
-## ------------------------------------------------------------------------
+## 
 str(mtcars) # display the structure of the data frame
 
-## ------------------------------------------------------------------------
+## 
 mtcars["Mazda RX4",] # using rows and columns names
 mtcars[c("Datsun 710", "Camaro Z28"),] 
 
-## ------------------------------------------------------------------------
+## 
 mtcars[,c("mpg","am")]
 
-## ------------------------------------------------------------------------
+## plot car weight by miles per gallon
 attach(mtcars)
 plot(wt, mpg, main="Scatterplot Example",
    xlab="Car Weight ", ylab="Miles Per Gallon ", pch=19) 
 
-## ------------------------------------------------------------------------
+## scatterplot
 pairs(~mpg+disp+drat+wt,data=mtcars,
    main="Simple Scatterplot Matrix")
 
-## ----fig.pos='center'----------------------------------------------------
+## tabulate and barplot
 tab <- table(mtcars[,c("cyl")])
 barplot(tab)
 
-## ------------------------------------------------------------------------
+## piechart
 pie(tab)
 
-## ------------------------------------------------------------------------
-VADeaths
-
-## ----echo=FALSE----------------------------------------------------------
-apply(VADeaths,1,mean)
-
-## ----echo=FALSE----------------------------------------------------------
-apply(VADeaths,2,mean)
-
-## ---- results='hide'-----------------------------------------------------
-library(DAAG)
-rainforest
-
-## ----echo=FALSE----------------------------------------------------------
-table(rainforest$species)
-barplot(table(rainforest$species))
-
-## ------------------------------------------------------------------------
-Acmena <- subset(rainforest, species == "Acmena smithii")
-
-## ----echo=FALSE----------------------------------------------------------
-par(mfrow=c(1,2))
-plot(wood~dbh,data=Acmena,pch=19, main="plot of dbh vs wood")
-plot(log(wood)~log(dbh),data=Acmena,pch=19,main="log transformation")
-
-## ----echo=FALSE----------------------------------------------------------
-hist(Acmena$dbh)
-
-## ----echo=FALSE----------------------------------------------------------
-  x <- seq(1,100,by=2)
-  x[x>60 & x<80]
 
