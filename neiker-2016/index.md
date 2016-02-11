@@ -7,8 +7,8 @@
 
 # Information and pre-requisites
 
-* **When:** February $14^{\rm th},21^{\rm st}$ and $28^{\rm th}$, 2016 from 9:00am to 2:00pm (total 24 hours)
-* **Where:** Azti Sukarrieta
+* **When:** *TBA*
+* **Where:** Parque Tecnológico Derio
 * **Requirements:**
     * Latest version of `R` software (download it [here](www.r-project.org))
     * [Rstudio](www.rstudio.com) installation is also recommended.
@@ -100,4 +100,25 @@ install.packages(c("nlme","lme4","RLRsim","mgcv","gamair","lattice","latticeExtr
 * [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
 
 
-----------------------------------------------------------------
+
+-----------------------------------------------------
+
+**Contact**
+
+Alameda de Mazarredo, 14
+
+E-48009 Bilbao, Basque Country - Spain
+
+Tel: +34 946 567 842 (Ext. 277)
+
+Fax: +34 946 567 843
+
+**email:** dlee[at]bcamath.org
+
+**Github** [idaejin](https://github.com/idaejin/)
+
+**BCAM webpage** [dlee](http://www.bcamath.org/en/people/dlee)
+
+<img src="http://www.bcamath.org/public_images/logo_bcam.jpg" style="width: 150px;" align="right">
+
+
