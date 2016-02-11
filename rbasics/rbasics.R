@@ -1,21 +1,28 @@
+# --------------------------------------------
 # R basics
 #  www.idaejin.github.io/bcam-courses/
+# --------------------------------------------
 
+# Load libraries
 library(DAAG) # or require(DAAG)
 library(gdata)
 library(foreign)
 
-## Create a variable with weights
+## Create a variable with weights and heights
 
 weight<-c(60,72,57,90,95,72) # function c is used to concatenate data/numbers or vectors 
+
 class(weight)
+
 height<-c(1.75,1.80,1.65,1.90,1.74,1.91)
 
 ## Compute body mass index
+
 bmi<- weight/height^2
 bmi
 
 ## Compute basic statistics
+
 mean(weight)
 median(weight)
 sd(weight)
@@ -33,19 +40,22 @@ sum(weight)
 length(weight)
 
 ## New create a data.frame of subjects by sex
+
 subject <- c("John","Peter","Chris","Tony","Mary","Jane")
 sex <- c("MALE","MALE","MALE","MALE","FEMALE","FEMALE")
 class(subject)
 table(sex)
 
-## Create a data.frame of subjects with weights and heihgts
+## Create a data.frame of subjects with weights and heigths
+
 Dat <- data.frame(subject,sex,weight,height)
+
 # add bmi to Dat
 Dat$bmi <- bmi  # or Dat$bmi <- weight/height^2
 class(Dat)
 str(Dat) # display object structure
 
-## Row names
+## Working on data frames
 # Change rownames
 rownames(Dat)<-c("A","B","C","D","E","F")
 
@@ -54,28 +64,28 @@ Dat[,1]     # 1st column
 Dat[,1:3]   # 1st to 3rd columns
 Dat[1:2,]   # 1st to 2nd row
 
-## ---- results='hide'-----------------------------------------------------
+# Show only rows of males/females
 Dat[sex=="MALE",]
 Dat[sex=="FEMALE",]
 
+# Compute statistics by factor/s
 mean(Dat[sex=="MALE",3])  # weight average of MALEs
 mean(Dat[sex=="MALE","weight"])
 
-## ---- results='hide'-----------------------------------------------------
+# Use apply function
 apply(Dat[sex=="FEMALE",3:5],2,mean)
 apply(Dat[sex=="MALE",3:5],2,mean)
 
-# we can apply any function
+# we can use apply with our own function
 apply(Dat[sex=="FEMALE",3:5],2,function(x){x+2})
 
-## ---- results='hide'-----------------------------------------------------
+# function by
 by(Dat[,3:5],sex, colMeans) # 'by' splits your data by factors and do calculations on each subset.
 
-## ---- results='hide'-----------------------------------------------------
 # another option
 aggregate(Dat[,3:5], by=list(sex),mean) 
 
-## ----results='hide'------------------------------------------------------
+# logic operations on variables
 bmi
 bmi>22
 as.numeric(bmi>22) # convert a logical condition to a numeric value 0/1
