@@ -36,9 +36,9 @@ install.packages(c("nlme","lme4","RLRsim","mgcv","gamair","lattice","latticeExtr
 
 ### 1.1 Logistic regression
 
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
-* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
+* [link](http://idaejin.github.io/bcam-courses/neiker-2016/material/2_Logistic_regression/LogReg.pdf)
+* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/material/2_Logistic_regression/LogReg.R)
+* [data.zip](http://idaejin.github.io/bcam-courses/neiker-2016/material/2_Logistic_regression/data.zip)
 
 
 ### 1.2. Multinomial regression
