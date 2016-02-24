@@ -10,8 +10,8 @@
 * **When:** March 7-8, 14-15 and 21-22 from 9:30am to 2:00pm.
 * **Where:** Neiker-Tecnalia Parque Tecnológico Derio ([map](https://www.google.es/maps/place/NEIKER-Tecnalia/@43.291225,-2.875765,15z/data=!4m2!3m1!1s0x0:0xb517b13250614601?sa=X&ved=0ahUKEwjJzZKKzu_KAhWF7RQKHa2xDCoQ_BIIcjAN))
 * **Requirements:**
-    * Latest version of `R` software (download it [here](www.r-project.org))
-    * [Rstudio](www.rstudio.com) installation is also recommended.
+    * Latest version of `R` software (download it [here](https://www.r-project.org))
+    * [Rstudio](https://www.rstudio.com) installation is also recommended.
     * Install the following libraries in `R` (copy the next commands to the `R` console).
 
 ```r
@@ -65,10 +65,10 @@ install.packages(c("nlme","lme4","RLRsim","mgcv","gamair","lattice","latticeExtr
 
 ## 2. Mixed-effects Models with R 
 
-* [link]()
-* [pdf version]()
-* [R scripts]()
-* [data.zip]()
+* [link](http://idaejin.github.io/bcam-courses/neiker-2016/mixed-models/)
+* [pdf version](http://idaejin.github.io/bcam-courses/neiker-2016/mixed-models/IntroMixedModels.pdf)
+* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/mixed-models/mixed-models.R)
+* [data.zip](http://idaejin.github.io/bcam-courses/neiker-2016/mixed-models/data.zip)
 
 -----------------------------------------------------
 
