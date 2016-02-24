@@ -1,0 +1,574 @@
+---
+title: '**R** basics for beginners'
+author: "Dae-Jin Lee"
+date: "<http://idaejin.github.io/bcam-courses>"
+output:
+  slidy_presentation:
+    fig_caption: yes
+    highlight: haddock
+    keep_md: yes
+  ioslides_presentation:
+    highlight: kate
+    incremental: no
+subtitle: Basque Center for Applied Mathematics
+---
+
+
+
+---------------------------------------
+
+# Why R ? 
+
+* **R** is a command-driven statistical package.
+
+* The most important reasons to use **R** are:
+
+    + **R** is free and multiplatform (Windows/Linux/MACos)
+
+    + **R** allows you to do all the statistical tests/models/analysis you need :)
+
+    + Excellent graphics and programming capabilities
+
+    + Growing community of users and developers 
+
+    + Lots of online resources
+
+    + An user-friendly interface is RStudio <http://www.rstudio.com/>
+
+-------------------------------
+
+# Statistical features
+
+* Graphical Techniques (Exploratory Data Analysis)
+* Linear and non-linear modeling (linear regression, non-parametric regression, smoothing, etc ...)
+* Classical statistical tests
+* Time-series analysis
+* Econometrics
+* Classification and clustering (data mining, machine learning)
+* Optimization and Mathematical Programming
+* Bayesian inference etc ....
+
+**Visit** http://cran.r-project.org/web/views
+ or http://stackoverflow.com/questions/tagged/r
+ 
+ 
+------------------------------
+ 
+# Start with **R**
+
+* Get current working directory 
+```{r,eval=FALSE}
+getwd() 
+```
+
+* Set working directory
+```{r, eval=FALSE}
+setwd("/Users/dlee") 
+```
+
+## Install and load an **R** library
+ 
+```{r,eval=FALSE}
+install.packages("DAAG") # (Data Analysis And Graphics)
+```
+
+* Once installed the package, load it
+```{r,warning=FALSE,message=FALSE}
+library(DAAG) # or require(DAAG)
+```
+ 
+
+-------------------------------------
+
+
+# Data Import
+
+* Several formats are available (`.txt`, `.csv`, `.xls`, `.xlsx`, `SAS`, `Stata`, etc...)
+* Some **R** libraries to import data are 
+```{r,message=FALSE,warning=FALSE}
+library(gdata)
+library(foreign)
+``` 
+
+\bigskip
+
+* Read data from a `.txt` or `.csv` files (*e.g.:* created in `Rintro1.R`)
+```{r,eval=FALSE}
+mydata1 = read.table("cardata.txt") 
+mydata2 = read.csv("cardata.csv")  
+```
+
+* Other formats `.xls` and `.xlsx`
+\medskip
+
+```{r,eval=FALSE,message=FALSE,warning=FALSE}
+# read in the worksheet named mysheet
+mydata <- read.xlsx("myexcel.xlsx", sheetName = "mysheet")
+```
+
+---------------------------------
+
+
+* Minitab, SPSS, SAS or Stata \medskip
+
+```{r, eval=FALSE, message=FALSE}
+library(foreign)                   
+mydata = read.mtp("mydata.mtp")  # Minitab
+mydata = read.spss("myfile", to.data.frame=TRUE) # SPSS
+mydata = read.dta("mydata.dta") # Stata
+```
+
+* Or
+```{r,eval=FALSE}
+library(Hmisc)
+mydata = spss.get("mydata.por", use.value.labels=TRUE)  # SPSS
+```
+
+-------------------------
+
+# Exporting data
+
+* There are numerous methods for exporting **R** objects into other formats . For SPSS, SAS and Stata. you will need to load the `foreign` packages. For Excel, you will need the `xlsx` package.  
+ 
+ - Tab delimited text file
+
+```{r,eval=FALSE}
+write.table(mydata, "mydata.txt", sep="\t") 
+```
+
+*  Excel spreadsheet
+
+```{r,eval=FALSE}
+library(xlsx)
+write.xlsx(mydata, "mydata.xlsx")
+```
+
+
+----------------------------
+
+# Data vectors
+
+* Download `R code` [here](http://idaejin.github.io/bcam-courses/rbasics/rbasics.R)
+
+* Create a vector of weights and heights
+
+```{r}
+weight<-c(60,72,57,90,95,72) # function c is used to concatenate data/numbers or vectors 
+class(weight)
+height<-c(1.75,1.80,1.65,1.90,1.74,1.91)
+```
+
+* calculate Body Mass Index
+```{r} 
+bmi<- weight/height^2
+bmi
+```
+
+----------------------------
+
+
+# Basic statistics 
+
+* mean, median, st dev, variance
+
+```{r,eval=FALSE}
+mean(weight) 
+median(weight)
+sd(weight)
+var(weight)
+```
+
+* summarize data
+
+```{r}
+summary(weight)
+```
+
+* or
+```{r,eval=FALSE}
+min(weight)
+max(weight)
+range(weight)
+quantile(weight)
+sum(weight)
+length(weight)
+```
+
+
+----------------------------------
+
+# Character vectors and factor variables
+
+```{r,fig.width=5,fig.height=5}
+subject <- c("John","Peter","Chris","Tony","Mary","Jane")
+sex <- c("MALE","MALE","MALE","MALE","FEMALE","FEMALE")
+class(subject)
+table(sex)
+```
+
+
+-----------------------------------
+
+
+# Data frames
+```{r}
+Dat <- data.frame(subject,sex,weight,height)
+# add bmi to Dat
+Dat$bmi <- bmi  # or Dat$bmi <- weight/height^2
+class(Dat)
+str(Dat) # display object structure
+```
+
+
+```{r}
+# Change rownames
+rownames(Dat)<-c("A","B","C","D","E","F")
+
+# Access to data frame elements (similar to a matrix)
+Dat[,1]     # 1st column
+Dat[,1:3]   # 1st to 3rd columns
+Dat[1:2,]   # 1st to 2nd row
+```
+
+
+
+# Working with data frames
+## Example: Analyze data by groups
+
+*  Obtain the mean weight, heigth and bmi means by FEMALES and MALES:
+
+1. Select each group and compute the mean
+
+```{r, results='hide'}
+Dat[sex=="MALE",]
+Dat[sex=="FEMALE",]
+
+mean(Dat[sex=="MALE",3])  # weight average of MALEs
+mean(Dat[sex=="MALE","weight"])
+```
+
+2. Use `apply` by columns 
+```{r, results='hide'}
+apply(Dat[sex=="FEMALE",3:5],2,mean)
+apply(Dat[sex=="MALE",3:5],2,mean)
+
+# we can use apply with our own function
+apply(Dat[sex=="FEMALE",3:5],2,function(x){x+2})
+```
+
+3. `by` and `colMeans`
+```{r, results='hide'}
+by(Dat[,3:5],sex, colMeans) # 'by' splits your data by factors and do calculations on each subset.
+```
+
+4. `aggregate`
+
+```{r, results='hide'}
+# another option
+aggregate(Dat[,3:5], by=list(sex),mean) 
+```
+
+------------------------------------
+
+# Logical vectors
+
+* Choose individuals with BMI>22
+```{r,results='hide'}
+bmi
+bmi>22
+as.numeric(bmi>22) # convert a logical condition to a numeric value 0/1
+which(bmi>22)  # gives the position of bmi for which bmi>22
+```
+
+* Which are between 20 and 25?
+
+```{r,results='hide'}
+bmi > 20 & bmi < 25
+which(bmi > 20 & bmi < 25)
+```
+
+--------------------------------------
+
+# Working with vectors 
+
+* Concatenate
+
+```{r,results='hide'}
+x <- c(2, 3, 5, 2, 7, 1)
+y <- c(10, 15, 12)
+z <- c(x,y)  # concatenates x and y
+```
+
+* list two vectors
+
+```{r}
+zz <- list(x,y) # create a list
+unlist(zz) # unlist the list converting it to a concatenated vector
+``` 
+
+* subset of vectors
+
+```{r}
+x[c(1,3,4)]
+
+x[-c(2,6)] # negative subscripts omit the chosen elements 
+```
+
+* Sequences
+```{r}
+seq(1,9) # or 1:9
+seq(1,9,by=1)
+seq(1,9,by=0.5)
+seq(1,9,length=20)
+```
+
+* Replicates
+
+```{r,results='hide'}
+oops <- c(7,9,13)
+rep(oops,3) # repeats the entire vector "oops" three times
+rep(oops,1:3) # this function has the number 3 replaced 
+              #  by a vector with the three values (1,2,3) 
+              #  indicating that 7 should be repeated once, 9 twice and 13 three times.
+
+rep(c(2,3,5), 4)
+rep(1:2,c(10,15))
+
+rep(c("MALE","FEMALE"),c(4,2)) # it also works with character vectors 
+c(rep("MALE",3), rep("FEMALE",2))
+```
+
+---------------------------------------------
+
+
+# Matrices and arrays
+
+```{r}
+x<- 1:12
+x
+dim(x)<-c(3,4)  # 3 rows and 4 columns
+
+X <- matrix(1:12,nrow=3,byrow=TRUE)
+X <- matrix(1:12,nrow=3,byrow=FALSE)
+
+# rownames, colnames
+
+rownames(X) <- c("A","B","C")
+colnames(X) <- LETTERS[4:7]
+colnames(X) <- month.abb[4:7]
+```
+
+* Column/Row bind operations `cbind()`, `rbind()`
+
+```{r}
+Y <- matrix(0.1*(1:12),3,4)
+
+cbind(X,Y)  # bind column-wise
+rbind(X,Y)  # bind row-wise
+```
+
+-----------------------------------------------
+
+# Factors
+
+```{r}
+gender<-c(rep("female",691),rep("male",692))
+class(gender)
+
+# change vector to factor (i.e. a category)
+gender<- factor(gender)
+levels(gender)
+
+summary(gender)
+table(gender)
+
+status<- c(0,3,2,1,4,5)    # This command creates a numerical vector ???pain???, encoding the pain level of five patients.
+fstatus <- factor(status, levels=0:5)
+levels(fstatus) <- c("student","engineer","unemployed","lawyer","economist","dentist")
+
+Dat$status <- fstatus
+Dat
+````
+
+
+-----------------------------------------------
+
+#  Indexing vector with logicals
+
+```{r}
+a <- c(1,2,3,4,5)
+b <- c(TRUE,FALSE,FALSE,TRUE,FALSE)
+
+max(a[b])
+
+sum(a[b])
+````
+
+# Missing values (NA)
+
+```{r}
+a <- c(1,2,3,4,NA)
+sum(a)
+sum(a,na.rm=TRUE)
+
+a <- c(1,2,3,4,NA)
+is.na(a)
+```
+
+
+
+------------------------------------------------
+
+# Working with data frames
+
+ * A data frame is used for storing data tables. It is a list of vectors of equal length. 
+```{r,results="hide"}
+mtcars
+?mtcars       # or help(mtcars)
+```
+
+* look at the first rows
+
+```{r}
+head(mtcars)
+```
+
+* Structure of the data frame
+
+```{r}
+str(mtcars) # display the structure of the data frame
+```
+
+* Select a car model:
+```{r}
+mtcars["Mazda RX4",] # using rows and columns names
+mtcars[c("Datsun 710", "Camaro Z28"),] 
+```
+
+* Or specific variables
+
+```{r}
+mtcars[,c("mpg","am")]
+```
+
+------------------------------------
+
+# Plotting 
+
+*  Scatterplot
+
+```{r}
+attach(mtcars)
+plot(wt, mpg, main="Scatterplot Example",
+   xlab="Car Weight ", ylab="Miles Per Gallon ", pch=19) 
+```
+
+* Basic Scatterplot Matrix
+```{r}
+pairs(~mpg+disp+drat+wt,data=mtcars,
+   main="Simple Scatterplot Matrix")
+```
+
+* Barplot
+
+```{r,fig.pos='center'}
+tab <- table(mtcars[,c("cyl")])
+barplot(tab)
+```
+
+* Piechart
+
+```{r}
+pie(tab)
+```
+
+
+
+-----------------------------------------
+
+# Exercises
+
+1. The data.frame `VADeaths` contains the death rates per 1000 in Virginia (US) in 1940
+
+    + The death rates are measured per 1000 population per year. They are cross-classified by age group (rows) and population group (columns). The age groups are: 50–54, 55–59, 60–64, 65–69, 70–74 and the population groups are Rural/Male, Rural/Female, Urban/Male and Urban/Female.
+
+```{r}
+VADeaths
+```
+
+* Compute the mean for each age group. 
+      + **Result:**
+
+```{r,echo=FALSE}
+apply(VADeaths,1,mean)
+```
+
+* Compute the mean for each population group. 
+      + **Result:** 
+      
+```{r,echo=FALSE}
+apply(VADeaths,2,mean)
+```
+
+2. The  `data.frame` `rainforest` contains several variables from different `species`
+
+```{r, results='hide'}
+library(DAAG)
+rainforest
+```
+
+  * Create a table of counts for each `species` and make a graphic with the results. 
+  
+      + **Result:**
+      
+```{r,echo=FALSE}
+table(rainforest$species)
+barplot(table(rainforest$species))
+```
+
+3. The `Acmena` `data.frame` is created from  `rainforest` using the function `subset`. 
+
+  * Plot the relationship between the wood biomass (`wood`) and the diameter of the breast height (`dbh`). Use also a logarithm scale.
+
+```{r}
+Acmena <- subset(rainforest, species == "Acmena smithii")
+```
+
+ 
+
+```{r,echo=FALSE}
+par(mfrow=c(1,2))
+plot(wood~dbh,data=Acmena,pch=19, main="plot of dbh vs wood")
+plot(log(wood)~log(dbh),data=Acmena,pch=19,main="log transformation")
+```
+
+
+  * Compute a histogram of variable `dbh` using function `hist`
+
+```{r,echo=FALSE}
+hist(Acmena$dbh)
+```
+
+4. Create a vector of the positive odd integers less than 100 and remove the values greater than 60 and less than 80.
+
+    * **Result:** 
+    
+```{r,echo=FALSE}
+  x <- seq(1,100,by=2)
+  x[x>60 & x<80]
+```
+
+
+* [Solutions here](http://idaejin.github.io/bcam-courses/rbasics/rbasics_sol.R)
+
+
+```{r,eval=FALSE,echo=FALSE}
+library(knitr)
+purl("RBasics.Rmd",output="RBasics.R")
+```
+
+
+
+
+
+
