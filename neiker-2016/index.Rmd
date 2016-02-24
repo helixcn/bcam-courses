@@ -74,10 +74,10 @@ install.packages(c("nlme","lme4","RLRsim","mgcv","gamair","lattice","latticeExtr
 
 ## 2. Mixed-effects Models with R 
 
-* [link](http://idaejin.github.io/bcam-courses/neiker-2016/mixed-models/)
-* [pdf version](http://idaejin.github.io/bcam-courses/neiker-2016/mixed-models/IntroMixedModels.pdf)
-* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/mixed-models/mixed-models.R)
-* [data.zip](http://idaejin.github.io/bcam-courses/neiker-2016/mixed-models/data.zip)
+* [link](http://idaejin.github.io/bcam-courses/neiker-2016/material/mixed-models/)
+* [pdf version](http://idaejin.github.io/bcam-courses/neiker-2016/material/mixed-models/IntroMixedModels.pdf)
+* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/material/mixed-models/mixed-models.R)
+* [data.zip](http://idaejin.github.io/bcam-courses/neiker-2016/material/mixed-models/data.zip)
 
 -----------------------------------------------------
 
