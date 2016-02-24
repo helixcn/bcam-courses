@@ -31,7 +31,8 @@ install.packages(c("nlme","lme4","RLRsim","mgcv","gamair","lattice","latticeExtr
 ## 1. Introduction to Generalized Linear Models
 
 * [Slides](http://idaejin.github.io/bcam-courses/neiker-2016/material/1_Intro/Intro.pdf)
-* [R scripts and data](https://github.com/idaejin/bcam-courses/tree/master/neiker-2016/material/1_Intro/R-code)
+* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/material/1_Intro/R-code/Intro.R)
+* [data](http://idaejin.github.io/bcam-courses/neiker-2016/material/1_Intro/R-code/data)
 
 ### 1.1 Logistic regression
 
