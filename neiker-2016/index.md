@@ -30,70 +30,62 @@ install.packages(c("nlme","lme4","RLRsim","mgcv","gamair","lattice","latticeExtr
 
 ## 1. Introduction to Generalized Linear Models
 
-* [Slides](https://github.com/idaejin/bcam-courses/blob/master/neiker-2016/material/1_Intro/Intro.pdf)
-* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-
+* [Slides](http://idaejin.github.io/bcam-courses/neiker-2016/material/1_Intro/Intro.pdf)
+* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/material/1_Intro/R-code/Intro.R)
+* [data.zip](http://idaejin.github.io/bcam-courses/neiker-2016/material/1_Intro/R-code/data.zip)
 
 ### 1.1 Logistic regression
 
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
-* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
+* [Slides](http://idaejin.github.io/bcam-courses/neiker-2016/material/2_Logistic_regression/LogReg.pdf)
+* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/material/2_Logistic_regression/R-code/LogReg.R)
+* [data.zip](http://idaejin.github.io/bcam-courses/neiker-2016/material/2_Logistic_regression/R-code/data.zip)
 
 
 ### 1.2. Multinomial regression
 
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
-* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
+* [Slides](http://idaejin.github.io/bcam-courses/neiker-2016/material/3_Multinomial_regression/Multinom.pdf)
+* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/material/3_Multinomial_regression/R-code/Multinom.R)
+* [data.zip](http://idaejin.github.io/bcam-courses/neiker-2016/material/3_Multinomial_regression/R-code/data.zip)
 
 
 ### 1.3. Ordinal regression
 
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
-* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-
+* [Slides](http://idaejin.github.io/bcam-courses/neiker-2016/material/4_Ordinal_regression/Ordreg.pdf)
+* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/material/4_Ordinal_regression/R-code/Ordreg.R)
+* [data.zip](http://idaejin.github.io/bcam-courses/neiker-2016/material/4_Ordinal_regression/R-code/data.zip)
 
 ### 1.4. Poisson regression
 
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
-* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
+* [Slides](http://idaejin.github.io/bcam-courses/neiker-2016/material/5_Poisson_regression/Poisreg.pdf)
+* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/material/5_Poisson_regression/R-code/Poisreg.R)
+* [data.zip](http://idaejin.github.io/bcam-courses/neiker-2016/material/5_Poisson_regression/R-code/data.zip)
 
-
-### 1.5. Examples
-
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
-* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
 
 -------------------------------------------------
 
-## 2. Mixed-effects Models with R
+## 2. Mixed-effects Models with R (**available soon!**)
 
 ### 2.1. Introduction to linear mixed models with R
 
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
+* [link](http://idaejin.github.io/bcam-courses/xxx)
 * [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
 * [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
 
 ### 2.2. Multilevel models
 
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
+* [link](http://idaejin.github.io/bcam-courses/xxx)
 * [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
 * [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
 
 ### 2.3. Repeated measurements and longitudinal data
 
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
+* [link](http://idaejin.github.io/bcam-courses/xxx)
 * [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
 * [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
 
 ### 2.4. Some extensions and examples
 
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
+* [link](http://idaejin.github.io/bcam-courses/xxx)
 * [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
 * [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
 
