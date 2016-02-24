@@ -1,0 +1,703 @@
+####################################################
+### recode factor variables and plot#
+####################################################
+species$pH<-factor(species$pH)#
+#
+species$pH<-factor(species$pH, labels=c("Low","Medium","High"))
+species$pH
+levels(species$pH)
+attach(species)#
+plot(Biomass,Species,type="n")#
+#
+spp<-split(Species,pH)#
+#
+bio<-split(Biomass,pH)#
+#
+points(bio[[1]],spp[[1]],pch=16,col=1)#
+points(bio[[2]],spp[[2]],pch=17,col=2)#
+points(bio[[3]],spp[[3]],pch=15,col=4)#
+legend("topright",legend=c("Low","Medium","High"),pch=c(16,17,15),col=c(1,2,4))#
+abline(lm(Species[pH=="Low"]~Biomass[pH=="Low"]),lwd=2,col=1)#
+abline(lm(Species[pH=="Medium"]~Biomass[pH=="Medium"]),lwd=2,col=2)#
+abline(lm(Species[pH=="High"]~Biomass[pH=="High"]),lwd=2,col=4)
+Biomass
+####################################################
+### Fit a Poisson glm's#
+####################################################
+m0=glm(Species~Biomass,family=poisson,data=species)#
+anova(m0,test="Chisq")#
+#
+m1=glm(Species~pH,family=poisson,data=species)#
+#
+anova(m1,test="Chisq")
+m0=glm(Species~Biomass,family=poisson,data=species)
+anova(m0,test="Chisq")
+m1=glm(Species~pH,family=poisson,data=species)
+anova(m1,test="Chisq")
+####################################################
+### Include interaction#
+####################################################
+m2 <- glm(Species~Biomass+pH,family=poisson,data=species)#
+m3 <- glm(Species~Biomass*pH,family=poisson,data=species)#
+#
+anova(m2,m3,test="Chisq")
+####################################################
+### summary#
+####################################################
+summary(m3)#
+####################################################
+### plot fits#
+####################################################
+x <- rep(seq(0,10,l=101),3) # Biomass.x#
+#
+pH.seq <- factor(c(rep("Low",101),rep("Medium",101),rep("High",101)))#
+#
+fit3 <- predict(m3,data.frame(list(Biomass=x,pH = pH.seq)), type="response")#
+plot(Biomass,Species,type="n",main="response")#
+spp3<-split(fit3,pH.seq)#
+bio3<-split(x,pH.seq)#
+points(bio3[["Low"]],spp3[["Low"]],pch=16,col=1)#
+points(bio3[["Medium"]],spp3[["Medium"]],pch=17,col=2)#
+points(bio3[["High"]],spp3[["High"]],pch=15,col=4)#
+points(bio[["Low"]],spp[["Low"]],pch=16,col=1)#
+points(bio[["Medium"]],spp[["Medium"]],pch=17,col=2)#
+points(bio[["High"]],spp[["High"]],pch=15,col=4)#
+legend("topright",legend=c("Low","Medium","High"),pch=c(16,17,15),col=c(1,2,4))
+fit3a <- predict(m3,data.frame(list(Biomass=x,pH = pH.seq)), type="link")#
+#
+spp3a<-split(fit3a,pH.seq)#
+bio3a<-split(x,pH.seq)#
+plot(Biomass,log(Species),type="n",main="link")#
+points(bio3[["Low"]],log(spp3[["Low"]]),pch=16,col=1)#
+points(bio3[["Medium"]],log(spp3[["Medium"]]),pch=17,col=2)#
+points(bio3[["High"]],log(spp3[["High"]]),pch=15,col=4)#
+points(bio[["Low"]],log(spp[["Low"]]),pch=16,col=1)#
+points(bio[["Medium"]],log(spp[["Medium"]]),pch=17,col=2)#
+points(bio[["High"]],log(spp[["High"]]),pch=15,col=4)#
+legend("topright",legend=c("Low","Medium","High"),pch=c(16,17,15),col=c(1,2,4))
+####################################################
+### Quasi-Poisson#
+####################################################
+m4 <- glm(Species~Biomass*pH,family=quasipoisson,data=species)
+####################################################
+### test for overdispersion#
+####################################################
+library(AER)#
+dispersiontest(m3)#
+####################################################
+### Negative Binomial#
+####################################################
+library(MASS)#
+m5 <- glm.nb(Species~Biomass*pH,data=species)
+dispersiontest(m3)
+m5
+summary(m5)
+####################################################
+### Load libraries#
+####################################################
+library(effects)#
+library(ResourceSelection)#
+library(Epi)#
+####################################################
+### Health perception data#
+####################################################
+rm(list=ls()) # Remove all previous variables#
+salud <- read.table("data/salud.txt",header=TRUE, dec=",")#
+ ## salud$g02     <- factor(salud$g02)#
+ salud$sexo    <- factor(salud$sexo)#
+ salud$con_tab <- factor(salud$con_tab)#
+ salud$educa   <- factor(salud$educa)#
+ salud$bebedor <- factor(salud$bebedor)#
+attach(salud)#
+#
+# we can reasign the categories#
+levels(sexo)[1]<-"male"#
+levels(sexo)[2]<-"female"
+levels(bebedor)[1]<-"poco/nada"#
+levels(bebedor)[2]<-"ocasional"#
+levels(bebedor)[3]<-"frecuente"#
+####################################################
+### ftable#
+####################################################
+ftable(list(g02,sexo,bebedor))#
+#
+ftable(list(bebedor,sexo,g02))#
+apply(ftable(list(bebedor,sexo,g02)),1,sum)#
+#
+####################################################
+### logistic regression model 1#
+####################################################
+#
+logistic1 <- glm(g02~sexo+bebedor,family=binomial(link=logit))#
+summary(logistic1)#
+attributes(logistic1)#
+#
+####################################################
+### Confidence Intervals#
+####################################################
+confint(logistic1)#
+####################################################
+### Odds-Ratio and C.I.#
+####################################################
+exp(coefficients(logistic1))#
+#
+exp(confint(logistic1))
+####################################################
+### Polytomous predictor#
+####################################################
+# Create a new variable edad2#
+salud$edad2 <- salud$edad#
+salud$edad2[salud$edad >= 18 & salud$edad <= 29] <- 1#
+salud$edad2[salud$edad >= 30 & salud$edad <= 44] <- 2#
+salud$edad2[salud$edad >= 45 & salud$edad <= 64] <- 3#
+#
+# make it factor#
+salud$edad2<-factor(salud$edad2)
+####################################################
+### logistic reg model with continous predictor#
+####################################################
+logistic3 <- glm(g02~imc,family=binomial(link=logit))#
+summary(logistic3)#
+####################################################
+### OR#
+####################################################
+exp(coefficients(logistic3))#
+####################################################
+### Predict values#
+####################################################
+logit54 <- predict(logistic3,data.frame(imc=54))#
+logit55 <- predict(logistic3,data.frame(imc=55))#
+#
+# Take the difference#
+logit55-logit54
+plot(imc[order(imc)],fitted3[order(imc)],t='b',#
+     xlab="imc", ylab="Fitted",ylim=c(0,1), main="response") # order by imc#
+abline(h=c(0,1),col="grey",lty=2)
+fitted3 <- predict(logistic3,type="response") #
+plot(imc[order(imc)],fitted3[order(imc)],t='b',#
+     xlab="imc", ylab="Fitted",ylim=c(0,1), main="response") # order by imc#
+abline(h=c(0,1),col="grey",lty=2)
+####################################################
+### plot fitted values#
+####################################################
+# if type="link" the values are the logit#
+fitted3 <- predict(logistic3,type="link") #
+plot(imc[order(imc)],fitted3[order(imc)],t='b',#
+     xlab="imc", ylab="Fitted", main = "logit") # order by imc
+fitted3 <- predict(logistic3) #
+plot(imc[order(imc)],fitted3[order(imc)],t='b',#
+     xlab="imc", ylab="Fitted",ylim=c(0,1), main="response") # order by imc#
+abline(h=c(0,1),col="grey",lty=2)
+# if type="link" the values are the logit#
+fitted3 <- predict(logistic3,type="response") #
+plot(imc[order(imc)],fitted3[order(imc)],t='b',#
+     xlab="imc", ylab="Fitted",ylim=c(0,1), main="response") # order by imc#
+abline(h=c(0,1),col="grey",lty=2)
+# if type="link" the values are the logit#
+fitted3 <- predict(logistic3,type="response") #
+plot(imc[order(imc)],fitted3[order(imc)],t='b',#
+     xlab="imc", ylab="Fitted",ylim=c(0,1), main="response") # order by imc#
+abline(h=c(0,1),col="grey",lty=2)
+####################################################
+### dichotomous and continuous predictors#
+####################################################
+logistic4<-glm(g02~sexo,family=binomial(link=logit))#
+logistic5<-glm(g02~sexo+edad,family=binomial(link=logit))#
+coefficients(logistic4)#
+coefficients(logistic5)#
+#
+exp(coefficients(logistic4))#
+exp(coefficients(logistic5))#
+#
+####################################################
+### plot#
+####################################################
+  fitted5=predict(logistic5,type="response")#
+  plot(edad,fitted5,type="n",main="No interaction (response)",ylim =c(0,1))#
+  abline(h=c(0,1),col="grey", lty=2)#
+  points(edad[sexo=="male"],fitted5[sexo=="male"],col=2,t='p', lwd=3)#
+  points(edad[sexo=="female"],fitted5[sexo=="female"],col=4,t='p', lwd=3)#
+  legend("topright", col=c(2,4),c("male","female"), lty=1, lwd=5)#
+  fitted5=predict(logistic5,type="link")#
+  plot(edad,fitted5,type="n",main="No interaction (logit)")#
+  points(edad[sexo=="male"],fitted5[sexo=="male"],col=2,t='l', lwd=3)#
+  points(edad[sexo=="female"],fitted5[sexo=="female"],col=4,t='l', lwd=3)#
+  legend("topright", col=c(2,4),c("male","female"), lty=1, lwd=5)#
+####################################################
+### compare coefficients#
+####################################################
+coefficients(logistic5)[2]#
+coefficients(logistic4)[2]
+####################################################
+### fit model with interaction#
+####################################################
+logistic7<-glm(g02~sexo+edad+sexo:edad,family=binomial(link=logit))#
+summary(logistic7)#
+coefficients(logistic7)#
+####################################################
+### plot#
+####################################################
+fitted7=predict(logistic7,type="link")#
+plot(edad,fitted5,type="n",main="without & with interaction sexo:edad")#
+points(edad[sexo=="male"],fitted5[sexo=="male"],col=2)#
+points(edad[sexo=="female"],fitted5[sexo=="female"],col=4)#
+points(edad[sexo=="female"],fitted7[sexo=="female"],col=3,pch=2)#
+legend("topright", col=c(2,4,3),pch=c(1,1,2),c("male","female", "female-interact"),cex=1.2)#
+####################################################
+### logistic model #
+####################################################
+logistic8<-glm(g02~sexo+peso,family=binomial(link=logit))#
+summary(logistic8)
+####################################################
+### with interaction#
+####################################################
+logistic9<-glm(g02~sexo+peso+sexo:peso,family=binomial(link=logit))
+anova(logistic4,logistic5)
+anova(logistic4,logistic5,test="Chisq")
+anova(logistic5,logistic7,test="Chisq")
+####################################################
+### plot#
+####################################################
+fitted9=predict(logistic9,type="link")#
+plot(peso,fitted9,type="n",main="with interaction")#
+points(peso[sexo=="male"],fitted9[sexo=="male"],col=2)#
+points(peso[sexo=="female"],fitted9[sexo=="female"],col=4)#
+legend("bottomleft", col=c(2,4),pch=c(1,1),c("male","female"),cex=1.2)
+fitted9=predict(logistic9,type="response")
+plot(peso,fitted9,type="n",main="with interaction")
+points(peso[sexo=="male"],fitted9[sexo=="male"],col=2)
+points(peso[sexo=="female"],fitted9[sexo=="female"],col=4)
+legend("bottomleft", col=c(2,4),pch=c(1,1),c("male","female"),cex=1.2)
+####################################################
+### plot fits with C.I.#
+####################################################
+fitted8=predict(logistic8,se.fit=TRUE,type="link")#
+L.inf=with(fitted8,exp(fit-1.96*se.fit)/(1+exp(fit-1.96*se.fit)))#
+L.sup=with(fitted8,exp(fit+1.96*se.fit)/(1+exp(fit+1.96*se.fit)))#
+with(fitted8,plot(peso[sexo=="male"],(exp(fit)/(1+exp(fit)))[sexo=="male"],ylim=c(0.1,1),ylab="Probability",cex=0.6))#
+points(peso[sexo=="male"],L.inf[sexo=="male"],col=2,cex=0.6)#
+points(peso[sexo=="male"],L.sup[sexo=="male"],col=2,cex=0.6)#
+legend("topright", c("probability","C.I."),col=c(1,2),pch=c(1,1))#
+abline(v=mean(peso[sexo=="male"]),col=c("red"),lwd=2,lty=1)
+####################################################
+### plot fits with C.I.#
+####################################################
+fitted8=predict(logistic8,se.fit=TRUE,type="link")#
+#
+L.inf=with(fitted8,exp(fit-1.96*se.fit)/(1+exp(fit-1.96*se.fit)))#
+L.sup=with(fitted8,exp(fit+1.96*se.fit)/(1+exp(fit+1.96*se.fit)))#
+with(fitted8,plot(peso[sexo=="male"],(exp(fit)/(1+exp(fit)))[sexo=="male"],ylim=c(0.1,1),ylab="Probability",cex=0.6))#
+points(peso[sexo=="male"],L.inf[sexo=="male"],col=2,cex=0.6)#
+points(peso[sexo=="male"],L.sup[sexo=="male"],col=2,cex=0.6)#
+legend("topright", c("probability","C.I."),col=c(1,2),pch=c(1,1))#
+abline(v=mean(peso[sexo=="male"]),col=c("red"),lwd=2,lty=1)
+fitted8=predict(logistic8,se.fit=TRUE,type="response")
+L.inf=with(fitted8,exp(fit-1.96*se.fit)/(1+exp(fit-1.96*se.fit)))
+L.sup=with(fitted8,exp(fit+1.96*se.fit)/(1+exp(fit+1.96*se.fit)))
+with(fitted8,plot(peso[sexo=="male"],(exp(fit)/(1+exp(fit)))[sexo=="male"],ylim=c(0.1,1),ylab="Probability",cex=0.6))
+points(peso[sexo=="male"],L.inf[sexo=="male"],col=2,cex=0.6)
+points(peso[sexo=="male"],L.sup[sexo=="male"],col=2,cex=0.6)
+legend("topright", c("probability","C.I."),col=c(1,2),pch=c(1,1))
+abline(v=mean(peso[sexo=="male"]),col=c("red"),lwd=2,lty=1)
+fitted8=predict(logistic8,se.fit=TRUE,type="response")
+L.inf=with(fitted8,exp(fit-1.96*se.fit)/(1+exp(fit-1.96*se.fit)))
+L.sup=with(fitted8,exp(fit+1.96*se.fit)/(1+exp(fit+1.96*se.fit)))
+with(fitted8,plot(peso[sexo=="male"],(exp(fit)/(1+exp(fit)))[sexo=="male"],ylim=c(0.1,1),ylab="",cex=0.6))
+points(peso[sexo=="male"],L.inf[sexo=="male"],col=2,cex=0.6)
+points(peso[sexo=="male"],L.sup[sexo=="male"],col=2,cex=0.6)
+legend("topright", c("probability","C.I."),col=c(1,2),pch=c(1,1))
+abline(v=mean(peso[sexo=="male"]),col=c("red"),lwd=2,lty=1)
+fit.males80=predict(logistic8,data.frame(sexo="male",peso=80),se.fit=TRUE,type="link")
+fit.males80
+# probability for males with 80 kgr.#
+fit.males80=predict(logistic8,data.frame(sexo="male",peso=c(80,85,96,200),se.fit=TRUE,type="link")
+)
+fit.males80
+fit.males80=predict(logistic8,data.frame(sexo="male",peso=c(80,85,96,200),se.fit=TRUE,type="response")
+)
+fit.males80
+# probability for males with 80 kgr.#
+fit.males80=predict(logistic8,data.frame(sexo="male",peso=c(80,85,96,200),type="response")
+)
+fit.males80=predict(logistic8,data.frame(sexo="male",peso=c(80,85,96,200)),type="response")
+fit.males80
+fit.males80=predict(logistic8,data.frame(sexo="male",peso=c(80,85,96,200)),se.fit=TRUE,type="response")
+fit.males80
+fit.males80=predict(logistic8,data.frame(sexo="male",peso=c(80,85,96,200)),type="response",se.fit=TRUE)
+prob.males80 <- with(fit.males80,exp(fit)/(1+exp(fit)))
+prob.males80.L.inf=with(fit.males80,exp(fit-1.96*se.fit)/(1+exp(fit-1.96*se.fit)))
+prob.males80.L.sup=with(fit.males80,exp(fit+1.96*se.fit)/(1+exp(fit+1.96*se.fit)))
+prob.males80
+prob.males80.L.inf
+prob.males80.L.sup
+####################################################
+### fit model with and without bebedor predictor#
+####################################################
+  logistic4 <- glm(formula = g02 ~ sexo, family = binomial(link = logit))#
+ logistic4a <- glm(formula = g02 ~ sexo + bebedor, family = binomial(link = logit))#
+####################################################
+### LRT#
+####################################################
+anova(logistic4,logistic4a,test="Chisq")#
+####################################################
+### Wald test#
+####################################################
+library(aod)#
+wald.test(coef(logistic4a), Sigma=vcov(logistic4a),Terms=3:4)
+?wald.test
+salud$bebedor
+?wald.test
+summary(logistic4a)
+salud$educa
+plot(effect("educa",logistic13,ylab="Prob(salud)"))
+library(effects)
+plot(effect("educa",logistic13,ylab="Prob(salud)"))
+logistic12 <- glm(formula = g02 ~ educa+edad2+sexo+peso, family = binomial(link = logit),data=salud)
+logistic13 <- glm(formula = g02 ~ educa+edad2+sexo*peso, family = binomial(link = logit),data=salud)
+### LRT
+anova(logistic12,logistic13,test="Chisq")
+### plot effects
+library(effects)
+plot(effect("educa",logistic13,ylab="Prob(salud)"))
+plot(effect("sexo*peso",logistic13,ylab="Prob(salud)"))
+plot(effect("sexo*peso",logistic13,ylab="Prob(salud)"))
+?effect
+plot(effect("sexo*peso",logistic13,ylab="Prob(salud)"))
+plot(effect("educa",logistic13,ylab="Prob(salud)"))
+logistic12
+summary(logistic12)
+plot(effect("educa",logistic13,ylab="Prob(salud)"))
+?effect
+summary(logistic13)
+effect("educa",logistic13,ylab="Prob(salud)")
+effect
+Effect
+effect("educa",logistic13,ylab="Prob(salud)")
+plot(effect("educa",logistic13,ylab="Prob(salud)"))
+####################################################
+###  variable selection#
+####################################################
+mod <- glm(formula=g02~educa+edad2+bebedor+sexo*peso+anio, family = binomial(link = logit),data=salud)#
+#
+library(MASS)#
+stepAIC(mod,trace=FALSE)$anova
+####################################################
+###  variable selection#
+####################################################
+mod <- glm(formula=g02~educa+edad2+bebedor+sexo*peso+anio, family = binomial(link = logit),data=salud)#
+#
+library(MASS)#
+stepAIC(mod,trace=TRUE)$anova
+salud$anio
+table(salud$anio)
+####################################################
+###  variable selection#
+####################################################
+mod <- glm(formula=g02~educa+edad2+bebedor+sexo*peso+anio, family = binomial(link = logit),data=salud)#
+#
+library(MASS)#
+stepAIC(mod,trace=TRUE)$anova
+mod <- glm(formula=g02~., family = binomial(link = logit),data=salud)
+mod
+?glm
+stepAIC(mod,trace=FALSE)$anova
+####################################################
+### ROC curve#
+####################################################
+library(Epi)#
+ROC(form=g02~educa+edad2+sexo*peso, data=salud,plot="ROC",lwd=3,cex=1.5)
+getwd()
+dir()
+mamexp=read.table("data/mammexp.txt",header=TRUE)
+names(mamexp)
+str(mamexp)
+attach(mamexp)#
+####################################################
+### load libraries#
+####################################################
+library(VGAM)   #
+library(nnet)  #
+library(mlogit)#
+####################################################
+### cross table#
+####################################################
+xtabs(~me+hist,data=mamexp)#
+#
+####################################################
+### fit model using vglm#
+####################################################
+vglm1 <- vglm(me ~ hist, family=multinomial(refLevel=1), data=mamexp)#
+summary(vglm1)
+summary(vglm1)
+anova(vglm1)
+library(nnet)
+multi1=multinom(me ~ hist, data=mamexp)
+summary(multi1)
+anova(multi1)
+coefficients(multi1)
+####################################################
+### Get p-values#
+####################################################
+pvals<-function(test){#
+z <- summary(test)$coefficients/summary(test)$standard.errors#
+p<-pnorm(abs(summary(test)$coefficients/summary(test)$standard.errors),lower.tail=FALSE)*2#
+output <- list(z=z,p=p)#
+return(output)#
+}
+pvals(multi1)
+pvals(multi1)$p<0.05
+####################################################
+### Model with only an intercept#
+####################################################
+multi0 <- multinom(me~1,data=mamexp)#
+anova(multi0,multi1)#
+####################################################
+### cross table#
+####################################################
+xtabs(~me+dect,data=mamexp)#
+####################################################
+### with dect covariate#
+####################################################
+multi2 <- multinom(me~dect,data=mamexp)#
+####################################################
+### LRT test#
+####################################################
+anova(multi0,multi2)#
+####################################################
+### coefficients and odds#
+####################################################
+coef(multi2)#
+exp(coef(multi2))#
+####################################################
+### confidence intervals for odds#
+####################################################
+exp(confint(multi2))#
+####################################################
+### LRT significance tests#
+####################################################
+multi3 <- multinom(me~symp,data=mamexp); anova(multi0,multi3)#
+#
+multi4 <- multinom(me~bse,data=mamexp); anova(multi0,multi4)#
+#
+multi5 <- multinom(me~pb,data=mamexp); anova(multi0,multi5)
+multi6 <- multinom(me~symp+pb+bse+hist+dect,data=mamexp)
+summary(multi6)
+pvals(multi6)$p>0.5
+pvals(multi6)$p>0.05
+pvals(multi6)$p<0.05
+####################################################
+### with additional covariates#
+####################################################
+ vglm6 <- vglm(me ~ symp+pb+bse+hist+dect,#
+               family=multinomial(refLevel=1), data=mamexp)#
+#
+summary(vglm6)
+mamexp$symp
+table(mamexp$symp)
+summary(vglm6)
+####################################################
+### transform numeric variables to factors#
+####################################################
+mamexp$me<-factor(mamexp$me)#
+mamexp$symp<-factor(mamexp$symp)#
+mamexp$hist<-factor(mamexp$hist)#
+mamexp$bse<-factor(mamexp$bse)#
+mamexp$dect<-factor(mamexp$dect)
+multi6 <- multinom(me~symp+pb+bse+hist+dect,data=mamexp)
+### with additional covariates
+vglm6 <- vglm(me ~ symp+pb+bse+hist+dect,
+family=multinomial(refLevel=1), data=mamexp)
+summary(vglm6)
+mamexp$symp01<-mamexp$symp  # create a new variable symp01
+library(car)
+mamexp$symp01<-recode(mamexp$symp,"1=0;2=0;3=1;4=1")
+vglm6a <- vglm(me ~ symp01+pb+bse+hist+dect,
+family=multinomial(refLevel=1), data=mamexp)
+summary(vglm6a)
+family=multinomial(refLevel=1), data=mamexp)
+mod1 <- vglm(me ~ pb+bse+hist+dect,
+multiA <- multinom(me~pb+bse+hist,data=mamexp)
+multiB <- multinom(me~pb+bse+hist+dect,data=mamexp)
+anova(multiA,multiB)
+multi6a <- multinom(me~symp01+pb+bse+hist,data=mamexp)
+multi7a <- multinom(me~symp01+pb+bse+hist+dect,data=mamexp)
+multiA <- multinom(me~pb+bse+hist,data=mamexp)
+multiB <- multinom(me~pb+bse+hist+dect,data=mamexp)
+anova(multiA,multiB)
+####################################################
+### fit with dect01#
+####################################################
+ vglm7a <- vglm(me ~ symp01+pb+bse+hist+dect01,#
+                family=multinomial(refLevel=1), data=mamexp)#
+#
+summary(vglm7a)
+table(dect)
+mamexp$dect01 <- mamexp$dect
+mamexp$dect01 <- recode(mamexp$dect01,"0=0; 1=0; 2=1")
+multi7b <- multinom(me~symp01+pb+bse+hist+dect01,data=mamexp)
+anova(multi6a,multi7b)
+multi7b <- multinom(me~hist+symp01+bse,data=mamexp)
+multi7c <- multinom(me~hist+symp01+bse+dect01,data=mamexp)
+anova(multi7b,multi7c)
+mamexp$pb
+range(mamexp$pb)
+table(mamexp$pb)
+####################################################
+### group pb variable#
+####################################################
+mamexp$benef <- mamexp$pb#
+mamexp$benef[mamexp$benef<=5] =  0#
+mamexp$benef[mamexp$benef>5 & mamexp$benef <=7] =  1#
+mamexp$benef[mamexp$benef>7 & mamexp$benef <=9] =  2#
+mamexp$benef[mamexp$benef>9] = 3#
+mamexp$benef <- factor(mamexp$benef)
+table(mamexp$benef)
+####################################################
+### estimate and plot coefficients#
+####################################################
+ multi8 <- multinom(me~hist+symp01+bse+benef,data=mamexp)#
+#
+pvals(multi8)#
+pvals(multi8)$p<0.05#
+#
+ vglm8 <- vglm(me ~ symp01+benef+bse+hist+dect01,#
+                family=multinomial(refLevel=1), data=mamexp)
+summary(vglm8)
+matplot(t(coef(multi8)[,5:7]),t='b',lwd=3,main="Plot of the estimated logit regression coefficients",xlab="pb (created as benef)", ylab="Estimated logit")
+rm(list=ls())
+gradschool<-read.dta(file="data/gradschool.dta")
+library(foreign)
+str(gradschool)
+gradschool$apply <- ordered(gradschool$apply)
+gradschool<-read.dta(file="data/gradschool.dta")
+gradschool$apply
+gradschool$apply <- ordered(gradschool$apply)
+gradschool$apply
+gradschool$pared  <- factor(gradschool$pared)
+gradschool$public <- factor(gradschool$public)
+?ordered
+attach(gradschool)
+is.ordered(apply)
+is.ordered(public)
+library(MASS)
+ord1 <- polr(apply~pared,data=gradschool)
+summary(ord1)
+####################################################
+### compute p-values of the fitted model#
+####################################################
+# we create a function to obtain a table with p-values#
+pvals <- function(mod){#
+# store table#
+tab <- coef(summary(mod))#
+## calculate and store p values#
+p <- pnorm(abs(tab[, "t value"]), lower.tail = FALSE) * 2#
+## combined table#
+tab <- cbind(tab, "p value" = round(p,4))#
+tab#
+}#
+pvals(ord1)
+confint(ord1)
+exp(confint(ord1))
+ord2 <- polr(apply~public,data=gradschool)
+summary(ord2)
+pvals(ord2)
+ord3 <- polr(apply~gpa,data=gradschool)
+summary(ord3)
+ord0 <- polr(apply~1,data=gradschool)
+pvals(ord3)
+anova(ord0,ord1)
+anova(ord0,ord2)
+anova(ord0,ord3)
+ord4 <- polr(apply~pared+gpa,data=gradschool)
+summary(ord4)
+pvals(ord4)
+apply2=ordered(gradschool$apply)
+library(VGAM)
+m0 <- vglm(apply2~pared+gpa,family=cumulative(parallel=TRUE),data=gradschool)
+m1 <- vglm(apply2~pared+gpa,family=cumulative(parallel=FALSE),data=gradschool)
+test.po <- 2*logLik(m1)-2*logLik(m0)
+df.po <- length(coef(m1))-length(coef(m0))
+test.po
+df.po
+1-pchisq(test.po,df=df.po) # 0.6584501 (Do not reject the null hypothesis)
+### 5. Poisson regression#
+####################################################
+### read data#
+####################################################
+species<-read.table("data/species.txt",header=TRUE)#
+names(species)#
+####################################################
+### recode factor variables and plot#
+####################################################
+species$pH<-factor(species$pH)#
+#
+species$pH<-factor(species$pH, labels=c("Low","Medium","High"))#
+#
+# or levels(species$pH) <- c("Low","Medium","High")#
+attach(species)
+m0=glm(Species~Biomass,family=poisson,data=species)
+anova(m0,test="Chisq")
+m1=glm(Species~pH,family=poisson,data=species)
+anova(m1,test="Chisq")
+####################################################
+### Include interaction#
+####################################################
+m2 <- glm(Species~Biomass+pH,family=poisson,data=species)#
+m3 <- glm(Species~Biomass*pH,family=poisson,data=species)#
+#
+anova(m2,m3,test="Chisq")
+summary(m3)
+####################################################
+### plot fits#
+####################################################
+x <- rep(seq(0,10,l=101),3) # Biomass.x#
+#
+pH.seq <- factor(c(rep("Low",101),rep("Medium",101),rep("High",101)))#
+#
+fit3 <- predict(m3,data.frame(list(Biomass=x,pH = pH.seq)), type="response")#
+plot(Biomass,Species,type="n",main="response")#
+spp3<-split(fit3,pH.seq)#
+bio3<-split(x,pH.seq)#
+points(bio3[["Low"]],spp3[["Low"]],pch=16,col=1)#
+points(bio3[["Medium"]],spp3[["Medium"]],pch=17,col=2)#
+points(bio3[["High"]],spp3[["High"]],pch=15,col=4)#
+points(bio[["Low"]],spp[["Low"]],pch=16,col=1)#
+points(bio[["Medium"]],spp[["Medium"]],pch=17,col=2)#
+points(bio[["High"]],spp[["High"]],pch=15,col=4)#
+legend("topright",legend=c("Low","Medium","High"),pch=c(16,17,15),col=c(1,2,4))
+fit3a <- predict(m3,data.frame(list(Biomass=x,pH = pH.seq)), type="link")
+spp3a<-split(fit3a,pH.seq)
+bio3a<-split(x,pH.seq)
+plot(Biomass,log(Species),type="n",main="link")
+points(bio3[["Low"]],log(spp3[["Low"]]),pch=16,col=1)
+points(bio3[["Medium"]],log(spp3[["Medium"]]),pch=17,col=2)
+points(bio3[["High"]],log(spp3[["High"]]),pch=15,col=4)
+points(bio[["Low"]],log(spp[["Low"]]),pch=16,col=1)
+points(bio[["Medium"]],log(spp[["Medium"]]),pch=17,col=2)
+points(bio[["High"]],log(spp[["High"]]),pch=15,col=4)
+legend("topright",legend=c("Low","Medium","High"),pch=c(16,17,15),col=c(1,2,4))
+plot(Biomass,Species,type="n",main="response")#
+spp3<-split(fit3,pH.seq)#
+bio3<-split(x,pH.seq)#
+points(bio3[["Low"]],spp3[["Low"]],pch=16,col=1)#
+points(bio3[["Medium"]],spp3[["Medium"]],pch=17,col=2)#
+points(bio3[["High"]],spp3[["High"]],pch=15,col=4)#
+points(bio[["Low"]],spp[["Low"]],pch=16,col=1)#
+points(bio[["Medium"]],spp[["Medium"]],pch=17,col=2)#
+points(bio[["High"]],spp[["High"]],pch=15,col=4)#
+legend("topright",legend=c("Low","Medium","High"),pch=c(16,17,15),col=c(1,2,4))
+####################################################
+### Quasi-Poisson#
+####################################################
+m4 <- glm(Species~Biomass*pH,family=quasipoisson,data=species)#
+####################################################
+### test for overdispersion#
+####################################################
+library(AER)#
+dispersiontest(m3)#
+####################################################
+### Negative Binomial#
+####################################################
+library(MASS)#
+m5 <- glm.nb(Species~Biomass*pH,data=species)
+m5

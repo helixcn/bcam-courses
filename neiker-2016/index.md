@@ -7,7 +7,7 @@
 
 # Information and pre-requisites
 
-* **When:** *TBA*
+* **When:** March 7-8, 14-15 and 21-22 from 9:30am to 2:00pm.
 * **Where:** Neiker-Tecnalia Parque Tecnológico Derio ([map](https://www.google.es/maps/place/NEIKER-Tecnalia/@43.291225,-2.875765,15z/data=!4m2!3m1!1s0x0:0xb517b13250614601?sa=X&ved=0ahUKEwjJzZKKzu_KAhWF7RQKHa2xDCoQ_BIIcjAN))
 * **Requirements:**
     * Latest version of `R` software (download it [here](www.r-project.org))
