@@ -24,9 +24,7 @@ install.packages(c("nlme","lme4","RLRsim","mgcv","gamair","lattice","latticeExtr
 
 ## 0. Introduction to R 
 
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
-* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
+* `R` basics for beginners [(link)](http://idaejin.github.io/bcam-courses/rbasics)
 
 --------------------------------------------------
 
