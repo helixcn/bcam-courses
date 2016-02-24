@@ -22,82 +22,14 @@ install.packages(c("nlme","lme4","RLRsim","mgcv","gamair","lattice","latticeExtr
 
 -------------------------------------------------
 
-## 0. Introduction to R 
+## Introduction to R 
 
 * `R` basics for beginners [(link)](http://idaejin.github.io/bcam-courses/rbasics)
 
 --------------------------------------------------
 
-## 1. Introduction to Generalized Linear Models
 
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
-* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-
-
-### 1.1 Logistic regression
-
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
-* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-
-
-### 1.2. Multinomial regression
-
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
-* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-
-
-### 1.3. Ordinal regression
-
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
-* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-
-
-### 1.4. Poisson regression
-
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
-* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-
-
-### 1.5. Examples
-
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
-* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-
--------------------------------------------------
-
-## 2. Mixed-effects Models with R
-
-### 2.1. Introduction to linear mixed models with R
-
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
-* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-
-### 2.2. Multilevel models
-
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
-* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-
-### 2.3. Repeated measurements and longitudinal data
-
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
-* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-
-### 2.4. Some extensions and examples
-
-* [link](http://idaejin.github.io/bcam-courses/rbasics)
-* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-* [data](http://idaejin.github.io/bcam-courses/neiker-2016/xxx)
-
-
+[Download material](https://github.com/idaejin/bcam-courses/tree/master/neiker-2016/material)
 
 -----------------------------------------------------
 
