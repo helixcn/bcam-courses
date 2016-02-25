@@ -18,9 +18,11 @@
 install.packages(c("nlme","lme4","RLRsim","mgcv","gamair","lattice","latticeExtra","grDevices","sm"))
 ```
 
-\bigskip
+* **Download all material** [here](http://idaejin.github.io/bcam-courses/neiker-2016/material.zip)
 
 -------------------------------------------------
+
+
 
 ## 0. Introduction to R 
 
