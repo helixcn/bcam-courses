@@ -15,11 +15,11 @@
     * Install the following libraries in `R` (copy the next commands to the `R` console).
 
 ```r
-install.packages(c("nlme","lme4","RLRsim","mgcv","gamair","lattice","latticeExtra","grDevices","sm"))
+install.packages(c("effects","Epi","ResourceSelection","nlme","lme4","RLRsim","mgcv","gamair","car","scatterplot3d","VGAM","nnet","mlogit","foreign","AER","fields"))
 ```
 
-* **Download all material** [here](http://idaejin.github.io/bcam-courses/neiker-2016/material.zip)
-
+<!--* **Download all material** [here](http://idaejin.github.io/bcam-courses/neiker-2016/material.zip)
+-->
 -------------------------------------------------
 
 

@@ -58,8 +58,8 @@ summary(lin.mod)$r.squared
 ###################################################
 ### plot fitted lm
 ###################################################
- plot(x,y)
- abline(lin.mod,lwd=2,col="red")
+plot(x,y)
+abline(lin.mod,lwd=2,col="red")
 
 
 
