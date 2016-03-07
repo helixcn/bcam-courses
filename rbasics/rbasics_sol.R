@@ -23,6 +23,8 @@ barplot(table(rainforest$species))
 
 # Ex 3. Create a subset of a data frame
 Acmena <- subset(rainforest, species == "Acmena smithii")
+#or Acmena<-rainforest[rainforest$species=="Acmena smithii",]
+
 
 ## plotting
 par(mfrow=c(1,2))

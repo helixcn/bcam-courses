@@ -57,12 +57,19 @@ str(Dat) # display object structure
 
 ## Working on data frames
 # Change rownames
+rownames(Dat)
+
 rownames(Dat)<-c("A","B","C","D","E","F")
+
+colnames(Dat) <- c("Individuo","Sexo","peso","altura","IMC")
+
+colnames(Dat) <- c("subject", "sex", "weight",  "height",  "bmi" ) 
+
 
 # Access to data frame elements (similar to a matrix)
 Dat[,1]     # 1st column
 Dat[,1:3]   # 1st to 3rd columns
-Dat[1:2,]   # 1st to 2nd row
+Dat[1:5,]   # 1st to 2nd row
 
 # Show only rows of males/females
 Dat[sex=="MALE",]
@@ -77,7 +84,14 @@ apply(Dat[sex=="FEMALE",3:5],2,mean)
 apply(Dat[sex=="MALE",3:5],2,mean)
 
 # we can use apply with our own function
-apply(Dat[sex=="FEMALE",3:5],2,function(x){x+2})
+
+suma2 <- function(x){
+suma2 <- x+2
+suma2
+}
+
+apply(Dat[sex=="FEMALE",3:5],2,suma2)
+
 
 # function by
 by(Dat[,3:5],sex, colMeans) # 'by' splits your data by factors and do calculations on each subset.
@@ -88,10 +102,11 @@ aggregate(Dat[,3:5], by=list(sex),mean)
 # logic operations on variables
 bmi
 bmi>22
+
 as.numeric(bmi>22) # convert a logical condition to a numeric value 0/1
 which(bmi>22)  # gives the position of bmi for which bmi>22
 
-## ----results='hide'------------------------------------------------------
+## --------------------------------
 bmi > 20 & bmi < 25
 which(bmi > 20 & bmi < 25)
 
@@ -115,7 +130,7 @@ seq(1,9,by=1)
 seq(1,9,by=0.5)
 seq(1,9,length=20)
 
-## ----results='hide'------------------------------------------------------
+## -----------------------------------------------------
 oops <- c(7,9,13)
 rep(oops,3) # repeats the entire vector "oops" three times
 rep(oops,1:3) # this function has the number 3 replaced 
@@ -201,12 +216,17 @@ mtcars[,c("mpg","am")]
 
 ## plot car weight by miles per gallon
 attach(mtcars)
+
 plot(wt, mpg, main="Scatterplot Example",
    xlab="Car Weight ", ylab="Miles Per Gallon ", pch=19) 
 
 ## scatterplot
 pairs(~mpg+disp+drat+wt,data=mtcars,
    main="Simple Scatterplot Matrix")
+
+pairs(~.,data=mtcars,
+   main="Simple Scatterplot Matrix")
+
 
 ## tabulate and barplot
 tab <- table(mtcars[,c("cyl")])

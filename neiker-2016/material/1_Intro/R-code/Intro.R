@@ -15,8 +15,8 @@ library(Epi)
 ### Simulate some data 
 ###################################################
 set.seed(1234)
-n <- 50 
 
+n <- 50 
 x <- seq(1,n)  # creates a sequence from 1 to n
 
  beta0 <- 15
@@ -60,7 +60,6 @@ summary(lin.mod)$r.squared
 ###################################################
 plot(x,y)
 abline(lin.mod,lwd=2,col="red")
-
 
 
 ###################################################
@@ -149,7 +148,7 @@ cor(df1)
 cor(df1[,2:3])
 # Linear Model fit
 mod1 <- lm(y ~ x1 + x2 , data = df1)
-
+summary(mod1)
 
 ###################################################
 ### 3D fit
@@ -343,6 +342,7 @@ legend("bottomright",c("Male","Female"),col=c("red","blue"),lwd=2)
 ### Likelihood Ratio Test with anova()
 ###################################################
   modelo5 <- lm(imc~peso+sexo+peso:sexo+bebedor+bebedor:peso)
+
 anova(modelo5,modelo4)
 
 
@@ -425,6 +425,7 @@ lines(peso.seq,predict.nsmod2.female,col="red",lwd=3)
 ### lm for binary outcomes?
 ###################################################
 g02num<-as.numeric(g02)-1 # go back to g02 as numeric values
+
 plot(peso,g02num,cex=.3,xlab="peso",ylab="g02")
 ex1 <- lm(g02num~peso)
 abline(ex1,col=2,lwd=3)
