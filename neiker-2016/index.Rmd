@@ -48,7 +48,7 @@ install.packages(c("effects","Epi","ResourceSelection","nlme","lme4","RLRsim","m
 ### 1.1 Logistic regression
 
 * [Slides](http://idaejin.github.io/bcam-courses/neiker-2016/material/2_Logistic_regression/LogReg.pdf)
-* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/material/2_Logistic_regression/R-code/LogReg.R)
+* [R scripts](http://idaejin.github.io/bcam-courses/neiker-2016/material/2_Logistic_regression/R-code/Logreg.R)
 * [data.zip](http://idaejin.github.io/bcam-courses/neiker-2016/material/2_Logistic_regression/R-code/data.zip)
 
 
