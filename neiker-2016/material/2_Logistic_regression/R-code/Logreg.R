@@ -385,7 +385,11 @@ exp(confint(logistic13))
 ### Automated model selection 
 # See www.jstatsoft.org/v34/i12/paper
 
+ dat <- salud[,-c(2,11)]
+
+
 library(glmulti)
+
 glmulti.logistic.out <-
     glmulti(g02 ~., data = dat,
             level = 1,               # No interaction considered
