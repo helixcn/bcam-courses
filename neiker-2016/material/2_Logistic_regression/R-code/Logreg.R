@@ -97,7 +97,6 @@ salud$edad2[salud$edad >= 45 & salud$edad <= 64] <- 3
 # make it factor
 salud$edad2<-factor(salud$edad2)
 
-
 ###################################################
 ### logistic reg model with polytomous predictor
 ###################################################
@@ -123,8 +122,8 @@ exp(coefficients(logistic3))
 ###################################################
 ### Predict values
 ###################################################
-logit54 <- predict(logistic3,data.frame(imc=54))
-logit55 <- predict(logistic3,data.frame(imc=55))
+logit54 <- predict(logistic3,data.frame(imc=55))
+logit55 <- predict(logistic3,data.frame(imc=56))
 
 # Take the difference
 logit55-logit54
@@ -148,6 +147,7 @@ exp(logit55-logit54)^c # is equivalent to exp(c*logit55-c*logit54)
 ###################################################
 # if type="link" the values are the logit
 fitted3 <- predict(logistic3,type="response") 
+
 plot(imc[order(imc)],fitted3[order(imc)],t='b',
      xlab="imc", ylab="Fitted",ylim=c(0,1), main="response") # order by imc
 abline(h=c(0,1),col="grey",lty=2)
@@ -205,6 +205,7 @@ logistic7<-glm(g02~sexo+edad+sexo:edad,family=binomial(link=logit))
 summary(logistic7)
 coefficients(logistic7)
 
+anova(logistic5,logistic7)
 
 ###################################################
 ### plot
@@ -235,7 +236,7 @@ coefficients(logistic8)
 ### with interaction
 ###################################################
 logistic9<-glm(g02~sexo+peso+sexo:peso,family=binomial(link=logit))
-
+summary(logistic9)
 
 ###################################################
 ### plot
@@ -245,6 +246,13 @@ plot(peso,fitted9,type="n",main="with interaction")
 points(peso[sexo=="male"],fitted9[sexo=="male"],col=2)
 points(peso[sexo=="female"],fitted9[sexo=="female"],col=4)
 legend("bottomleft", col=c(2,4),pch=c(1,1),c("male","female"),cex=1.2)
+
+fitted9=predict(logistic9,type="link")
+plot(peso,fitted9,type="n",main="with interaction")
+points(peso[sexo=="male"],fitted9[sexo=="male"],col=2)
+points(peso[sexo=="female"],fitted9[sexo=="female"],col=4)
+legend("bottomleft", col=c(2,4),pch=c(1,1),c("male","female"),cex=1.2)
+
 
 coefficients(logistic9)
 
@@ -261,6 +269,8 @@ points(peso[sexo=="male"],L.inf[sexo=="male"],col=2,cex=0.6)
 points(peso[sexo=="male"],L.sup[sexo=="male"],col=2,cex=0.6)
 legend("topright", c("probability","C.I."),col=c(1,2),pch=c(1,1))
 abline(v=mean(peso[sexo=="male"]),col=c("red"),lwd=2,lty=1)
+
+
 
 # probability for males with 80 kgr.
 fit.males80=predict(logistic8,data.frame(sexo="male",peso=80),type="response",se.fit=TRUE)
@@ -307,7 +317,7 @@ wald.test(coef(logistic4a), Sigma=vcov(logistic4a),L=l)
 ### include sexo:peso interaction
 ###################################################
 logistic12 <- glm(formula = g02 ~ educa+edad2+sexo+peso, family = binomial(link = logit),data=salud)
-logistic13 <- glm(formula = g02 ~ educa+edad2+sexo*peso, family = binomial(link = logit),data=salud)
+logistic13 <- glm(formula = g02 ~ educa+edad2+sexo+peso+sexo:peso, family = binomial(link = logit),data=salud)
 
 
 ###################################################
@@ -371,5 +381,23 @@ summary(logistic13)
 exp(logistic13$coeff)
 
 exp(confint(logistic13))
+
+### Automated model selection 
+# See www.jstatsoft.org/v34/i12/paper
+
+library(glmulti)
+glmulti.logistic.out <-
+    glmulti(g02 ~., data = dat,
+            level = 1,               # No interaction considered
+            method = "h",            # Exhaustive approach
+            crit = "aic",            # AIC as criteria
+            confsetsize = 5,         # Keep 5 best models
+            plotty = F, report = F,  # No plot or interim reports
+            fitfunction = "glm",     # glm function
+            family = binomial)       # binomial family for logistic regression
+
+
+## Show result for the best model
+summary(glmulti.logistic.out@objects[[1]])
 
 
