@@ -21,8 +21,8 @@ mamexp$bse<-factor(mamexp$bse)
 mamexp$dect<-factor(mamexp$dect)
 
 
-#levels(mamexp$me)<-c("never","1yearago","over2years")
-#levels(mamexp$hist)<-c("no","yes")
+# levels(mamexp$me)<-c("never","1yearago","over2years")
+# levels(mamexp$hist)<-c("no","yes")
 
 attach(mamexp)
 
@@ -43,7 +43,8 @@ xtabs(~me+hist,data=mamexp)
 ###################################################
 ### fit model using vglm
 ###################################################
-vglm1 <- vglm(me ~ hist, family=multinomial(refLevel=1), data=mamexp)
+vglm1 <- vglm(me ~ hist, family=multinomial(refLevel=1), 
+			 data=mamexp)
 summary(vglm1)
 
 ###################################################
