@@ -1,6 +1,6 @@
 ### Introduction to Generalized Linear Models with R
-### Date: May, 14 & 15 2015
 ### Dae-Jin Lee, dlee@bcamath.org
+### (2015-)
 
 ### 4. Ordinal regression
 ###################################################
