@@ -143,6 +143,8 @@ multi5 <- multinom(me~pb,data=mamexp); anova(multi0,multi5)
 
 multi6 <- multinom(me~symp+pb+bse+hist+dect,data=mamexp)
 
+summary(multi6)
+pvals(multi6)
 
 ###################################################
 ### with additional covariates

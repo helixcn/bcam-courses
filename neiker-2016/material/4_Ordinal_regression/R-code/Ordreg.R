@@ -9,16 +9,41 @@
 library(foreign)
 
 gradschool<-read.dta(file="data/gradschool.dta")
+str(gradschool)
 
+# Why not linear regression??
+
+# convert to numeric 
+gradschool$apply.num <- as.numeric(gradschool$apply)-1
+
+# 2 is very likely
+# 1 is somewhat likely
+# 0 is unlikely
+linmod <- lm(apply.num~gpa,data=gradschool)
+summary(linmod)
+
+predict(linmod,data.frame(gpa=3))
+plot(linmod)
+
+# The decision between linear regression and ordered multinomial 
+#	regression is not always black and white.  
+# When you have a large number of categories that can be considered equally spaced simple linear regression is an optional alternative 
 
 ###################################################
 ### convert to factor
 ###################################################
 
+
  gradschool$apply <- ordered(gradschool$apply)
 
 gradschool$pared  <- factor(gradschool$pared)
 gradschool$public <- factor(gradschool$public)
+
+attach(gradschool)
+
+xtabs(~ pared + apply)
+
+xtabs(~ public + apply)
 
 
 ###################################################
