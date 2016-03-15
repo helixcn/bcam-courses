@@ -10,7 +10,7 @@ class(Rail)
 ?Rail
 Rail$Rail # ordered factor
 
-# "Travel time in nanoseconds in a sample of six rails.*
+# "Travel time in nanoseconds in a sample of six rails"
 plot(Rail)
 
 # mean and std

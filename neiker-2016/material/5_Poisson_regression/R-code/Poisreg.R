@@ -19,8 +19,6 @@ species$pH<-factor(species$pH, labels=c("Low","Medium","High"))
 
 # or levels(species$pH) <- c("Low","Medium","High")
 
-
-
 attach(species)
 
 
@@ -144,7 +142,7 @@ m5 <- glm.nb(Species~Biomass*pH,data=species)
 ### Lung cancer cases in Denmark
 #################################################################
 lung <- read.table("data/lung.txt",header=TRUE)
-
+head(lung)
 
 
 ###################################################

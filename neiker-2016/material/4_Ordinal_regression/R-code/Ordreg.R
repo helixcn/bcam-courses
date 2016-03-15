@@ -19,7 +19,9 @@ gradschool$apply.num <- as.numeric(gradschool$apply)-1
 # 2 is very likely
 # 1 is somewhat likely
 # 0 is unlikely
+
 linmod <- lm(apply.num~gpa,data=gradschool)
+
 summary(linmod)
 
 predict(linmod,data.frame(gpa=3))
@@ -33,8 +35,8 @@ plot(linmod)
 ### convert to factor
 ###################################################
 
-
- gradschool$apply <- ordered(gradschool$apply)
+gradschool$apply <- ordered(gradschool$apply)
+gradschool$apply
 
 gradschool$pared  <- factor(gradschool$pared)
 gradschool$public <- factor(gradschool$public)
@@ -105,6 +107,9 @@ apply2=ordered(gradschool$apply)
 m0 <- vglm(apply2~pared+gpa,family=cumulative(parallel=TRUE),data=gradschool)  
 m1 <- vglm(apply2~pared+gpa,family=cumulative(parallel=FALSE),data=gradschool)
 
+anova(m0,m1) # not implemented in vglm()
+
+# create LRT
 test.po <- 2*logLik(m1)-2*logLik(m0)
 df.po <- length(coef(m1))-length(coef(m0))
 
