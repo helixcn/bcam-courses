@@ -36,9 +36,13 @@ abline(0,0)
 
 # random effects model
 library(nlme)
+
 rail3 <- lme(travel~1,random=~1|Rail,data=Rail)
+
 # or equivalently
+
 # rail3 <- lme(travel~1,random=list(Rail=~1),data=Rail)
+
 rail3
 
 summary(rail3)
@@ -63,7 +67,9 @@ anova(model)
 
 # with lmer
 library(lme4)
+
 rail.lmer <- lmer(travel ~1+(1|Rail),data=Rail)
+
 summary(rail.lmer)
 
 ## Ergonometrics data
@@ -163,6 +169,7 @@ multilev1 <- lm(MathAch~CSES+School, data=MathAchieve) # fit a lm
 multilev1
 
 
+library(lattice)
 ## subsample of Schools
 attach(MathAchieve)
 subMathAchieve=MathAchieve[School==c("91","3","31","52","74"),]
@@ -193,6 +200,7 @@ multilev.NULL=lm(MathAch~1,data=MathAchieve)
 test=-2*logLik(multilev.NULL, REML=FALSE) +2*logLik(multilev.lme, REML=FALSE)
 test
 mean(pchisq(test,df=c(0,1),lower.tail=FALSE))
+
 # or
 exactLRT(update(multilev.lme,method="ML"),multilev.NULL)
 
@@ -273,6 +281,10 @@ lines(MathAchieve$CSES[MathAchieve$School==levels(MathAchieve$School)[i] & MathA
 }
 legend("topleft", c("Public","Private"), lwd=2, lty=c(2,5), col=c("blue","red"))
 
+
+#########
+
+
 ## Longitudinal models
 child <- read.table("data/child.txt",header=TRUE)
 
@@ -313,20 +325,21 @@ mean(pchisq(test,df=c(0,1),lower.tail=FALSE))
 
 # Fitted model with random intercepts and quadratic trend
 library(fields)
-xyplot(fitted(child.mod2) ~ age,groups=id,
+xyplot(fitted(child.mod2a) ~ age,groups=id,
        col=tim.colors(length(unique(child$id))),
        lwd=1,t="b",pch=19,data=child,ylim=c(2,20))
 
 # Fitted model with random intercepts and quadratic trend for boys and girls
-xyplot(fitted(child.mod2) ~ age|sex,groups=id,lwd=1,t="b",pch=19,
+xyplot(fitted(child.mod2a) ~ age|sex,groups=id,lwd=1,t="b",pch=19,
        data=child,ylim=c(2,20))
 
-## ------------------------------------------------------------------------
+## 
 child.mod3<-lme(weight~age*sex+I(age^2),random=list(id=pdDiag(~age)),
                 data=child)
 summary(child.mod3)$tTable
 
-## ------------------------------------------------------------------------
+##
+
 child.mod4<-lme(weight~age*sex+I(age^2),
                 random=list(id=pdDiag(~sex-1),id=pdDiag(~sex:age-1)),
                 data=child)
