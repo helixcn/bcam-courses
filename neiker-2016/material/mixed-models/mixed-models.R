@@ -358,6 +358,8 @@ xyplot(fitted(child.mod4) ~ age|sex,groups=id,lwd=1,t="b",pch=19,
 
 library(nlme)
 data(BodyWeight)
+?BodyWeight
+
 head(BodyWeight)
 
 # Body weights of rats by Time and Diet
@@ -419,6 +421,7 @@ xyplot(distance~age | Subject, groups=Sex,
        data=Orthodont,type=c("p","r"), 
        par.strip.text=list(cex=0.75), layout=c(8,4))
 
+attach(Orthodont)
 
 age.means <- tapply(distance,age,mean)
 plot(c(8,14),c(20,28),xlab="Age",ylab="Mean distance",pch=16,type="n")
@@ -503,29 +506,27 @@ anova(ortho3,ortho5)
 
 # Correlation
 
-## ----eval=FALSE----------------------------------------------------------
-## cs1AR1 <- corAR1(0.8,form=~1|Subject)
-## cs1AR1 <- Initialize(cs1AR1,data=Orthodont)
-## corMatrix(cs1AR1)
+ cs1AR1 <- corAR1(0.8,form=~1|Subject)
+ cs1AR1 <- Initialize(cs1AR1,data=Orthodont)
+ corMatrix(cs1AR1)
 
-## ----eval=FALSE----------------------------------------------------------
-##  cs1ARMA <- corARMA(0.4,form=~1|Subject,q=1)
-##  cs1ARMA <- Initialize(cs1ARMA,data=Orthodont)
-## corMatrix(cs1ARMA)
-## 
-##  cs2ARMA <- corARMA(c(0.8,0.4),form=~1|Subject,p=1,q=1)
-##  cs2ARMA <- Initialize(cs2ARMA,data=Orthodont)
-## corMatrix(cs2ARMA)
 
-## ----eval=FALSE----------------------------------------------------------
-##  cs1CompSymm <- corCompSymm(value=0.3,form=~1|Subject)
-##  cs1CompSymm <- Initialize(cs1CompSymm,data=Orthodont)
-## corMatrix(cs1CompSymm)
+  cs1ARMA <- corARMA(0.4,form=~1|Subject,q=1)
+  cs1ARMA <- Initialize(cs1ARMA,data=Orthodont)
+ corMatrix(cs1ARMA)
+ 
+  cs2ARMA <- corARMA(c(0.8,0.4),form=~1|Subject,p=1,q=1)
+  cs2ARMA <- Initialize(cs2ARMA,data=Orthodont)
+ corMatrix(cs2ARMA)
 
-## ----eval=FALSE----------------------------------------------------------
-## cs1Symm <- corSymm(value=c(0.2,0.1,-0.1,0,0.2,0),form=~1|Subject)
-## cs1Symm <- Initialize(cs1Symm, data=Orthodont)
-## corMatrix(cs1Symm)
+
+  cs1CompSymm <- corCompSymm(value=0.3,form=~1|Subject)
+  cs1CompSymm <- Initialize(cs1CompSymm,data=Orthodont)
+ corMatrix(cs1CompSymm)
+
+ cs1Symm <- corSymm(value=c(0.2,0.1,-0.1,0,0.2,0),form=~1|Subject)
+ cs1Symm <- Initialize(cs1Symm, data=Orthodont)
+ corMatrix(cs1Symm)
 
 # Ovary data
 data(Ovary) # see ?Ovary
@@ -554,7 +555,6 @@ plot(ACF(ovary1,maxLag=20),alpha=0.01)
 ovary3 <- update(ovary2,correlation=corAR1())
 ovary3
 
-## ------------------------------------------------------------------------
 anova(ovary2,ovary3)
 
 #
@@ -578,8 +578,8 @@ BDHS <- read.table("data/BDHS.txt", header = TRUE)
 
 BDHS$womid<- factor(BDHS$womid)
 BDHS$meduc<- factor(BDHS$meduc)
-BDHS$urban <- factor(BDHS$urban)
-BDHS$islam <- factor(BDHS$islam)
+BDHS$urban<- factor(BDHS$urban)
+BDHS$islam<- factor(BDHS$islam)
 levels(BDHS$urban) <- c("rural","urban")
 
 library(lme4)
