@@ -84,7 +84,7 @@ install.packages(c("effects","Epi","ResourceSelection","nlme","lme4","RLRsim","m
 ## Additional examples
 
 * [link](http://idaejin.github.io/bcam-courses/neiker-2016/extra-examples.html)
-* [Titanic data](http://idaejin.github.io/bcam-courses/neiker-2016/extra-data/titanic.zip)
+
 -----------------------------------------------------
 
 **Contact**
