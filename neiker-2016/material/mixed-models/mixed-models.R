@@ -294,8 +294,14 @@ library(fields)
 xyplot(weight ~ age,groups=id,col=tim.colors(length(unique(child$id))),
        lwd=1,t="b",pch=19,data=child, ylim=c(2,20))
 
+xyplot(weight ~ age|sex,groups=id,col=tim.colors(length(unique(child$id))),
+       lwd=1,t="b",pch=19,data=child, ylim=c(2,20))
+
 # model with random intercept 
 child.mod1 <- lme(weight~age+I(age^2),random=~1|id,data=child)
+
+# child.mod1 <- lme(weight~age+I(age^2),random=list(id=~1),data=child)
+
 child.mod1
 
 
@@ -307,9 +313,17 @@ xyplot(fitted(child.mod1) ~ age,groups=id,
        col=tim.colors(length(unique(child$id))),
        lwd=1,t="b",pch=19,data=child,ylim=c(2,20))
 
+xyplot(fitted(child.mod1) ~ age|sex,groups=id,
+       col=tim.colors(length(unique(child$id))),
+       lwd=1,t="b",pch=19,data=child,ylim=c(2,20))
+
+
 # model with random slopes 
 child.mod2<-lme(weight~age+I(age^2),random=~age|id,
                 data=child)
+
+# child.mod2<-lme(weight~age+I(age^2),random=~age-1|id,
+#                data=child)
 # or with lmer
 # child.mod2 <- lmer(weight~age+I(age^2)+(age|id),data=child)
 child.mod2
@@ -353,6 +367,9 @@ xyplot(fitted(child.mod4) ~ age,groups=id,
 xyplot(fitted(child.mod4) ~ age|sex,groups=id,lwd=1,t="b",pch=19,
        data=child,ylim=c(2,20))
 
+anova(update(child.mod4,method="ML"),update(child.mod3,method="ML"))
+
+##### Extension of LMM
 
 ## Body Weight Growth in Rats
 
@@ -367,11 +384,21 @@ xyplot(weight ~ Time | Diet, group = Rat,
        data = BodyWeight, 
        type = "l",  aspect = 2)
 
+
+xyplot(weight ~ Time | Rat, group = Diet, 
+       data = BodyWeight, 
+       type = "l",  aspect = 2)
+
+
 # create a centered variable cTime
 BodyWeight$cTime <- BodyWeight$Time - mean(BodyWeight$Time)
+
 rat1 <- lme(weight~cTime*Diet, data=BodyWeight,random=~cTime|Rat)
 rat1
+summary(rat1)
 #
+anova(rat1)
+
 rat1a <- update(rat1,method="ML")
 rat1b <- lme(weight~cTime+Diet, data=BodyWeight,random=~cTime|Rat,
              method="ML")
@@ -380,7 +407,8 @@ anova(rat1b,rat1a)
 #
 rat1.1 <- lme(weight~cTime*Diet, data=BodyWeight,
               random = list(Rat=pdDiag(~cTime)))
-anova(rat1.1,rat1)
+
+anova(update(rat1.1,method="ML"),update(rat1,method="ML"))
 
 #
 # Null model 

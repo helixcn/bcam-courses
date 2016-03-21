@@ -1,0 +1,375 @@
+---
+title: '**Additional examples**'
+author: "Dae-Jin Lee"
+date: 'March 2016'
+output:
+  html_document:
+    fig_caption: yes
+    highlight: haddock
+    keep_md: yes
+    number_sections: no
+    theme: cerulean
+    toc: yes
+  pdf_document:
+    fig_caption: yes
+    fig_height: 4
+    fig_width: 5
+    highlight: haddock
+    includes:
+      in_header: mystyle.sty
+    keep_tex: yes
+    number_sections: no
+    template: BCAM.tex
+    toc: no
+header-includes:
+- \usepackage{hyperref}
+- \usepackage{palatino}
+- \usepackage{mathtools}
+subtitle: BCAM - Basque Center for Applied Mathematics
+bibliography: MMrefs.bib
+---
+
+
+----------------------------
+
+# Case studies 
+
+### Variability in Semiconductor Manufacturing
+
+
+These data are described in @Littel96 as coming *from a passive data collection study in the semiconductor industry where the objective is to estimate the variance components to determine the assignable causes of the observed variability*. The observed response is the thickness of the oxide layer on silicon wafers, measured at three different sites of each of three wafers selected from each of eight lots sampled from the population of lots.
+```{r,fig.cap="*Thickness of Oxide layer measured on different sites of wafers selected from a sample of manufacturing lots.*"}
+library(nlme)
+library(lattice)
+data(Oxide)
+?Oxide
+xyplot(Lot~Thickness,group=Wafer,auto.key=TRUE,pch=Oxide$Site,data=Oxide)
+xtabs(~ Lot + Wafer, Oxide)
+```
+
+The Figure suggests that tht *lot-to-lot* variability of the oxide layer thickness is greater than the *wafer-to-wafer* variability within a lot, which, in turn, is greater than the *site-to-site* variation within a wafer.
+
+A multilevel model to describe the oxide thickness $y_{ijk}$ measured on the $k$th site of the $j$th wafer within the $i$th lot is
+$$
+      y_{ijk}  = \mu + b_i + b_{i,j} + \epsilon_{ijk}, ~ i=1,...,8 \quad j,k = 1,2,3  
+$$
+with 
+$$
+      b_i \sim \mathcal{N}(0,\sigma_1^2), \quad b_{i,j} \sim \mathcal{N}(0,\sigma_2^2), \quad \epsilon_{ijk} \sim \mathcal{N}(0,\sigma^2),
+$$
+where `lot` random effects $b_i$ are assumed to be independent for different $i$, the *wafer within lot* random effects $b_{i,j}$ are assumed to be independent for different $i$ and $j$ and to be independent of the $b_i$, and the *within-group* errors $\epsilon_{ijk}$ are assumed to be independent for different $i,j,$ and $k$ and to be independent of the random effects. 
+
+
+The most general form of the argument `random` when `lme` is used to fit a multilevel model is a *named list* where the names define the grouping factors and the formulas describe the random-effects models at each level. The order of nesting is taken to be the order of the elements in the list, with the outermost level appearing first. 
+
+```{r,eval=FALSE}
+random = list(Lot= ~1, Wafer = ~1)
+```
+
+When the random-effects formulas are the same for all levels of grouping, we can replace the named list by a one-sided formula with the common random-effects formula and an expression defining the grouping structure separated by a `|` operation 
+
+```{r,eval=FALSE}
+random = list(~1|Lot/Wafer)
+```
+
+```{r}
+formula(Oxide) # grouping formula already defined
+```
+
+
+```{r}
+fm1Oxide <- lme(Thickness~1,Oxide) 
+fm1Oxide
+```
+
+```{r}
+intervals(fm1Oxide,which="var-cov")
+```
+
+All intervals are bounded well away from zero, indicating that the two random effects should be kept. We can test, for example, if the *wafer within lot* random effect can be eliminated from the model with 
+
+```{r}
+fm2Oxide <- update(fm1Oxide, random = ~1|Lot)
+anova(fm1Oxide,fm2Oxide)
+```
+The very high value of the LR test confirms the significance of that term in the model. 
+
+
+```{r,echo=FALSE,eval=FALSE}
+coef(fm1Oxide,level=1) # Estimated average oxide layer thickness by lot
+coef(fm1Oxide,level=2) # Estimated average oxide layer thickness per Wafer
+```
+
+```{r,echo=FALSE,eval=FALSE}
+ranef(fm1Oxide,level=1:2) 
+```
+
+#### Questions
+
+1. Identify which factors you would treat as random and which as fixed, in a linear mixed model analysis of these data.
+2.  Write down a model that might form a suitable basis for beginning to analyze the Oxide data.
+3. Perform a complete analysis of the data, including model checking. Your aim should be to identify the sources of thickness variability in the data and any fixed effects causing thickness variability.
+
+
+```{r,echo=FALSE,eval=FALSE}
+fm3Oxide <- lme(Thickness~Site+Source,Oxide,random=~1|Lot/Wafer)
+plot(fm3Oxide) # check resids vs fitted values
+qqnorm(residuals(fm3Oxide)) # check resids for normality
+abline(0,sd(resid(fm3Oxide)))
+qqnorm(fm3Oxide,~ranef(.,level=1))
+qqnorm(fm3Oxide,~ranef(.,level=2))
+fm4Oxide <- lme(Thickness~Site+Source,Oxide,random=~1|Lot)
+anova(fm3Oxide,fm4Oxide) # Reject H0
+anova(fm3Oxide) # no evidence of Site or Source Effects
+intervals(fm3Oxide)
+```
+
+
+---------------------------------------------
+
+
+### Productivity Scores for Machines and Workers
+
+
+Data on an experiment to compare three brands of machines used in an industrial process are presented in @Milliken92. Six workers were chosen randomly among the employees of a factory to operate each machine three times. The response is an overall productivity score taking into account the number and quality of components produced.
+
+```{r}
+library(nlme)
+data(Machines)
+head(Machines)
+?Machines
+```
+
+The next Figure shows that there are differences between machines and also some differences between workers. There is also very little variability in the productivity score for the same worker using the same machine. 
+
+```{r,fig.cap="*Productivity scores for three types of machines as used by six different workers. Scores take into account the number and the quality of components produced.*",fig.width=12}
+plot(Machines)
+```
+
+We can model the `Worker` factor as a random effect and `Machine` as fixed. 
+
+```{r,echo=TRUE}
+with(Machines,
+interaction.plot(Machine,Worker,score,las=1,lwd=1.4,col=1:6)
+)
+```
+
+First, we consider a model 
+$$
+    y_{ijk} = \mu_j + b_i + \epsilon_{ijk}, \quad i=1,...,6
+,\quad j=1,...,3,\quad k=1,...,3,
+$$
+with $b_i \sim \mathcal{N}(0,\sigma^2_b)$, $\epsilon_{ijk}\sim\mathcal{N}(0,\sigma^2)$.
+
+Fit this model in `R` using `lme` function
+
+```{r,eval=TRUE,echo=FALSE,warning=FALSE,message=FALSE}
+fm1Machine <- lme(score ~ Machine, data=Machines,random= ~1|Worker)
+#fm1Machine
+```
+
+Now consider a random interaction term, by $b_{ij}$, $i=1,...,6$, $j=1,...,3$, is
+$$
+    y_{ijk} = \mu_j + b_i + b_{ij} + \epsilon_{ijk}, \quad i=1,...,6
+,\quad j=1,...,3,\quad k=1,...,3,
+$$
+with $b_i \sim \mathcal{N}(0,\sigma_1^2)$, $b_{ij} \sim \mathcal{N}(0,\sigma_2^2)$, $\epsilon_{ijk}\sim\mathcal{N}(0,\sigma^2)$.
+
+This model has random effects at two levels: 
+
+* the effects $b_i$ for the worker and
+* the effects $b_{ij}$ for the type of machine within each worker. 
+
+Fit this model in `R` using `lme` function
+
+```{r,echo=FALSE,warning=FALSE,message=FALSE}
+fm2Machine <- update(fm1Machine,random= ~1|Worker/Machine)
+#fm2Machine
+```
+
+Apply a LRT 
+```{r,echo=FALSE,message=FALSE,eval=FALSE}
+anova(fm1Machine,fm2Machine)
+```
+Do you reject $H_0:\sigma_2^2 = 0$?
+
+```{r,echo=FALSE,message=FALSE}
+intervals(fm2Machine)
+```
+
+
+---------------------------------------------
+
+
+### Soy bean data
+
+Data from an experiment to compare growth patterns of two genotypes of soybeans: Plant Introduction #416937 (P), an experimental strain, and Forrest (F), a commercial variety.
+
+```{r}
+library(nlme)
+library(lattice)
+data(Soybean)
+?Soybean
+```
+
+```{r}
+Soy <- Soybean 
+Soy$logweight <- log(Soy$weight)
+xyplot(logweight ~ Time, Soy, groups = Plot, type = c('g','l','b')) # Spaghetti plot
+```
+
+#### Questions
+1. Fit a model for `logweight` based on `Variety` and `Year`
+
+```{r}
+g1 <- lme(logweight ~ Year + Variety + Time + I(Time^2),random = list(Plot = ~ 1 + Time), data = Soy, method = "REML") 
+# or g1 <- lme(logweight ~ Year + Variety + Time + I(Time^2),random =  ~ 1 + Time|Plot, data = Soy, method = "REML") 
+summary(g1)
+xyplot(fitted(g1) ~ Time, Soy, groups = Plot, type = c('g','l','b')) # Spaghetti plot
+```
+
+
+### Pig weights data
+
+```{r}
+library(SemiPar)
+data(pig.weights)
+library(lattice)
+xyplot(weight~num.weeks,data=pig.weights,groups=id.num,type=c("g","l"))
+head(pig.weights)
+```
+
+#### Questions
+1. Fit longitudinal model to explain the growth of the pigs. Use `lme`  or `lmer`
+
+```{r,echo=FALSE,eval=FALSE}
+library(nlme)
+
+m1 <- lme(weight~num.weeks,random=~1|id.num,data=pig.weights)
+library(lme4)
+
+print(xyplot(weight ~ num.weeks, groups = id.num, data = pig.weights,type = "l", col = 1))
+
+# same model
+pig.mm1 <- lmer(weight ~ num.weeks+(1+num.weeks|id.num),data=pig.weights)
+pig.mm0 <- lme(weight ~ num.weeks,random= ~1+num.weeks|id.num,data=pig.weights)
+
+summary(pig.mm1)
+summary(pig.mm0)
+
+library(lattice)
+library(latticeExtra)
+library(fields)
+attach(pig.weights)
+
+a <- xyplot(weight ~ num.weeks,groups=id.num,lwd=1,pch=19,
+			data=pig.weights,main="Pig weights",cex=.35)
+
+b <- xyplot(fitted(pig.mm1) ~ num.weeks,groups=id.num,lwd=1,pch=19,data=pig.weights,main="Pig weights",cex=.35,type=c("b","g"))
+
+a + as.layer(b)
+```
+
+
+### Titanic survivors data
+
+The dataset is a collection of data about some of the passengers, and the goal is to predict the survival (either 1 if the passenger survived or 0 if they did not) based on some features such as the class of service, the sex, the age etc. As you can see, we are going to use both categorical and continuous variables.
+
+```
+VARIABLE DESCRIPTIONS:
+pclass          Passenger Class
+                (1 = 1st; 2 = 2nd; 3 = 3rd)
+survival        Survival
+                (0 = No; 1 = Yes)
+name            Name
+sex             Sex
+age             Age
+sibsp           Number of Siblings/Spouses Aboard
+parch           Number of Parents/Children Aboard
+ticket          Ticket Number
+fare            Passenger Fare
+cabin           Cabin
+embarked        Port of Embarkation
+                (C = Cherbourg; Q = Queenstown; S = Southampton)
+boat            Lifeboat
+body            Body Identification Number
+home_dest       Home/Destination
+```
+Full description of [data set](http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/titanic3info.txt)
+
+Download data [here](http://idaejin.github.io/bcam-courses/neiker-2016/extra-data/titanic.zip)
+
+
+Read `train` and `test` set
+```{r}
+train <- read.csv('extra-data/titanic_train.csv',header=TRUE,row.names=1)
+ test <- read.csv('extra-data/titanic_test.csv',header=TRUE,row.names=1)
+```
+
+#### Questions:
+
+* Fit a logistic model with `pclass` as exploratory variable. What is the interpretation of the fitted model?
+* Find the best possible logistic regression model based on all the available variables.
+
+```{r,echo=FALSE,eval=FALSE}
+# Titanic data
+
+train <- read.csv('./extra-data/titanic_train.csv',header=TRUE,row.names=1)
+test <- read.csv('./extra-data/titanic_test.csv',header=TRUE,row.names=1)
+
+
+model <- glm(Survived ~.,family=binomial(link='logit'),data=train)
+summary(model)
+
+anova(model, test="Chisq")
+
+mod1 <- glm(Survived ~ as.factor(Pclass), family=binomial, data=train)
+summary(mod1)
+anova(mod1,test="Chisq")
+
+# interaction effect between passenger class and sex, as passenger class showed a much bigger difference in survival rate amongst the women compared to the men (i.e. Higher class women were much more likely to survive than lower class women, whereas first class Men were more likely to survive than 2nd or 3rd class men, but not by the same margin as amongst the women).  
+mod2 <- glm(Survived ~ Pclass + Sex  + Age + SibSp, family = binomial(logit), data = train)
+summary(mod2)
+anova(mod2,test="Chisq")
+
+mod3 <-  glm(Survived ~ Pclass + Sex + Pclass:Sex + Age + SibSp, family = binomial(logit), data = train)
+summary(mod3)
+anova(mod3,test="Chisq")
+
+
+# In the steps above, we briefly evaluated the fitting of the model, now we would like to see how the model is doing when predicting y on a new set of data. By setting the parameter type='response', R will output probabilities in the form of P(y=1|X). Our decision boundary will be 0.5. If P(y=1|X) > 0.5 then y = 1 otherwise y=0. Note that for some applications different decision boundaries could be a better option.
+
+fitted.results <- predict(mod3,newdata=test,type='response')
+fitted.results <- ifelse(fitted.results > 0.5,1,0)
+
+misClasificError <- mean(fitted.results != test$Survived)
+print(paste('Accuracy',1-misClasificError))
+
+# The 0.8075 accuracy on the test set is quite a good result. However, keep in mind that this result is somewhat dependent on the manual split of the data that I made earlier, therefore if you wish for a more precise score, you would be better off running some kind of cross validation such as k-fold cross validation.
+
+# Evaluate predictive performance
+
+
+library(ROCR)
+p <- predict(mod3, newdata=subset(test,select=c(2,3,4,5,6,7,8)), type="response")
+pr <- prediction(p, test$Survived)
+prf <- performance(pr, measure = "tpr", x.measure = "fpr")
+plot(prf)
+
+auc <- performance(pr, measure = "auc")
+auc <- auc@y.values[[1]]
+auc
+```
+
+
+
+```{r,eval=FALSE,echo=FALSE,message=FALSE}
+library(knitr)
+purl("extra-examples.Rmd",output="extra-examples.R")
+```
+
+
+
+# References
+
+
