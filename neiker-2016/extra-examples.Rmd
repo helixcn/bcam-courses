@@ -193,7 +193,7 @@ anova(fm1Machine,fm2Machine)
 ```
 Do you reject $H_0:\sigma_2^2 = 0$?
 
-```{r,echo=FALSE,message=FALSE}
+```{r,eval=FALSE,echo=FALSE,message=FALSE}
 intervals(fm2Machine)
 ```
 

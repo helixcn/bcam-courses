@@ -244,29 +244,6 @@ Apply a LRT
 Do you reject $H_0:\sigma_2^2 = 0$?
 
 
-```
-## Approximate 95% confidence intervals
-## 
-##  Fixed effects:
-##                 lower      est.    upper
-## (Intercept) 47.314062 52.355556 57.39705
-## MachineB     3.116071  7.966667 12.81726
-## MachineC     9.066071 13.916667 18.76726
-## attr(,"label")
-## [1] "Fixed effects:"
-## 
-##  Random Effects:
-##   Level: Worker 
-##                    lower    est.    upper
-## sd((Intercept)) 2.249773 4.78105 10.16033
-##   Level: Machine 
-##                    lower     est.    upper
-## sd((Intercept)) 2.382804 3.729532 5.837413
-## 
-##  Within-group standard error:
-##     lower      est.     upper 
-## 0.7627736 0.9615771 1.2121953
-```
 
 
 ---------------------------------------------
