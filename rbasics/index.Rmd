@@ -10,6 +10,9 @@ output:
   ioslides_presentation:
     highlight: kate
     incremental: no
+  beamer_presentation:
+    highlight: haddock
+    incremental: no
 subtitle: Basque Center for Applied Mathematics
 ---
 

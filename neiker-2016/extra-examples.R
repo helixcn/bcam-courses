@@ -11,7 +11,7 @@ xtabs(~ Lot + Wafer, Oxide)
 formula(Oxide) # grouping formula already defined
 
 ## ------------------------------------------------------------------------
-fm1Oxide <- lme(Thickness~1,Oxide) 
+fm1Oxide <- lme(Thickness~1,random=~1|Lot/Wafer,Oxide) 
 fm1Oxide
 
 ## ------------------------------------------------------------------------
@@ -33,6 +33,19 @@ ranef(fm1Oxide,level=1:2)
 
 # ??
 
+
+
+fm3Oxide <- lme(Thickness~Site+Source,random=~1|Lot/Wafer,data=Oxide)
+
+summary(fm3Oxide)
+
+fm4Oxide <- lme(Thickness~Site+Source,random=~1|Lot,data=Oxide)
+
+anova(fm3Oxide,fm4Oxide)
+
+
+
+
 ### Productivity Scores for Machines and Workers
 
 library(nlme)
@@ -52,6 +65,9 @@ interaction.plot(Machine,Worker,score,las=1,lwd=1.4,col=1:6)
 
 #??
 
+fm1Machine <- lme(score ~ Machine,random=~1|Worker,data=Machines)
+
+summary(fm1Machine)
 
 
 ### Soy bean data
@@ -61,6 +77,20 @@ data(Soybean)
 ?Soybean
 
 
+
+
+Soy <- Soybean 
+xyplot(weight ~ Time, Soy, groups = Plot, type = c('g','l','b'))
+
+head(Soy)
+
+Soy$logweight <- log(Soy$weight)
+xyplot(logweight ~ Time, Soy, groups = Plot, type = c('g','l','b')) # Spaghetti plot
+
+
+xyplot(logweight ~ Time|Year, Soy, groups = Plot, type = c('g','l','b')) # Spaghetti plot
+
+xyplot(fitted(g1) ~ Time|Year+Variety, Soy, groups = Plot, type = c('g','l','b')) # Spaghetti plot
 
 
 
