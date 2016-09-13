@@ -1307,7 +1307,7 @@ One common task is to plot multiple data sets on the same plot. In many situatio
 ```
 
 ```
-## [1] 0.9365663
+## [1] 0.6412437
 ```
 
 ```r
@@ -5335,9 +5335,9 @@ geocode("Union South, Madison, WI")
 <!-- - [http://manuals.bioinformatics.ucr.edu](http://manuals.bioinformatics.ucr.edu/home/programming-in-r#TOC-Control-Structures)  -->
 
 
-# Case studies
+<!-- # Case studies -->
 
-## The Forbes 2000 Ranking of the World's Biggest Companies (Year 2004)
+<!-- ## The Forbes 2000 Ranking of the World's Biggest Companies (Year 2004) -->
 
 <!-- The data handling and manipulation techniques explained in this chapter will be illustrated by means of a data set of 2000 world leading companies, the Forbes 2000 list for the year 2004 collected by Forbes Magazine. This list is originally available from `www.forbes.com` -->
 
