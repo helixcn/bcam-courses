@@ -811,7 +811,7 @@ pie(tab)
 
 1. The data.frame `VADeaths` contains the death rates per 1000 in Virginia (US) in 1940
 
-    + The death rates are measured per 1000 population per year. They are cross-classified by age group (rows) and population group (columns). The age groups are: 50–54, 55–59, 60–64, 65–69, 70–74 and the population groups are Rural/Male, Rural/Female, Urban/Male and Urban/Female.
+    + The death rates are measured per 1000 population per year. They are cross-classified by age group (rows) and population group (columns). The age groups are: 50â54, 55â59, 60â64, 65â69, 70â74 and the population groups are Rural/Male, Rural/Female, Urban/Male and Urban/Female.
 
 
 ```r

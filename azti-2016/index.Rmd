@@ -22,15 +22,15 @@ output:
 * **Requirements:**
     * Latest version of `R` software (download it [here](https://www.r-project.org))
     * [Rstudio](https://www.rstudio.com) installation is also recommended.
-    * Install the following libraries in `R` (copy the next commands to the `R` console).
+    * Install the following libraries in `R` (copy the next command to the `R` console).
 ```{r,eval=FALSE}
-install.packages(c("effects","ggplot2"))
+install.packages(c("MASS","DAAG","effects","ggplot2","gdata","foreign","Hmisc","xlsx","psych","graphics","gplots","calibrate","corrplot","RgoogleMaps","ggmap"))
 ```
 
 
 # Aims of this course
 
-The course will provide basic knowledge and abilities for using `R` as a work environment. To this end, the course will give an overview of tools offered by R, e.g. handling of matrices and data-sets, graphical illustrations, statistical tests and analyses, and programming in `R`. The aim is that in the end of the course everyone has reached some familiarity with `R`, and is able to continue working with it and search for help for more advanced `R` features.
+The course will provide basic knowledge and abilities for using `R` as a work environment. To this end, the course will give an overview of tools offered by `R`, e.g. handling of matrices and data-sets, graphical illustrations, statistical tests and analyses, and programming in `R`. The aim is that in the end of the course everyone has reached some familiarity with `R`, and is able to continue working with it and search for help for more advanced `R` features.
 
 # Pre-required knowledge
 
