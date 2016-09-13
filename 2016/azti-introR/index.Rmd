@@ -951,7 +951,7 @@ qqplot(qchisq(ppoints(500), df = 3), y,
 qqline(y, distribution = function(p) qchisq(p, df = 3),
        prob = c(0.1, 0.6), col = 2)
 ```
-If the two distributions being compared are identical, the Q-Q plot follows the $45บ$ line y = x.
+If the two distributions being compared are identical, the Q-Q plot follows the $45ยบ$ line y = x.
 
 
 ## Tables and Cross-classification
