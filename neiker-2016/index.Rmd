@@ -1,5 +1,5 @@
 ---
-title: '**Neiker-Tecnalia Course 2016**'
+title: '**Neiker-Tecnalia Course 2016  blabla**'
 subtitle: 'Introduction to Statistical Modelling'
 author: '*by Dae-Jin Lee*'
 date: ''
