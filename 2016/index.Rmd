@@ -40,7 +40,11 @@ No background knowledge about `R` or advance programming is needed. Some backgro
 -->
 
 
+# Material
 
+  *   [Examples of Data Analysis with `R`](http://idaejin.github.io/bcam-courses/2016/azti-introR/examples.html)
+
+  *   [Course material](http://idaejin.github.io/bcam-courses/2016/azti-introR/)
 
 
 
