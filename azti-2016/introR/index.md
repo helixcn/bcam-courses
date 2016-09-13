@@ -1307,7 +1307,7 @@ One common task is to plot multiple data sets on the same plot. In many situatio
 ```
 
 ```
-## [1] 0.6412437
+## [1] 0.5383699
 ```
 
 ```r
@@ -5325,58 +5325,9 @@ geocode("Union South, Madison, WI")
 ## 1 -89.29914 42.77606
 ```
 
+# Case studies
 
-
-
-<!-- # References -->
-
-<!-- - [R tutorial http://www.cyclismo.org/tutorial/R](http://www.cyclismo.org/tutorial/R) -->
-
-<!-- - [http://manuals.bioinformatics.ucr.edu](http://manuals.bioinformatics.ucr.edu/home/programming-in-r#TOC-Control-Structures)  -->
-
-
-<!-- # Case studies -->
-
-<!-- ## The Forbes 2000 Ranking of the World's Biggest Companies (Year 2004) -->
-
-<!-- The data handling and manipulation techniques explained in this chapter will be illustrated by means of a data set of 2000 world leading companies, the Forbes 2000 list for the year 2004 collected by Forbes Magazine. This list is originally available from `www.forbes.com` -->
-
-
-<!-- ```{r} -->
-<!-- library("HSAUR2") -->
-<!-- data("Forbes2000") -->
-<!-- ``` -->
-
-<!-- **Question:** -->
-
-<!--   1. Calculate the median profit for the companies in the US and the median profit for the companies in the UK, France and Germany. -->
-<!--   2. Find all German companies with negative profit. -->
-<!--   3. To which business category do most of the Bermuda island companies belong? -->
-<!--   4. For the 50 companies in the Forbes data set with the highest profits, plot sales against assets (or some suitable transformation of each variable), labelling each point with the appropriate country name which may need to be abbreviated (using abbreviate) to avoid making the plot look too "messy". -->
-<!--   5. Find the average value of sales for the companies in each country in the Forbes data set, and find the number of companies in each country with profits above 5 billion US dollars. -->
-
-
-<!-- 1. Use the `View` function  -->
-<!-- ```{r,eval=FALSE} -->
-<!-- View(Forbes2000) -->
-<!-- ``` -->
-
-<!-- 2.  -->
-<!-- ```{r} -->
-<!-- ### number of countries -->
-<!-- length(levels(Forbes2000$country)) -->
-<!-- ### number of industries -->
-<!-- length(levels(Forbes2000$category)) -->
-<!-- # Forbes2000[,"name"] -->
-<!-- table(Forbes2000[,"category"]) -->
-<!-- ``` -->
-
-<!-- 3.  -->
-<!-- ```{r} -->
-<!-- top50 <- Forbes2000[1:50,] -->
-<!-- ``` -->
-
-
+TO DO
 
 
 
