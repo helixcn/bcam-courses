@@ -1307,7 +1307,7 @@ One common task is to plot multiple data sets on the same plot. In many situatio
 ```
 
 ```
-## [1] 0.7432941
+## [1] 0.5342141
 ```
 
 ```r
