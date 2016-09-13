@@ -1307,7 +1307,7 @@ One common task is to plot multiple data sets on the same plot. In many situatio
 ```
 
 ```
-## [1] 0.5342141
+## [1] 0.9365663
 ```
 
 ```r
@@ -1464,7 +1464,7 @@ qqline(y, distribution = function(p) qchisq(p, df = 3),
 ```
 
 ![](index_files/figure-html/unnamed-chunk-88-1.png)<!-- -->
-If the two distributions being compared are identical, the Q-Q plot follows the $45º$ line y = x.
+If the two distributions being compared are identical, the Q-Q plot follows the $45Âº$ line y = x.
 
 
 ## Tables and Cross-classification
@@ -5123,34 +5123,6 @@ Advantages of `ggplot2`
 
 ```r
 library(ggplot2)
-```
-
-```
-## 
-## Attaching package: 'ggplot2'
-```
-
-```
-## The following object is masked from 'mtcars':
-## 
-##     mpg
-## 
-## The following object is masked from 'mtcars':
-## 
-##     mpg
-## 
-## The following object is masked from 'mtcars':
-## 
-##     mpg
-```
-
-```
-## The following objects are masked from 'package:psych':
-## 
-##     %+%, alpha
-```
-
-```r
 ?qplot
 qplot(displ, hwy, data = mpg, colour = factor(cyl))
 ```
@@ -5228,7 +5200,7 @@ p + geom_point(colour = "darkblue")
 
 
 ```r
-filepath <- "http://idaejin.github.io/bcam-courses/azti-2016/data/ggplot2_data.txt"
+filepath <- "http://idaejin.github.io/bcam-courses/azti-2016/introR/data/ggplot2_data.txt"
 
 myData<-read.table(file=url(filepath),header=TRUE,sep="\t")
 

@@ -3219,7 +3219,7 @@ Advantages of `ggplot2`
   
   
   
-```{r}
+```{r,message=FALSE,warning=FALSE}
 library(ggplot2)
 ?qplot
 qplot(displ, hwy, data = mpg, colour = factor(cyl))
@@ -3244,7 +3244,7 @@ p + geom_point(colour = "darkblue")
 ```
 
 ```{r}
-filepath <- "http://idaejin.github.io/bcam-courses/azti-2016/data/ggplot2_data.txt"
+filepath <- "http://idaejin.github.io/bcam-courses/azti-2016/introR/data/ggplot2_data.txt"
 
 myData<-read.table(file=url(filepath),header=TRUE,sep="\t")
 
@@ -3309,9 +3309,9 @@ geocode("Union South, Madison, WI")
 <!-- - [http://manuals.bioinformatics.ucr.edu](http://manuals.bioinformatics.ucr.edu/home/programming-in-r#TOC-Control-Structures)  -->
 
 
-# Case studies
+<!-- # Case studies -->
 
-## The Forbes 2000 Ranking of the World's Biggest Companies (Year 2004)
+<!-- ## The Forbes 2000 Ranking of the World's Biggest Companies (Year 2004) -->
 
 <!-- The data handling and manipulation techniques explained in this chapter will be illustrated by means of a data set of 2000 world leading companies, the Forbes 2000 list for the year 2004 collected by Forbes Magazine. This list is originally available from `www.forbes.com` -->
 
