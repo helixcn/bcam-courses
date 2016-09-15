@@ -38,7 +38,7 @@ No background knowledge about `R` or advance programming is needed. Some backgro
   *   [Course material](http://idaejin.github.io/bcam-courses/azti-2016/introR/)
 
 
-
+  * [Additional material: R for Data Science](http://r4ds.had.co.nz/)
 
 -----------------------------------------------------
 

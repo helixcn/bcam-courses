@@ -1307,7 +1307,7 @@ One common task is to plot multiple data sets on the same plot. In many situatio
 ```
 
 ```
-## [1] 0.5383699
+## [1] 0.7387687
 ```
 
 ```r
@@ -2467,6 +2467,12 @@ lapply(X,FUN)
 sapply(X,FUN)
 ```
 
+
+```r
+## Creates a sample list
+mylist <- as.list(mtcars[,c(1,4,6)])
+mylist
+```
 
 ```
 ## $mpg
@@ -5272,24 +5278,6 @@ With the package `RgoogleMaps`, you can draw a background from Google Maps!
 
 ```r
 require(RgoogleMaps)
-```
-
-```
-## Loading required package: RgoogleMaps
-```
-
-```
-## 
-## Attaching package: 'RgoogleMaps'
-```
-
-```
-## The following object is masked from 'package:TeachingDemos':
-## 
-##     updateusr
-```
-
-```r
 lat <- 43.073888
 lon <- -89.405236
 center <- c(lat, lon)
@@ -5306,18 +5294,7 @@ text(lat,lon, "X") # I missed the class!
 
 ```r
 require(ggmap)
-```
-
-```
-## Loading required package: ggmap
-```
-
-```r
 geocode("Union South, Madison, WI")
-```
-
-```
-## Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=Union%20South,%20Madison,%20WI&sensor=false
 ```
 
 ```
@@ -5327,7 +5304,487 @@ geocode("Union South, Madison, WI")
 
 # Case studies
 
-TO DO
+
+## The Forbes 2000 Ranking of the World's Biggest Companies (Year 2004)
+
+The data handling and manipulation techniques explained will be illustrated by means of a data set of 2000 world leading companies, the Forbes 2000 list for the year 2004 collected by Forbes Magazine. This list is originally available from `www.forbes.com`
+
+Here we show a subset of the data set:
+
+
+```r
+library("HSAUR2")
+data("Forbes2000")
+```
+
+ rank  name                  country          category                 sales   profits    assets   marketvalue
+-----  --------------------  ---------------  ---------------------  -------  --------  --------  ------------
+    1  Citigroup             United States    Banking                  94.71     17.85   1264.03        255.30
+    2  General Electric      United States    Conglomerates           134.19     15.59    626.93        328.54
+    3  American Intl Group   United States    Insurance                76.66      6.46    647.66        194.87
+    4  ExxonMobil            United States    Oil & gas operations    222.88     20.96    166.99        277.02
+    5  BP                    United Kingdom   Oil & gas operations    232.57     10.27    177.57        173.54
+    6  Bank of America       United States    Banking                  49.01     10.81    736.45        117.55
+
+The data consists of 2000 observations on the following 8 variables.
+    
+  * `rank`: the ranking of the company.
+  * `name`: the name of the company.
+  * `country`: a factor giving the country the company is situated in.
+  * `category`: a factor describing the products the company produces.
+  * `sales`: the amount of sales of the company in billion USD.
+  * `profits`: the profit of the company in billion USD. 
+  * `assets`: the assets of the company in billion USD.
+  * `marketvalue`: the market value of the company in billion USD.
+    
+**Types of variables**
+
+`R` command
+
+
+```r
+str(Forbes2000)
+```
+
+```
+## 'data.frame':	2000 obs. of  8 variables:
+##  $ rank       : int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ name       : chr  "Citigroup" "General Electric" "American Intl Group" "ExxonMobil" ...
+##  $ country    : Factor w/ 61 levels "Africa","Australia",..: 60 60 60 60 56 60 56 28 60 60 ...
+##  $ category   : Factor w/ 27 levels "Aerospace & defense",..: 2 6 16 19 19 2 2 8 9 20 ...
+##  $ sales      : num  94.7 134.2 76.7 222.9 232.6 ...
+##  $ profits    : num  17.85 15.59 6.46 20.96 10.27 ...
+##  $ assets     : num  1264 627 648 167 178 ...
+##  $ marketvalue: num  255 329 195 277 174 ...
+```
+
+**Factor levels**
+
+Nominal measurements are represented by factor variables in `R`, such as the country of the company or the category of the business segment.
+
+A factor in `R` is divided into levels
+
+
+
+How many countries are on the top 2000 ranking?
+
+`R` command
+
+
+
+```r
+nlevels(Forbes2000[,"country"])
+```
+
+```
+## [1] 61
+```
+
+Which countries?
+
+`R` command
+
+
+```r
+levels(Forbes2000[,"country"])
+```
+
+```
+##  [1] "Africa"                       "Australia"                   
+##  [3] "Australia/ United Kingdom"    "Austria"                     
+##  [5] "Bahamas"                      "Belgium"                     
+##  [7] "Bermuda"                      "Brazil"                      
+##  [9] "Canada"                       "Cayman Islands"              
+## [11] "Chile"                        "China"                       
+## [13] "Czech Republic"               "Denmark"                     
+## [15] "Finland"                      "France"                      
+## [17] "France/ United Kingdom"       "Germany"                     
+## [19] "Greece"                       "Hong Kong/China"             
+## [21] "Hungary"                      "India"                       
+## [23] "Indonesia"                    "Ireland"                     
+## [25] "Islands"                      "Israel"                      
+## [27] "Italy"                        "Japan"                       
+## [29] "Jordan"                       "Kong/China"                  
+## [31] "Korea"                        "Liberia"                     
+## [33] "Luxembourg"                   "Malaysia"                    
+## [35] "Mexico"                       "Netherlands"                 
+## [37] "Netherlands/ United Kingdom"  "New Zealand"                 
+## [39] "Norway"                       "Pakistan"                    
+## [41] "Panama/ United Kingdom"       "Peru"                        
+## [43] "Philippines"                  "Poland"                      
+## [45] "Portugal"                     "Russia"                      
+## [47] "Singapore"                    "South Africa"                
+## [49] "South Korea"                  "Spain"                       
+## [51] "Sweden"                       "Switzerland"                 
+## [53] "Taiwan"                       "Thailand"                    
+## [55] "Turkey"                       "United Kingdom"              
+## [57] "United Kingdom/ Australia"    "United Kingdom/ Netherlands" 
+## [59] "United Kingdom/ South Africa" "United States"               
+## [61] "Venezuela"
+```
+
+And in the top 20?
+
+`R` commands
+
+
+```r
+top20 <- droplevels(subset(Forbes2000,rank<=20))
+levels(top20[,"country"])
+```
+
+```
+## [1] "France"                      "Japan"                      
+## [3] "Netherlands"                 "Netherlands/ United Kingdom"
+## [5] "Switzerland"                 "United Kingdom"             
+## [7] "United States"
+```
+
+As a simple summary statistic, the frequencies of the levels of such a factor variable can be found from
+
+
+```r
+table(top20[,"country"])
+```
+
+```
+## 
+##                      France                       Japan 
+##                           2                           1 
+##                 Netherlands Netherlands/ United Kingdom 
+##                           1                           1 
+##                 Switzerland              United Kingdom 
+##                           1                           3 
+##               United States 
+##                          11
+```
+
+
+Which type of companies?
+
+
+```r
+levels(Forbes2000[,"category"])
+```
+
+```
+##  [1] "Aerospace & defense"              "Banking"                         
+##  [3] "Business services & supplies"     "Capital goods"                   
+##  [5] "Chemicals"                        "Conglomerates"                   
+##  [7] "Construction"                     "Consumer durables"               
+##  [9] "Diversified financials"           "Drugs & biotechnology"           
+## [11] "Food drink & tobacco"             "Food markets"                    
+## [13] "Health care equipment & services" "Hotels restaurants & leisure"    
+## [15] "Household & personal products"    "Insurance"                       
+## [17] "Materials"                        "Media"                           
+## [19] "Oil & gas operations"             "Retailing"                       
+## [21] "Semiconductors"                   "Software & services"             
+## [23] "Technology hardware & equipment"  "Telecommunications services"     
+## [25] "Trading companies"                "Transportation"                  
+## [27] "Utilities"
+```
+
+How many of each category?
+
+
+```r
+table(Forbes2000[,"category"])
+```
+
+```
+## 
+##              Aerospace & defense                          Banking 
+##                               19                              313 
+##     Business services & supplies                    Capital goods 
+##                               70                               53 
+##                        Chemicals                    Conglomerates 
+##                               50                               31 
+##                     Construction                Consumer durables 
+##                               79                               74 
+##           Diversified financials            Drugs & biotechnology 
+##                              158                               45 
+##             Food drink & tobacco                     Food markets 
+##                               83                               33 
+## Health care equipment & services     Hotels restaurants & leisure 
+##                               65                               37 
+##    Household & personal products                        Insurance 
+##                               44                              112 
+##                        Materials                            Media 
+##                               97                               61 
+##             Oil & gas operations                        Retailing 
+##                               90                               88 
+##                   Semiconductors              Software & services 
+##                               26                               31 
+##  Technology hardware & equipment      Telecommunications services 
+##                               59                               67 
+##                Trading companies                   Transportation 
+##                               25                               80 
+##                        Utilities 
+##                              110
+```
+
+A simple summary statistics such as the mean, median, quantiles and range can be found from continuous variables such as `sales`
+
+`R` command
+
+
+```r
+summary(Forbes2000[,"sales"])
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   0.010   2.018   4.365   9.697   9.548 256.300
+```
+
+**Simple Graphics**
+
+*Chambers et al. (1983)*, "there is no statistical tool that is as powerful as a well chosen graph"
+
+
+Histograms and boxplots
+
+
+```r
+layout(matrix(1:4, nrow = 2,ncol=2))
+hist(Forbes2000$marketvalue, col="lightgrey",main="Histogram of market value")
+hist(log(Forbes2000$marketvalue),col="lightgrey",main="Histogram of log(market value)")
+boxplot(Forbes2000$marketvalue, col="lightgrey",main="Boxplot of market value")
+boxplot(log(Forbes2000$marketvalue),col="lightgrey",main="Boxplot of log(market value)")
+```
+
+![](index_files/figure-html/unnamed-chunk-252-1.png)<!-- -->
+
+Scatterplots to visualize the relationship betwen variables
+
+
+![](index_files/figure-html/unnamed-chunk-253-1.png)<!-- -->
+
+**Cool Graphics**
+
+Using the `ggplot2` library
+
+
+```r
+library(ggplot2)
+#?qplot
+qplot(marketvalue,data = Forbes2000)
+```
+
+![](index_files/figure-html/unnamed-chunk-254-1.png)<!-- -->
+
+```r
+qplot(log(marketvalue),  data = Forbes2000)
+```
+
+![](index_files/figure-html/unnamed-chunk-254-2.png)<!-- -->
+
+```r
+qplot(marketvalue,sales, data=Forbes2000)
+```
+
+![](index_files/figure-html/unnamed-chunk-254-3.png)<!-- -->
+
+```r
+qplot(log(marketvalue),log(sales),size=assets,alpha = I(0.1),data=Forbes2000)
+```
+
+![](index_files/figure-html/unnamed-chunk-254-4.png)<!-- -->
+
+
+
+```r
+library(calibrate)
+profits_all = na.omit(Forbes2000$profits)  # all_profts without No data
+order_profits = order(profits_all)     # index of the profitable companies in decreasing order
+top_50 = rev(order_profits)[1:50]      # top 50 profitable companies
+
+sales = Forbes2000$sales[top_50]       # sales of the 50 top profitable companies
+assets = Forbes2000$assets[top_50]     # assets of the 50 top profitable companies
+countries = Forbes2000$country[top_50] # countries where the 50 top profitable companies are found
+
+plot(assets,sales,pch =1)
+textxy(assets,sales, abbreviate(countries,2),col = "blue",cex=0.5)  # used to put the countries where the companies are found
+title(main = "Sales and Assets in billion USD \n of the 50 most profitable companies ", col.main = "gray")
+```
+
+![](index_files/figure-html/unnamed-chunk-255-1.png)<!-- -->
+
+**Graphics by factor**
+
+Boxplots of the logarithms of the market value for four selected countries, the width of the boxes is proportional to the square roots of the number of companies.
+
+
+```r
+tmp <- subset(Forbes2000,
+        country %in% c("United Kingdom", "Germany",
+                       "India", "Turkey"))
+tmp$country <- tmp$country[,drop = TRUE]
+plot(log(marketvalue) ~ country, data = tmp, col = 3:6,
+       ylab = "log(marketvalue)", varwidth = TRUE)
+```
+
+![](index_files/figure-html/unnamed-chunk-256-1.png)<!-- -->
+
+Scatterplots by country
+
+
+```r
+library(lattice)
+xyplot(log(marketvalue)~log(sales)|country,data=tmp)
+```
+
+![](index_files/figure-html/unnamed-chunk-257-1.png)<!-- -->
+
+<!-- ## Questions -->
+
+
+<!--   1. Calculate the median profit for the companies in the US and the median profit for the companies in the UK, France and Germany. -->
+<!--   2. Find all German companies with negative profit. -->
+<!--   3. To which business category do most of the Bermuda island companies belong? -->
+<!--   4. For the 50 companies in the Forbes data set with the highest profits, plot sales against assets (or some suitable transformation of each variable), labelling each point with the appropriate country name which may need to be abbreviated (using abbreviate) to avoid making the plot look too "messy". -->
+<!--   5. Find the average value of sales for the companies in each country in the Forbes data set, and find the number of companies in each country with profits above 5 billion US dollars. -->
+
+ 
+-----------------------------------------
+
+
+## Malignant Melanoma in the USA
+
+Fisher and Belle (1993) report mortality rates due to malignant melanoma of the skin for white males during the period 1950-1969, for each state on the US mainland. 
+
+
+
+```r
+data("USmelanoma",package="HSAUR2")
+```
+
+A data consists of 48 observations on the following 5 variables.
+
+  * `mortality`: number of white males died due to malignant melanoma 1950-1969 per one million inhabitants.
+
+  * `latitude`: latitude of the geographic centre of the state.
+
+  * `longitude`: longitude of the geographic centre of each state.
+
+  * `ocean`: a binary variable indicating contiguity to an ocean at levels `no` or `yes`.
+
+
+**Plotting mortality rates**
+
+
+```r
+xr <- range(USmelanoma$mortality) * c(0.9, 1.1)
+```
+
+Let us plot mortality rates in 
+
+
+```r
+#layout(matrix(1:2, nrow = 2))
+boxplot(USmelanoma$mortality, ylim = xr, horizontal = TRUE,xlab = "Mortality")
+```
+
+<img src="index_files/figure-html/unnamed-chunk-260-1.png" style="display: block; margin: auto;" />
+
+```r
+hist(USmelanoma$mortality, xlim = xr, xlab = "", main = "",axes = FALSE, ylab = "")
+axis(1)
+```
+
+<img src="index_files/figure-html/unnamed-chunk-260-2.png" style="display: block; margin: auto;" />
+
+Malignant melanoma mortality rates by contiguity to an ocean
+
+
+```r
+plot(mortality ~ ocean, data = USmelanoma, xlab = "Contiguity to an ocean", ylab = "Mortality")
+```
+
+<img src="index_files/figure-html/unnamed-chunk-261-1.png" style="display: block; margin: auto;" />
+
+Histograms can often be misleading for displaying distributions because of their dependence on the number of classes chosen. An alternative is to formally estimate the density function of a variable and then plot the resulting estimate.
+
+The estimated densities of malignant melanoma mortality rates by contiguity to an ocean looks like this:
+
+
+```r
+dyes <- with(USmelanoma, density(mortality[ocean == "yes"]))
+dno <- with(USmelanoma, density(mortality[ocean == "no"]))
+plot(dyes, lty = 1, xlim = xr, main = "", ylim = c(0, 0.018))
+lines(dno, lty = 2)
+legend("topright", lty = 1:2, legend = c("Coastal State","Land State"), bty = "n")
+```
+
+<img src="index_files/figure-html/unnamed-chunk-262-1.png" style="display: block; margin: auto;" />
+
+
+Now we might move on to look at how mortality rates are related to the geographic location of a state as represented by the latitude and longitude of the centre of the state. 
+
+
+```r
+layout(matrix(1:2, ncol = 2))
+plot(mortality ~ -longitude, data = USmelanoma)
+plot(mortality ~ latitude, data = USmelanoma)
+```
+
+<img src="index_files/figure-html/unnamed-chunk-263-1.png" style="display: block; margin: auto;" />
+
+## Mapping mortality rates
+
+The data contains the longitude and latitude of the centroids 
+
+
+```r
+plot(-USmelanoma$longitude,USmelanoma$latitude,asp=1.5,cex=.3,pch=19,col="blue")
+```
+
+<img src="index_files/figure-html/unnamed-chunk-264-1.png" style="display: block; margin: auto;" />
+
+
+
+```r
+library("sp")
+library("maps")
+library("maptools")
+library("RColorBrewer")
+map("state")
+points(-USmelanoma$longitude,USmelanoma$latitude,asp=1.5,cex=.3,pch=19,col="blue")
+```
+
+<img src="index_files/figure-html/unnamed-chunk-265-1.png" style="display: block; margin: auto;" />
+
+
+```r
+#Create a function to generate a continuous color palette
+rbPal <- colorRampPalette(c('blue','grey','red'))
+#This adds a column of color values
+# based on the y values
+USmelanoma$Col <- (rbPal(10)[as.numeric(cut(USmelanoma$mortality,breaks = 10))])
+map("state",xlim=c(-135,-65))
+points(-USmelanoma$longitude,USmelanoma$latitude,col=USmelanoma$Col,asp=1.5,pch=19,cex=1.2)
+legend("topleft",title="Decile",legend=quantile(USmelanoma$mortality,seq(0.1,1,l=10)),col =rbPal(10),pch=15,cex=1.,box.col = NA)
+```
+
+<img src="index_files/figure-html/unnamed-chunk-266-1.png" style="display: block; margin: auto;" />
+
+
+```r
+states <- map("state", plot = FALSE, fill = TRUE)
+IDs <- sapply(strsplit(states$names, ":"), function(x) x[1])
+rownames(USmelanoma) <- tolower(rownames(USmelanoma))
+
+us1 <- map2SpatialPolygons(states, IDs=IDs,proj4string = CRS("+proj=longlat +datum=WGS84"))
+us2 <- SpatialPolygonsDataFrame(us1, USmelanoma)
+
+col <- colorRampPalette(c('blue', 'gray80','red'))
+
+spplot(us2, "mortality", col.regions = col(200),par.settings = list(axis.line = list(col =  'transparent')),main="Map of the US showing malignant melanoma mortality rates")
+```
+
+<img src="index_files/figure-html/unnamed-chunk-267-1.png" style="display: block; margin: auto;" />
+
+
 
 
 
