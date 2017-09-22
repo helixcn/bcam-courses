@@ -68,7 +68,7 @@ install.packages(c("MASS","DAAG","effects","ggplot2","gdata","foreign","Hmisc","
 
   * [Algunos ejemplos con `R`](http://idaejin.github.io/bcam-courses/R/intro/examples.html)
 
-  * [Material del curso](http://idaejin.github.io/datahack)
+  * [Material del curso](http://idaejin.github.io/bcam-courses/R/datahack)
 
 
   * [Material adicional (en inglés): `R` for Data Science](http://r4ds.had.co.nz/) o [aquí](http://courses.had.co.nz/)
@@ -80,6 +80,10 @@ install.packages(c("MASS","DAAG","effects","ggplot2","gdata","foreign","Hmisc","
       + [Plots to avoid](http://genomicsclass.github.io/book/pages/plots_to_avoid.html)
       
   * The **German Credit data set** [(link)](http://ftp.ics.uci.edu/pub/machine-learning-databases/statlog/german/) contains observations on 30 variables for 1000 past applicants for credit. Each applicant was rated as “good credit” (700 cases) or “bad credit” (300 cases).
+  
+  * **Boston Housing data set** [(link)](http://lib.stat.cmu.edu/datasets/boston). This dataset contains information collected by the U.S Census Service concerning housing in the area of Boston Mass.
+  
+  * ***Pima Indians data set** [(link)](https://archive.ics.uci.edu/ml/machine-learning-databases/pima-indians-diabetes/pima-indians-diabetes.data). This dataset is originally from the National Institute of Diabetes and Digestive and Kidney Diseases. The objective is to predict based on diagnostic measurements whether a patient has diabetes.
   
 -----------------------------------------------------
 
