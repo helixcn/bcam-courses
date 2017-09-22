@@ -1,7 +1,7 @@
 ---
 title: '**Curso de Estadística básica para Data Scientists**'
 author: "Dae-Jin Lee < lee.daejin@gmail.com >"
-date: '**TEMA 2. Estadística descriptiva univariante**'
+date: 'TEMA 2. Estadística descriptiva univariante'
 output:
   html_document:
     highlight: haddock
