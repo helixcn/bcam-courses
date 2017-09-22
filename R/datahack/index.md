@@ -11,7 +11,7 @@ Este curso es una introducción a la Estadística con el software estadístico `
 
 # Programa del curso:
 
-  [1. Introducción al software estadístico `R`](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema1.html)[*.pdf](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema1.pdf)
+  [1. Introducción al software estadístico `R`](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema1.html)[(*.pdf)](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema1.pdf)
   
   [2. Estadística descriptiva univariante](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema2.html) [(*.pdf)](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema2.pdf)
   
