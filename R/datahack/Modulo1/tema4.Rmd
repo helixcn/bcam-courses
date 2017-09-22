@@ -38,7 +38,7 @@ bibliography: MMrefs.bib
 
 \newpage
 
-[Regresar a la página principal](https://idaejin.github.io/datahack/)
+[Regresar a la página principal](https://idaejin.github.io/bcam-courses/R/datahack/)
 
 
 
