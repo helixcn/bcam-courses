@@ -11,13 +11,13 @@ Este curso es una introducción a la Estadística con el software estadístico `
 
 # Programa del curso:
 
-  [1. Introducción al software estadístico `R`](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema1.html)
+  [1. Introducción al software estadístico `R`](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema1.html)[*.pdf](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema1.pdf)
   
-  [2. Estadística descriptiva univariante](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema2.html)
+  [2. Estadística descriptiva univariante](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema2.html)[*.pdf](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema2.pdf)
   
-  [3.  Estadística descriptiva bivariante](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema3.html)
+  [3.  Estadística descriptiva bivariante](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema3.html)[*.pdf](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema3.pdf)
   
-  [4.  Variables Aleatorias y probabilidad](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema4.html)
+  [4.  Variables Aleatorias y probabilidad](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema4.html)[*.pdf](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema4.pdf)
   
   5.  Introducción a la inferencia estadística
   
