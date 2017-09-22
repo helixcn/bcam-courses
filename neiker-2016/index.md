@@ -1,4 +1,4 @@
-# **Neiker-Tecnalia Course 2016  blabla**
+# **Neiker-Tecnalia Course 2016**
 *by Dae-Jin Lee*  
   
 

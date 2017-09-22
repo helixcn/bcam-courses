@@ -3,16 +3,16 @@ title: '**R** basics for beginners'
 author: "Dae-Jin Lee"
 date: "<http://idaejin.github.io/bcam-courses>"
 output:
-  slidy_presentation:
-    fig_caption: yes
-    highlight: haddock
-    keep_md: yes
   ioslides_presentation:
     highlight: kate
     incremental: no
   beamer_presentation:
     highlight: haddock
     incremental: no
+  slidy_presentation:
+    fig_caption: yes
+    highlight: haddock
+    keep_md: yes
 subtitle: Basque Center for Applied Mathematics
 ---
 

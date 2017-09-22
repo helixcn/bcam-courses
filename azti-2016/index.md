@@ -35,7 +35,7 @@ No background knowledge about `R` or advance programming is needed. Some backgro
 
   *   [Examples of Data Analysis with `R`](http://idaejin.github.io/bcam-courses/azti-2016/introR/examples.html)
 
-  * [Course material](http://idaejin.github.io/bcam-courses/azti-2016/introR/) You can also download a pdf version  [introR.pdf](http://idaejin.github.io/bcam-courses/azti-2016/introR/introR.pdf)
+  * [Course material](http://idaejin.github.io/bcam-courses/azti-2016/introR/) You can also download a pdf version  [introR.pdf](https://github.com/idaejin/bcam-courses/raw/gh-pages/azti-2016/introR/IntroR.pdf)
 
 
   * [Additional material: R for Data Science](http://r4ds.had.co.nz/)

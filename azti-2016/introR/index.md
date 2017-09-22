@@ -1,6 +1,6 @@
-# **Introduction to `R` statistical software**
+# **Introduction to Statistical Modelling with `R`**
 Dae-Jin Lee < dlee@bcamath.org >  
-Azti - Tecnalia  
+October 2016  
 
 
 ***********
@@ -1307,7 +1307,7 @@ One common task is to plot multiple data sets on the same plot. In many situatio
 ```
 
 ```
-## [1] 0.7387687
+## [1] 0.5210604
 ```
 
 ```r
