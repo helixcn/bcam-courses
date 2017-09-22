@@ -1,0 +1,95 @@
+# **Curso de Estadística básica para Data Scientists con `R`**
+Dae-Jin Lee < lee.daejin@gmail.com >  
+  
+<img src="http://www.datahack.es/wp-content/uploads/2015/10/LogoWhite.png" style="width: 150px;" align="right">
+
+----------------------------
+
+# Resumen
+
+Este curso es una introducción a la Estadística con el software estadístico `R`. El curso alternará conceptos teóricos con el uso del paquete Estadístico `R` y el análisis de datos reales. El objetivo es adquirir los conocimientos básicos para el análisis e interpretación de una base de datos, su representación gráfica, métodos estadísticos básicos y programación básica en `R`.
+
+# Programa del curso:
+
+  [1. Introducción al software estadístico `R`](http://idaejin.github.io/datahack/Modulo1/tema1.html)
+  
+  [2. Estadística descriptiva univariante](http://idaejin.github.io/datahack/Modulo1/tema2.html)
+  
+  3.  Estadística descriptiva bivariante
+  
+  4.  Variables Aleatorias y probabilidad 
+  
+  5.  Introducción a la inferencia estadística
+  
+  6.  Modelos lineales
+  
+  7.  Regresión para datos binarios y de conteo
+  
+  8.  Análisis de series temporales
+  
+  9.  Casos de estudio
+  
+  
+  
+# Requisitos
+
+  * Última versión version del software `R` (<a href="https://www.r-project.org" target="_blank">Descargar en `https://www.r-project.org`</a>)
+  * Se recomienda la interfaz de Rstudio (<a href="https://www.rstudio.com" target="_blank">Descargar en `https://www.rstudio.com`</a>).
+  
+# Evaluación 
+
+El objetivo final de este módulo será en análisis de una base de datos para realizar un estudio estadístico descriptivo completo. El conjunto de datos contiene la actividad de ventas de dispositivos móviles y electrónicos por tienda / Región.
+
+  - Estadística Descriptiva de las Variables
+  
+  - Intervalos de Confianza
+  
+  - Contrastes de Hipótesis
+  
+  - Regresiones y análisis Multivariante y Cluster
+  
+
+**Fecha de entrega: 16 de octubre**
+
+
+<!---
+
+```r
+install.packages(c("MASS","DAAG","effects","ggplot2","gdata","foreign","Hmisc","xlsx","psych","graphics","gplots","calibrate","corrplot","RgoogleMaps","ggmap"))
+```
+--->
+
+
+<!--* **Download all material** [here](http://idaejin.github.io/bcam-courses/neiker-2016/material.zip)
+-->
+
+
+# Material
+
+  * [Algunos ejemplos con `R`](http://idaejin.github.io/bcam-courses/R/intro/examples.html)
+
+  * [Material del curso](http://idaejin.github.io/datahack)
+
+
+  * [Material adicional (en inglés): `R` for Data Science](http://r4ds.had.co.nz/) o [aquí](http://courses.had.co.nz/)
+
+  * Otros enlaces de interés (en inglés):
+  
+      + [Karl Broman's talks](http://kbroman.org/pages/talks.html)
+      
+      + [Plots to avoid](http://genomicsclass.github.io/book/pages/plots_to_avoid.html)
+      
+      
+-----------------------------------------------------
+
+**Contacto:**
+
+  **email:** dlee[at]bcamath.org / lee.daejin[at]gmail.com
+
+  **Github** [idaejin](https://github.com/idaejin/)
+
+  **BCAM webpage** [dlee](http://www.bcamath.org/en/people/dlee)
+
+<img src="https://media.licdn.com/media/AAEAAQAAAAAAAATvAAAAJGVlNjhkYzFkLThlZWItNDkwYi1hZDIyLWY3YTgxNGEyNzlkNg.png" style="width: 150px;" align="right">
+
+

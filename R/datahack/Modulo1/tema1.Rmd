@@ -1,0 +1,1767 @@
+---
+title: '**Curso de Estadística básica para Data Scientists**'
+author: "Dae-Jin Lee < lee.daejin@gmail.com >"
+date: '**TEMA 1. Introducción a `R`**'
+output:
+  html_document:
+    highlight: haddock
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 4
+    toc_float:
+      collapsed: yes
+      smooth_scroll: yes
+  pdf_document:
+    fig_caption: no
+    fig_height: 4
+    fig_width: 5
+    highlight: tango
+    includes:
+      in_header: mystyle.sty
+    keep_tex: yes
+    number_sections: yes
+    template: datahack_template.tex
+    toc: yes
+    toc_depth: 2
+  word_document: default
+header-includes:
+- \usepackage{hyperref}
+- \usepackage{mathtools}
+- \usepackage{palatino}
+- \usepackage[spanish]{babel}
+- \usepackage[official]{eurosym}
+- \renewcommand{\tablename}{Tabla}
+subtitle: null
+bibliography: MMrefs.bib
+---
+
+
+***********
+
+\newpage
+
+[Regresar a la página principal](https://idaejin.github.io/datahack/)
+
+# Introducción al software estadístico `R`
+
+`R` es un entorno de programación orientado al cálculo, manipulaci?n de datos, y representaci?n gr? fica, publicado como software libre con licencia GNU-GPL. 
+ 
+## Empezando con `R`
+
+* Obtener el directorio de trabajo o *working directory*
+
+```{r,eval=FALSE}
+getwd() 
+```
+
+* listar los objetos en el espacio de trabajo o *workspace*
+
+```{r,eval=FALSE}
+ls()
+```
+
+* Definir el *working directory*
+
+```{r, eval=FALSE}
+setwd("/Users/dlee") 
+```
+
+* Ver los últimos comandos utilizados en la consola
+
+```{r,eval=FALSE}
+history() # display last 25 commands
+history(max.show=Inf) # display all previous commands
+```
+
+
+* Guardar el historial de comandos
+
+```{r,eval=FALSE}
+savehistory(file="myfile") # default is ".Rhistory"
+```
+
+* Cargar los commandos guardados en una sesi?n anterior 
+
+```{r,eval=FALSE}
+loadhistory(file="myfile") # default is ".Rhistory"
+```
+
+
+* Salvar todo el **workspace** en un fichero `.RData` 
+
+```{r, eval=FALSE}
+save.image()
+```
+
+* Guardar objectos especificos a un fichero (si no se especifica la ruta en el ordenador, se guardar? en el directorio actual de trabajo).
+
+```{r,eval=FALSE}
+save(<object list>,file="myfile.RData") 
+```
+
+
+* Cargar un *workspace* en la sesi?n 
+
+```{r,eval=FALSE}
+load("myfile.RData") 
+```
+
+
+* Salir de `R`. Por defecto `R` pregunta si deseas guardar la sesi?n. 
+
+```{r,eval=FALSE}
+q()
+```
+
+
+## Instalar y cargar librer?as en `R`
+ 
+```{r,eval=FALSE}
+install.packages("DAAG") # (Data Analysis And Graphics)
+```
+
+* Una vez instalada la librer?a, tenemos que cargarla con el comando `library` o `require`
+```{r,warning=FALSE,message=FALSE}
+library(DAAG) # or require(DAAG)
+```
+ 
+
+
+## Lectura de datos
+
+Consola de `R`
+
+
+```{r}
+x <- c(7.82,8.00,7.95) # c de "combinar"
+x
+```
+
+Otra forma es mediante la funci?n `scan()`
+
+```{r,eval=FALSE}
+x <- scan()  # introducir n?meros seguidos de ENTER y terminar con un ENTER
+1: 7.82
+2: 8.00
+3: 7.95
+4: 
+Read 3 items
+```
+Para crear un vector de caracteres `""`
+
+```{r}
+id <- c("John","Paul","George","Ringo")
+```
+
+
+To read a character vector 
+```{r,eval=FALSE}
+id <- scan(,"")
+1: John
+2: Paul
+3: George
+4: Ringo
+5: 
+Read 4 items  
+```
+
+```{r}
+id
+```
+
+
+## Importar datos 
+
+En ocasiones, necesitaremos leer datos de un fichero independiente. Existen varias formas de hacerlo: 
+
+* `scan()` (`?scan` ver la ayuda)
+
+
+```{r}
+# creamos el fichero ex.txt
+cat("Example:", "2 3 5 7", "11 13 17", file = "ex.txt", sep = "\n") 
+scan("ex.txt", skip = 1)
+scan("ex.txt", skip = 1, nlines = 1) # only 1 line after the skipped one
+unlink("ex.data") # tidy up
+```
+
+* Existen diferentes formatos (`.txt`, `.csv`, `.xls`, `.xlsx`, `SAS`, `Stata`, etc...)
+
+* Alguna librer?as de `R` para importar datos: 
+
+```{r,message=FALSE,warning=FALSE}
+library(gdata)
+library(foreign)
+``` 
+
+\bigskip
+
+* Generalmente leeros datos en formato `.txt` o `.csv` 
+
+Descara en el siguiente link los datos `cardata` [aqu?](data/cardata.zip)
+
+
+```{r,eval=FALSE}
+mydata1 = read.table("data/cardata.txt") 
+mydata2 = read.csv("data/cardata.csv")  
+```
+
+* Otros formatos `.xls` and `.xlsx`
+
+```{r,eval=FALSE,message=FALSE,warning=FALSE}
+library(gdata)
+mydata3 = read.xls ("cardata/cardata.xls", sheet = 1, header = TRUE)
+```
+
+* Minitab, SPSS, SAS or Stata
+
+```{r, eval=FALSE, message=FALSE}
+library(foreign)                   
+mydata = read.mtp("mydata.mtp")  # Minitab
+mydata = read.spss("myfile", to.data.frame=TRUE) # SPSS
+mydata = read.dta("mydata.dta") # Stata
+```
+
+* O tambi?n 
+
+```{r,eval=FALSE}
+library(Hmisc)
+mydata = spss.get("mydata.por", use.value.labels=TRUE)  # SPSS
+```
+
+
+## Exportar datos
+
+* Existen diferentes maneras de exportar datos desde `R` en diferentes formatos. Para SPSS, SAS y Stata. Por ejemplo, mediante la librer?a `foreign`. En Excel, la librer?a `xlsx`.  
+ 
+ - Texto delimitado por tabulaciones:
+
+```{r,eval=FALSE}
+mtcars
+?mtcars    
+write.table(mtcars, "cardata.txt", sep="\t") 
+```
+
+*  Hoja decálculo de Excel:
+
+```{r,eval=FALSE}
+library(xlsx)
+write.xlsx(mydata, "mydata.xlsx")
+```
+
+
+
+## Vectores
+
+* Descargar el siguiente c?digo de `R` [aqu?](http://idaejin.github.io/bcam-courses/rbasics/rbasics.R)
+
+* Crear dos vectores
+
+```{r}
+weight<-c(60,72,57,90,95,72)  
+class(weight)
+height<-c(1.75,1.80,1.65,1.90,1.74,1.91)
+```
+
+* calcular el Body Mass Index (*?ndice de masa corporal*)
+```{r} 
+bmi<- weight/height^2
+bmi
+```
+
+
+## Estad?sstica b?sica
+
+* mean, median, st dev, variance
+
+```{r,eval=FALSE}
+mean(weight) 
+median(weight)
+sd(weight)
+var(weight)
+```
+
+* Resumen de un vector
+
+```{r}
+summary(weight)
+```
+
+* o tambi?n
+
+```{r,eval=FALSE}
+min(weight)
+max(weight)
+range(weight)
+sum(weight)
+length(weight)
+```
+
+* Cuantiles y percentiles
+
+```{r}
+quantile(weight) # por defecto cuantil 25%, 50% y 75%
+quantile(weight,c(0.32,0.57,0.98))
+```
+
+* Covarianza y correlaci?n  
+
+La covarianza ($\sigma_{xy}$) indica el grado de variacion conjunta de dos variables aleatorias respecto a sus medias
+
+  - Si $\sigma_{xy}> 0$, hay dependencia directa (positiva), es decir, a grandes valores de $x$ corresponden grandes valores de $y$.
+  - Si $\sigma_{xy}= 0$, hay una covarianza 0 se interpreta como la no existencia de una relaci?n lineal entre las dos variables estudiadas.
+  - Si $\sigma_{xy}< 0$m hay dependencia inversa o negativa, es decir, a grandes valores de $x$ corresponden peque?os valores de $y$.
+
+$$
+\rm{Cov}(x,y) = \frac{1}{n}\sum_{i=1}^{n}(x_i - \bar{x})(y_i - \bar{y})
+$$
+
+```{r}
+cov(weight,height)
+```
+
+El *coeficiente de correlacion* mide la relacion lineal (positiva o negativa) entre dos variables. Formalmente es el cociente entre la covarianza y el producto de las desviaciones t?picas de ambas variables. Siendo $\sigma_x$ y $\sigma_y$ las desviaciones estandar y  $\sigma_xy$ la covarianza entre $x$ e $y$.
+
+$$
+      \rho_{xy}  = \frac{\sigma_{xy}}{\sigma_x~\sigma_y}
+$$
+
+```{r}
+cor(weight,height)
+```
+
+
+## Vectores caracteres y variables factor
+
+```{r}
+subject <- c("John","Peter","Chris","Tony","Mary","Jane")
+sex <- c("MALE","MALE","MALE","MALE","FEMALE","FEMALE")
+class(subject)
+table(sex)
+```
+
+
+
+## Data frames
+```{r}
+Dat <- data.frame(subject,sex,weight,height)
+# a?adir el bmi a Dat
+Dat$bmi <- bmi  # o Dat$bmi <- weight/height^2
+class(Dat)
+str(Dat) # Ver la estructura del data.frame
+```
+
+
+```{r}
+# cambiar el nombre de las filas
+rownames(Dat)<-c("A","B","C","D","E","F")
+
+# Acceder a los elementos del data.frame
+Dat[,1]     # columna 1
+Dat[,1:3]   # columnas 1 a 3
+Dat[1:2,]   # filas 1 a 2
+```
+
+
+## Trabajando con data frames
+
+**Ejemplo: analizar datos por grupos**
+
+*  Obtener el peso (`weight`), altura (`height`) y `bmi` por `FEMALES` y `MALES`:
+
+1. Seleccionado cada grupo y calculando la media por grupos
+
+```{r, results='hide'}
+Dat[sex=="MALE",]
+Dat[sex=="FEMALE",]
+
+mean(Dat[sex=="MALE",3])  # weight average of MALEs
+mean(Dat[sex=="MALE","weight"])
+```
+
+2. Mediante la funci?n `apply` por columnas
+```{r, results='hide'}
+apply(Dat[sex=="FEMALE",3:5],2,mean)
+apply(Dat[sex=="MALE",3:5],2,mean)
+
+# podemos utilizar la funci?n apply con cualquier funci?n
+apply(Dat[sex=="FEMALE",3:5],2,function(x){x+2})
+```
+
+3. funci?n `by` o `colMeans`
+
+```{r, results='hide'}
+# 'by' divide los datos en factores y realiza 
+#   loscálculos para cada grupo
+by(Dat[,3:5],sex, colMeans) 
+```
+
+4. funci?n `aggregate`
+
+```{r, results='hide'}
+# otra opcion
+aggregate(Dat[,3:5], by=list(sex),mean) 
+```
+
+
+## Vectores l?gicos
+
+* Elegir los individuos con `BMI>22`
+```{r,results='hide'}
+bmi
+bmi>22
+as.numeric(bmi>22) # convierte a numerico 0/1
+which(bmi>22)  # nos devuelve la posicion del valor donde bmi>22
+```
+
+* Qu? valores est?n entre 20 y 25?
+
+```{r,results='hide'}
+bmi > 20 & bmi < 25
+which(bmi > 20 & bmi < 25)
+```
+
+
+## Trabajando con vectores
+
+* Concatenar
+
+```{r,results='hide'}
+x <- c(2, 3, 5, 2, 7, 1)
+y <- c(10, 15, 12)
+z <- c(x,y)  # concatena x e y
+```
+
+* Lista de 2 vectores
+
+```{r}
+zz <- list(x,y) # create a list
+unlist(zz) # unlist the list converting it to a concatenated vector
+``` 
+
+* Subconjunto de vectores
+
+```{r}
+x[c(1,3,4)]
+
+x[-c(2,6)] # simbolo - omite los elementos 
+```
+
+* Secuencias
+```{r}
+seq(1,9) # o 1:9
+seq(1,9,by=1)
+seq(1,9,by=0.5)
+seq(1,9,length=20)
+```
+
+* R?plicas
+
+```{r,results='hide'}
+oops <- c(7,9,13)
+rep(oops,3) # repite el vector "oops" 3 veces
+rep(oops,1:3) # repite cada elemento del vector las veces indicadas
+
+rep(c(2,3,5), 4)
+rep(1:2,c(10,15))
+
+rep(c("MALE","FEMALE"),c(4,2)) # tambi?n funciona con caracteres
+c(rep("MALE",3), rep("FEMALE",2))
+```
+
+
+## Matrices y arrays
+
+```{r}
+x<- 1:12
+x
+dim(x)<-c(3,4)  # 3 filas y 4 columnas
+
+X <- matrix(1:12,nrow=3,byrow=TRUE)
+X
+
+X <- matrix(1:12,nrow=3,byrow=FALSE)
+X
+
+# rownames, colnames
+
+rownames(X) <- c("A","B","C")
+X
+colnames(X) <- LETTERS[4:7]
+X
+colnames(X) <- month.abb[4:7]
+X
+```
+
+* Concatenar filas y columnas `rbind()`, `cbind()`
+
+```{r}
+Y <- matrix(0.1*(1:12),3,4)
+
+cbind(X,Y)  # bind column-wise
+rbind(X,Y)  # bind row-wise
+```
+
+
+## Factors
+
+```{r}
+gender<-c(rep("female",691),rep("male",692))
+class(gender)
+
+# cambiar vector a factor (por ejemplo a una categoria)
+gender<- factor(gender)
+levels(gender)
+
+summary(gender)
+table(gender)
+
+status<- c(0,3,2,1,4,5)    # Crear vector numerico, 
+                           #    transformarlo a niveles.
+fstatus <- factor(status, levels=0:5)
+levels(fstatus) <- c("student","engineer","unemployed","lawyer","economist","dentist")
+
+Dat$status <- fstatus
+Dat
+```
+
+
+
+##  Indexando vectores con condiciones l?gicas
+
+```{r}
+a <- c(1,2,3,4,5)
+b <- c(TRUE,FALSE,FALSE,TRUE,FALSE)
+
+max(a[b])
+
+sum(a[b])
+```
+
+## Valores faltantes
+
+En `R`, los valores faltante (o *missing values*) se representan como `NA` (*not available*). Los valores imposibles (e.g., valores dividos por cero) se representan con el simbolo `NaN` (*not a number*). 
+
+```{r}
+a <- c(1,2,3,4,NA)
+sum(a)
+```
+
+El argumento `na.rm=TRUE` excluye los valores `NA` en el cálculo de algunos valores
+
+```{r}
+sum(a,na.rm=TRUE)
+
+a <- c(1,2,3,4,NA)
+is.na(a) # YES or NO
+```
+
+La funci?n `complete.cases()` devuelve un vector l?gico que indica los casos completos.
+
+```{r}
+complete.cases(a)
+```
+
+La funci?n `na.omit()` devuelve un objeto sin los elementos `NA`. 
+
+```{r}
+na.omit(a) 
+```
+
+`NA` en data frames:
+
+```{r,results='hide'}
+require(graphics)
+?airquality
+pairs(airquality, panel = panel.smooth, main = "airquality data")
+ok <- complete.cases(airquality)
+airquality[ok,]
+```
+
+
+## Trabajando con data frames
+
+ * Los data frame se utilizand para guardas tablas de datos. Contiene elementos de la misma longitud.
+ 
+```{r,results="hide"}
+mtcars
+?mtcars       # help(mtcars)
+```
+
+* Observemos las primeras filas
+
+```{r}
+head(mtcars)
+```
+
+* Estructura de un data frame
+
+```{r}
+str(mtcars) # display the structure of the data frame
+```
+
+* Select a car model:
+```{r}
+mtcars["Mazda RX4",] # using rows and columns names
+mtcars[c("Datsun 710", "Camaro Z28"),] 
+```
+
+* O variables concretas
+
+```{r}
+mtcars[,c("mpg","am")]
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(psych)
+describe(mtcars)
+```
+
+
+
+# An?lisis de datos b?sico en `R`
+
+## Gr?ficos sencillos
+
+
+*  Scatterplot
+
+```{r}
+attach(mtcars)
+plot(wt, mpg, main="Scatterplot Example",
+   xlab="Car Weight ", ylab="Miles Per Gallon ", pch=19) 
+```
+
+* Matriz scatterplot
+
+```{r}
+pairs(~mpg+disp+drat+wt,data=mtcars,
+   main="Simple Scatterplot Matrix")
+```
+
+* Barplot o diagrama de barras
+
+```{r,fig.pos='center'}
+tab <- table(mtcars[,c("cyl")])
+barplot(tab)
+```
+
+* Piechart o diagrama de tarta
+
+```{r,fig.align='center'}
+pie(tab)
+```
+
+
+
+**Ejercicio:**
+
+1. El `data.frame` `VADeaths` contiene las tasas de mortalidad por cada 1000 habitantes en Virginia (EEUU) en 1940
+
+  + Las tasas de mortalidad se miden cada 1000 habitantes por a?o. Se encuentran clasificadas por grupo de edad (filas) y grupo de poblaci?n (columnas). Los grupos de edad son: 50-54, 55-59, 60-64, 65-69, 70-74 y los grupos de poblaci?n: `Rural/Male`, `Rural/Female`, `Urban/Male` and `Urban/Female`.
+
+```{r}
+data(VADeaths)
+VADeaths
+```
+
+* Calcula la media para cada grupo de edad. 
+
+      + **Result:**
+
+```{r,echo=FALSE}
+apply(VADeaths,1,mean)
+```
+
+* Calcula la media para cada grupo de poblaci?n. 
+
+      + **Resultado:** 
+      
+```{r,echo=FALSE}
+apply(VADeaths,2,mean)
+```
+
+2. El  `data.frame` `rainforest` contiene diferentes variables de `species`
+
+```{r, results='hide'}
+library(DAAG)
+rainforest
+?rainforest
+names(rainforest)
+```
+
+  * Crear una tabla de conteos para cada `species` y realiza un gr?fico descriptivo. 
+  
+      + **Resultado:**
+      
+```{r,echo=FALSE}
+table(rainforest$species)
+barplot(table(rainforest$species))
+```
+
+3. El `data.frame` `Acmena` est?  creado a partir de `rainforest` mediante la funci?n `subset`. 
+
+  * Realiza un gr?fico que relacione la biomasa de la madera (`wood`) y el di?metro a la altura del pecho (`dbh`). Utiliza tambi?n la escala logar?tmica.
+
+```{r}
+Acmena <- subset(rainforest, species == "Acmena smithii")
+```
+
+ 
+```{r,echo=FALSE, fig.width=10,fig.height=8}
+par(mfrow=c(1,2))
+plot(wood~dbh,data=Acmena,pch=19, main="plot of dbh vs wood")
+plot(log(wood)~log(dbh),data=Acmena,pch=19,main="log transformation")
+```
+
+
+  * Calcula un histograma de la variable `dbh` mediante la funci?n `hist`
+
+```{r,echo=FALSE}
+hist(Acmena$dbh,col="grey")
+```
+
+4. Crea un vector de n?meros enteros positivos impares the longitud 100 y  calcula los valores entre 60 y 80.
+
+    * **Result:** 
+    
+```{r,echo=FALSE}
+  x <- seq(1,100,by=2)
+  x[x>60 & x<80]
+```
+
+
+* [Soluciones aqu?](http://idaejin.github.io/bcam-courses/rbasics/rbasics_sol.R)
+
+
+***********
+
+## Scatterplots
+
+```{r, message= FALSE, warning=FALSE}
+library(MASS)
+data("mammals")
+?mammals
+head(mammals)
+attach(mammals)
+species <- row.names(mammals)
+x <- body
+y <- brain
+```
+
+```{r,fig.align='center'}
+library(calibrate)
+# scatterplot
+plot(x,y, xlab = "body weight in kgr", ylab = "brain weight in gr", 
+     main="Body vs Brain weight \n for 62 Species of Land Mammals",xlim=c(0,8500))
+textxy(x,y,labs=species,col = "blue",cex=0.85) 
+```
+
+Identificar un punto en el scatterplot
+
+```{r, eval=FALSE}
+identify(x,y,species)
+```
+
+En escala logar?tmica
+
+```{r,fig.align='center'}
+plot(log(x),log(y), xlab = "log body weight in kgr", ylab = "log brain weight in gr", 
+     main="log Body vs log Brain weight \n for 62 Species of Land Mammals")
+textxy(log(x),log(y),labs=species,col = "blue",cex=0.85) 
+```
+
+Identificar un punto en la escala logar?tmica
+```{r, eval=FALSE}
+identify(log(x),log(y),species)
+```
+
+## M?s opciones gr?ficas
+
+**Varios conjuntos de datos en un s?lo gr?fico**
+
+Una vez realizado un `plot`, el comando `points` permite aadir nuevas observaciones.
+
+
+```{r}
+set.seed(1234)
+ x <- rnorm(10,sd=5,mean=20)
+ y <- 2.5*x - 1.0 + rnorm(10,sd=9,mean=0)
+ cor(x,y)
+ plot(x,y,xlab="Independent",ylab="Dependent",main="Random plot")
+ x1 <- runif(8,15,25)
+ y1 <- 2.5*x1 - 1.0 + runif(8,-6,6)
+ points(x1,y1,col=2)
+```
+
+con la leyenda
+```{r}
+set.seed(1234)
+x2 <- runif(8,15,25)
+y2 <- 2.5*x2 - 1.0 + runif(8,-6,6)
+ plot(x,y,xlab="Independent",ylab="Dependent",main="Random plot")
+ points(x1,y1,col=2,pch=3)
+ points(x2,y2,col=4,pch=5)
+ legend("topleft",c("Original","one","two"),col=c(1,2,4),pch=c(1,3,5))
+```
+
+<!-- **Errors bars:** -->
+
+<!-- ```{r,fig.width=8,fig.height=6} -->
+<!-- plot(x,y,xlab="Independent",ylab="Dependent",main="Random plot",ylim=c(20,90)) -->
+<!-- xHigh <- x -->
+<!-- yHigh <- y + abs(rnorm(10,sd=3.5)) -->
+<!-- xLow <- x -->
+<!-- yLow <- y - abs(rnorm(10,sd=3.1)) -->
+<!-- arrows(xHigh,yHigh,xLow,yLow,col=2,angle=90,length=0.1,code=3) -->
+<!-- ``` -->
+
+<!-- ```{r,fig.width=8,fig.height=6} -->
+<!-- plot(1:20,0*(1:20),pch=1:20,cex=2) -->
+<!-- ``` -->
+
+**Varios gr?ficos en un s?la imagen**
+
+```{r}
+set.seed(1234)
+ par(mfrow=c(2,3))
+ boxplot(rnorm(100),main="first plot")
+ boxplot(rgamma(100,2),main="second plot", horizontal=TRUE,col="bisque")
+ plot(rnorm(100),xlab="third plot",
+      ylab="y-label",main="x-label")
+ hist(rnorm(100),main="fourth plot",col="lightgrey")
+ hist(rexp(100),main="fifth plot",col="blue")
+ plot(rnorm(100),rexp(100),main="sixth plot")
+```
+
+**Relaciones entre variables**
+
+```{r}
+uData <- rnorm(20)
+vData <- rnorm(20,mean=5)
+wData <- uData + 2*vData + rnorm(20,sd=0.5)
+xData <- -2*uData+rnorm(20,sd=0.1)
+yData <-  3*vData+rnorm(20,sd=2.5)
+d <- data.frame(u=uData,v=vData,w=wData,x=xData,y=yData)
+pairs(d)
+```
+
+**Gr?fico de correlaciones**
+
+La funci?n `corrplot` de la librer?a `corrplot` permite visualizar una matriz de correlaciones calculada mediante la funci?n `cor`
+
+```{r, fig.width=8}
+library(corrplot)
+M <- cor(d)
+corrplot(M, method="circle",type="upper")
+```
+
+**Gr?ficos de superficies: `image`, `contour` y `persp`**
+
+```{r, fig.width=10, fig.height=10}
+x <- seq(0,2*pi,by=pi/50)
+y <- x
+xg <- (x*0+1) %*% t(y)
+yg <- (x) %*% t(y*0+1)
+f <- sin(xg*yg)
+
+par(mfrow=c(2,2))
+image(x,y,f)
+contour(x,y,f)
+contour(x,y,f,nlevels=4)
+image(x,y,f,col=grey.colors(100))
+contour(x,y,f,nlevels=4,add=TRUE,col="red")
+```
+
+
+Podemos utilizar la funci?n `persp`
+
+```{r,fig.width=10,fig.height=10,fig.align='center'}
+persp(x,y,f,theta=-30,phi=55,col="lightgrey",shade=.01)
+```
+
+
+o representar im?genes
+
+```{r,message=FALSE,warning=FALSE,fig.width=10,fig.height=10}
+library(fields)
+data(lennon)
+image(lennon,col=grey(seq(0,1,l=256)))
+```
+
+## Tablas de clasificaci?n cruzada o de contigencia
+
+```{r}
+library(MASS)
+data(quine)
+quine
+attach(quine)
+table(Sex)
+table(Sex,Age)
+
+# or xtabs
+xtabs(~Sex+Age,data=quine)
+xtabs(~Sex+Age+Eth,data=quine)
+```
+
+## cálculos sobre tablas de contigencia
+
+```{r}
+tapply(Days,Age,mean)
+```
+
+```{r}
+tapply(Days,list(Sex,Age),mean)
+```
+
+
+```{r}
+tapply(Days,list(Sex,Age),function(x) sqrt(var(x)/length(x)))
+```
+
+
+## Datos cualitativos
+
+Supongamos unos datos cualquiera de las variables `treatment` y `improvement` de pacientes a una enfermedad determinada.
+
+```{r}
+treatment <- factor(rep(c(1, 2), c(43, 41)), levels = c(1, 2),
+                    labels = c("placebo", "treated"))
+improved <- factor(rep(c(1, 2, 3, 1, 2, 3), c(29, 7, 7, 13, 7, 21)),
+                   levels = c(1, 2, 3),
+                   labels = c("none", "some", "marked"))
+```
+Tabla de contigencia
+```{r}
+xtabs(~treatment+improved)
+```
+
+De manera gr?fica,
+```{r}
+spineplot(improved ~ treatment)
+```
+
+
+El conjunto de datos de `R`, `UCBAdmissions`contiene los datos agregadps de los solicitantes a universidad de Berkeley a los seis departamentos m?s grandes en 1973 clasificados por sexo y admisi?n.
+
+
+```{r}
+data("UCBAdmissions")
+?UCBAdmissions
+apply(UCBAdmissions, c(2,1), sum)
+prop.table(apply(UCBAdmissions, c(2,1), sum))
+ftable(UCBAdmissions)
+```
+
+Con `ftable` podemos presentar la informaci?n con mayor claridad
+```{r}
+ftable(round(prop.table(UCBAdmissions), 3),
+       row.vars="Dept", col.vars = c("Gender", "Admit"))
+```
+
+Resulta m?s intereseante mostrar la informaci?n por g?nero `Gender` y `Dept` combinados (dimensiones 2 y 3 del array). N?tese que las tasas de admisi?n por `male` y `female` son m?s o menos similares en todos los departamentos, excepto en "A", donde las tasas de las mujeres es mayor.
+
+```{r}
+# prop.table(UCBAdmissions, c(2,3))
+ftable(round(prop.table(UCBAdmissions, c(2,3)), 2),
+       row.vars="Dept", col.vars = c("Gender", "Admit"))
+```
+
+
+```{r}
+## Data aggregated over departments
+apply(UCBAdmissions, c(1, 2), sum)
+````
+
+gr?ficamente
+
+```{r}
+spineplot(margin.table(UCBAdmissions, c(3, 2)),
+           main = "Applications at UCB")
+spineplot(margin.table(UCBAdmissions, c(3, 1)),
+           main = "Admissions at UCB")
+
+```
+
+Estos datos ilustran la denominada *paradoja de Simpson*. Este hecho ha sido analizado como un posible caso de discriminaci?n por sexo en las tasas de admisi?n en Berkeley. De los 2691 hombres que solicitaron se admitidos, 1198 (44.5%) fueron admitidos, comparado con las 1835 mujeres de las cuales tan s?lo 557 (30.4%) fueron admitidas. Se podr?a por tanto concluir que los hombres tienes tasas de admisi?n mayores que las mujeres. [Wikipedia: Gender Bias UC Berkeley](https://en.wikipedia.org/wiki/Simpson%27s_paradox#UC_Berkeley_gender_bias). See animation at [link](http://vudlab.com/simpsons/) 
+ 
+
+
+## Datos cuantitativos
+
+
+
+```{r}
+head(faithful)
+```
+
+
+Consideremos los datos del geyse Old Faithful en el parque nacional de Yellowstone, EEUU. 
+
+```{r}
+plot(faithful)
+```
+
+### Distribuciones de frecuencias 
+
+Vamos a utilizar el conjunto de datos `faithful`, para ilustrar el concepto de distribuci?n de frecuencias que consistir? en crear una series de categor?as o intervalos, en los que contaremos el n?mero de observaciones en cada categor?a.
+
+```{r}
+duration <- faithful$eruptions
+range(duration)
+```
+
+Crearemos los sub-intervalos entre `[1.6, 5.1]` y la secuencia `{ 1.5, 2.0, 2.5, ... }`. 
+
+```{r}
+breaks <- seq(1.5,5.5,by=0.5)
+breaks
+```
+
+La funci?n `cut` nos permite divider el rango en los intervalos que especifiquemos, con el argumento `right=FALSE`, consideramos el intervalo cerrado por la derecha. 
+
+```{r}
+duration.cut = cut(duration, breaks, right=FALSE) 
+```
+
+Con `table` generamos las frecuencias 
+
+```{r}
+duration.freq = table(duration.cut) 
+duration.freq
+```
+
+Con `hist` podemos realizarlo de manera autom?tica: 
+
+```{r}
+freq <- hist(duration)
+freq
+
+freq <- hist(duration,breaks = breaks)
+
+hist(duration,50)
+```
+
+
+**Estimaci?n de densidad** construye una estimaci?n dada una distribucion de probabilidad para una muestra dada.
+
+```{r}
+require(graphics)
+d <- density(faithful$eruptions)
+d
+plot(d)
+```
+
+En dos dimensiones:
+
+```{r,message=FALSE,warning=FALSE}
+library(gplots)
+h2 <- hist2d(faithful, nbins=30,xlab="Duration in minutes",ylab="Waiting")
+h2
+names(h2)
+```
+
+Frecuencias relativas
+
+```{r}
+duration.relfreq <- duration.freq / nrow(faithful) 
+tab <- cbind(duration.freq, duration.relfreq) 
+apply(tab,2,sum)
+```
+
+Distribuci?n de frecuencias acumuladas:
+
+```{r}
+cumsum(duration.freq)
+cumsum(duration.relfreq)
+```
+
+<!-- We can plot the cumulative relative frequency graph of a quantitative variable, which is a curve graphically showing the cumulative relative frequency distribution.  -->
+<!-- The e.c.d.f. (empirical cumulative distribution function) $F_n$ is a step function with jumps $i/n$ at observation values, where $i$ is the number of tied observations at that value. Missing values are ignored. -->
+
+<!-- For observations $x = (x_1,x_2, ... x_n)$, $F_n$ is the fraction of observations less or equal to $t$, i.e., -->
+
+<!-- $$ -->
+<!-- F_n(t) = \#{x_i <= t}/n = 1/n \sum_{i=1}^n I(x_i \leq t). -->
+<!-- $$ -->
+<!-- where $I$ is an indication function. -->
+
+
+
+
+<!-- ```{r} -->
+<!-- plot(ecdf(duration)) -->
+<!-- ``` -->
+
+**Estimaci?n bivariante tipo kernel**
+```{r}
+data("faithful")
+attach(faithful)
+Dens2d<-kde2d(eruptions,waiting)
+image(Dens2d,xlab="eruptions",ylab="waiting")
+contour(Dens2d,add=TRUE,col="black",lwd=2,nlevels=5)
+detach("faithful")
+```
+
+**Gr?ficos `persp`**
+
+```{r}
+persp(Dens2d,phi=30,theta=20,d=5,xlab="eruptions",ylab="waiting",zlab="",shade=.2,col="lightblue",expand=.85,ticktype = "detailed")
+```
+
+
+# Introducción a la programación b?sica con `R`
+
+## Condicionales
+
+**Comparaciones**
+
+  - equal: `==`
+  
+```{r}
+  "hola" == "hola"
+  "hola" == "Hola"
+   1 == 2-1
+```
+
+  
+  
+  - not equal: `!=`
+  
+
+```{r}
+    a <- c(1,2,4,5)
+    b <- c(1,2,3,5) 
+    a == b
+    a != b
+```
+  
+  - mayor/menor que: `>` `<`
+
+```{r}
+set.seed(1)
+a <- rnorm(10)
+b <- rnorm(10)
+a<b
+```  
+
+  - mayor/menor que o igual: `>=` `<=`
+  
+```{r}
+set.seed(2)
+a <- rnorm(10)
+b <- rnorm(10)
+a >= b
+```
+
+
+  - `which`
+```{r}
+set.seed(3)
+which(a>b)
+
+LETTERS
+which(LETTERS=="R")
+```
+ 
+  - `which.min` o `which.max`
+```{r}
+set.seed(4)
+a <- rnorm(10)
+a
+which.min(a)
+which.max(a)
+```
+
+  - `is.na`
+```{r}
+ a[2] <- NA
+is.na(a)
+which(is.na(a))
+```
+
+## Operadores L?gicos
+
+  - and: `&`
+
+```{r}
+z = 1:6
+which(2 < z & z > 3)
+```
+
+  - or: `|`
+  
+```{r}
+z = 1:6
+(z > 2) & (z < 5)
+which((z > 2) & (z < 5))
+```
+
+  - not: `!`
+
+```{r}
+x <- c(TRUE,FALSE,0,6)
+y <- c(FALSE,TRUE,FALSE,TRUE)
+
+!x
+```
+<!--
+Operators `&` and `|` perform element-wise operation producing result having length of the longer operand. But `&&` and `||` examines only the first element of the operands resulting into a single 
+length logical vector. Zero is considered `FALSE` and non-zero numbers are taken as `TRUE`. 
+-->
+
+**Ejemplo:**
+
+
+  - `&&` vs `&`
+
+```{r}
+x&y
+x&&y
+```
+
+ - `||` vs `|`
+ 
+ 
+```{r}
+x||y
+x|y
+```
+
+
+## `if` statements
+
+`if(cond1=true) { cmd1 } else { cmd2 }`
+
+```{r}
+if(1==0) {
+    print(1)
+} else {
+    print(2)
+}
+```
+
+## `ifelse` 
+
+`ifelse(test, true_value, false_value)`
+
+```{r}
+x <- 1:10 # Creates sample data
+ifelse(x<5 | x>8, x, 0)
+```
+
+
+## `while` 
+
+
+## Loops o Bucles
+
+Los m?s empleados en `R` son `for`, `while` y `apply`. Los menos habituales `repeat`.  La funci?n `break` sirve para salir de un bucle loop.
+
+### `for`
+
+<!--For loops are controlled by a looping vector. In every iteration of the loop one value in the looping vector is assigned to a variable that can be used in the statements of the body of the loop. Usually, the number of loop iterations is defined by the number of values stored in the looping vector and they are processed in the same order as they are stored in the looping vector.
+-->
+
+
+Sintaxis
+
+```
+for(variable in sequence) {
+    statements
+}
+```
+
+
+```{r}
+for (j in 1:5)
+{
+  print(j^2)
+}
+```
+
+Repetir el bucle guardando los resultados en un vector `x`. 
+
+```{r}
+n = 5
+x = NULL  # creates a NULL object
+for (j in 1:n)
+{
+  x[j] = j^2
+}
+x
+```
+
+Generamos el lanzamiento de un dado
+
+```{r}
+nsides = 6
+ntrials = 1000
+trials = NULL
+for (j in 1:ntrials)
+{
+  trials[j] = sample(1:nsides,1)  # We get one sample at a time
+}
+mean(trials^2)
+```
+
+**Ejemplo:** 
+
+```{r,eval=FALSE}
+x <- 1:10
+z <- NULL
+for(i in seq(along=x)) {
+    if (x[i]<5) {
+        z <- c(z,x[i]-1) 
+    } else {
+        stop("values need to be <5")
+    }
+}
+## Error: values need to be <5
+z
+## [1] 0 1 2 3
+```
+
+
+
+## `while`
+
+Similar al bucle `for`, pero las iteraciones est?n controladas por una condici?n.
+
+```{r}
+z <- 0
+while(z < 5) {
+    z <- z + 2
+    print(z) 
+}
+```
+
+<!--
+## Famila de funciones `apply` 
+
+
+
+**Syntax:**
+
+```
+apply(X, MARGIN, FUN, ARGs)
+```
+
+`X`: `array`, `matrix` or `data.frame`; `MARGIN`: 1 for rows, 2 for columns, `c(1,2)` for both; `FUN`: one or more functions; `ARGs`: possible arguments for function.
+
+```{r, eval=FALSE}
+## Example for applying predefined mean function
+apply(mtcars[,1:3], 1, mean)
+
+## With custom function
+x <- 1:10
+test <- function(x) { # Defines some custom function
+    if(x < 5) {
+        x-1
+    } else {
+        x / x
+    }
+} 
+
+apply(as.matrix(x), 1, test) 
+
+## Same as above but with a single line of code
+apply(as.matrix(x), 1, function(x) { if (x<5) { x-1 } else { x/x } })
+```
+
+**For Ragged Arrays: `tapply`**
+
+Apply a function to each cell of a ragged array, that is to each (non-empty) group of values given by a unique combination of the levels of certain factors.
+
+```{r,eval=TRUE}
+## Computes mean values of vector agregates defined by factor
+tapply(as.vector(mtcars$mpg), factor(mtcars$cyl), mean)
+
+## The aggregate function provides related utilities
+aggregate(mtcars[,c(1,3,4)], list(mtcars$cyl), mean)
+```
+
+
+**For Vectors and Lists: `lapply` and `sapply`**
+
+Both apply a function to vector or list objects. The function `lapply` returns a list, while `sapply` attempts to return the simplest data object, such as `vector` or `matrix` instead of `list`. 
+
+*Syntax*
+
+```
+lapply(X,FUN)
+sapply(X,FUN)
+```
+
+```{r, echo=TRUE}
+## Creates a sample list
+mylist <- as.list(mtcars[,c(1,4,6)])
+mylist
+```
+
+Compute sum of each list component and return result as list
+
+```{r}
+lapply(mylist, sum)
+```
+
+Compute sum of each list component and return result as vector
+
+```{r}
+sapply(mylist, sum)
+```
+
+## Other Loops
+
+**Repeat Loop**
+
+*Syntax*
+
+`repeat` statements
+
+Loop is repeated until a break is specified. This means there needs to be a second statement to test whether or not to break from the loop.
+
+*Example:*
+```
+z <- 0
+repeat {
+    z <- z + 1
+    print(z)
+    if(z > 100) break()
+}
+```
+
+## Improving Speed Performance of Loops
+
+Looping over very large data sets can become slow in `R`. However, this limitation can be overcome by eliminating certain operations in loops or avoiding loops over the data intensive dimension in an object altogether. The latter can be achieved by performing mainly vector-to-vector or matrix-to-matrix computations which run often over 100 times faster than the corresponding `for()` or `apply()` loops in `R`. For this purpose, one can make use of the existing speed-optimized R functions (e.g.: `rowSums`, `rowMeans`, `table`, `tabulate`) or one can design custom functions that avoid expensive `R` loops by using vector- or matrix-based approaches. Alternatively, one can write programs that will perform all time consuming computations on the C-level.
+
+
+1. Speed comparison of `for` loops with an append versus and inject step
+
+```{r,eval=FALSE}
+N <- 1e3
+myMA <- matrix(rnorm(N), N, 10, dimnames=list(1:N, paste("C", 1:10, sep="")))
+results <- NULL
+system.time(for(i in seq(along=myMA[,1])) 
+            results <- c(results, mean(myMA[i,])))
+
+results <- numeric(length(myMA[,1]))
+system.time(for(i in seq(along=myMA[,1])) 
+            results[i] <- mean(myMA[i,]))
+```
+The inject approach is 20-50 times faster than the append version.
+
+2. Speed comparison of `apply` loop versus `rowMeans` for computing the mean for each row in a large matrix:
+
+```{r,eval=FALSE}
+system.time(myMAmean <- apply(myMA, 1, mean))
+system.time(myMAmean <- rowMeans(myMA))
+```
+
+The `rowMeans` approach is over 200 times faster than the `apply` loop.
+
+
+-->
+
+<!-- http://manuals.bioinformatics.ucr.edu/home/programming-in-r#TOC-Control-Structures -->
+
+# Case studies
+
+
+## The Forbes 2000 Ranking of the World's Biggest Companies (Year 2004)
+
+The data handling and manipulation techniques explained will be illustrated by means of a data set of 2000 world leading companies, the Forbes 2000 list for the year 2004 collected by Forbes Magazine. This list is originally available from `www.forbes.com`
+
+Here we show a subset of the data set:
+
+```{r,echo=TRUE,message=FALSE,warning=FALSE}
+library("HSAUR2")
+data("Forbes2000")
+```
+```{r,echo=FALSE}
+library(knitr)
+kable(head(Forbes2000))
+```
+
+The data consists of 2000 observations on the following 8 variables.
+    
+  * `rank`: the ranking of the company.
+  * `name`: the name of the company.
+  * `country`: a factor giving the country the company is situated in.
+  * `category`: a factor describing the products the company produces.
+  * `sales`: the amount of sales of the company in billion USD.
+  * `profits`: the profit of the company in billion USD. 
+  * `assets`: the assets of the company in billion USD.
+  * `marketvalue`: the market value of the company in billion USD.
+    
+**Types of variables**
+
+`R` command
+
+```{r,echo=TRUE}
+str(Forbes2000)
+```
+
+**Factor levels**
+
+Nominal measurements are represented by factor variables in `R`, such as the country of the company or the category of the business segment.
+
+A factor in `R` is divided into levels
+
+
+
+How many countries are on the top 2000 ranking?
+
+`R` command
+
+
+```{r,echo=TRUE}
+nlevels(Forbes2000[,"country"])
+```
+
+Which countries?
+
+`R` command
+
+```{r,echo=TRUE}
+levels(Forbes2000[,"country"])
+```
+
+And in the top 20?
+
+`R` commands
+
+```{r,echo=TRUE}
+top20 <- droplevels(subset(Forbes2000,rank<=20))
+levels(top20[,"country"])
+```
+
+As a simple summary statistic, the frequencies of the levels of such a factor variable can be found from
+
+```{r,echo=TRUE}
+table(top20[,"country"])
+```
+
+
+Which type of companies?
+
+```{r,echo=TRUE}
+levels(Forbes2000[,"category"])
+```
+
+How many of each category?
+
+```{r,echo=TRUE}
+table(Forbes2000[,"category"])
+```
+
+A simple summary statistics such as the mean, median, quantiles and range can be found from continuous variables such as `sales`
+
+`R` command
+
+```{r,echo=TRUE}
+summary(Forbes2000[,"sales"])
+```
+
+**Simple Graphics**
+
+*Chambers et al. (1983)*, "there is no statistical tool that is as powerful as a well chosen graph"
+
+
+Histograms and boxplots
+
+```{r,echo=TRUE,fig.width=12,fig.height=10}
+layout(matrix(1:4, nrow = 2,ncol=2))
+hist(Forbes2000$marketvalue, col="lightgrey",main="Histogram of market value")
+hist(log(Forbes2000$marketvalue),col="lightgrey",main="Histogram of log(market value)")
+boxplot(Forbes2000$marketvalue, col="lightgrey",main="Boxplot of market value")
+boxplot(log(Forbes2000$marketvalue),col="lightgrey",main="Boxplot of log(market value)")
+```
+
+Scatterplots to visualize the relationship betwen variables
+
+
+```{r,echo=FALSE,fig.width=12,fig.height=10}
+layout(matrix(1:2, nrow = 2))
+plot(marketvalue ~ sales, data = Forbes2000, pch = ".")
+plot(log(marketvalue) ~ log(sales), data = Forbes2000, pch = ".")
+```
+
+**Cool Graphics**
+
+Using the `ggplot2` library
+
+```{r,message=FALSE,warning=FALSE}
+library(ggplot2)
+#?qplot
+qplot(marketvalue,data = Forbes2000)
+qplot(log(marketvalue),  data = Forbes2000)
+qplot(marketvalue,sales, data=Forbes2000)
+qplot(log(marketvalue),log(sales),size=assets,alpha = I(0.1),data=Forbes2000)
+```
+
+
+```{r,echo=TRUE,message=FALSE,warning=FALSE}
+library(calibrate)
+profits_all = na.omit(Forbes2000$profits)  # all_profts without No data
+order_profits = order(profits_all)     # index of the profitable companies 
+                                       #    in decreasing order
+top_50 = rev(order_profits)[1:50]      # top 50 profitable companies
+
+sales = Forbes2000$sales[top_50]       # sales of the 50 top profitable companies
+assets = Forbes2000$assets[top_50]     # assets of the 50 top profitable companies
+countries = Forbes2000$country[top_50] # countries where the 50 top profitable 
+                                       #    companies are found
+
+plot(assets,sales,pch =1)
+textxy(assets,sales, abbreviate(countries,2),col = "blue",cex=0.5)  # used to put the 
+                                                                    # countries where the companies are found
+title(main = "Sales and Assets in billion 
+              USD \n of the 50 most profitable companies ", col.main = "gray")
+```
+
+**Graphics by factor**
+
+Boxplots of the logarithms of the market value for four selected countries, the width of the boxes is proportional to the square roots of the number of companies.
+
+```{r, echo=TRUE}
+tmp <- subset(Forbes2000,
+        country %in% c("United Kingdom", "Germany",
+                       "India", "Turkey"))
+tmp$country <- tmp$country[,drop = TRUE]
+plot(log(marketvalue) ~ country, data = tmp, col = 3:6,
+       ylab = "log(marketvalue)", varwidth = TRUE)
+```
+
+Scatterplots by country
+
+```{r,echo=TRUE, warning=FALSE}
+library(lattice)
+xyplot(log(marketvalue)~log(sales)|country,data=tmp)
+```
+
+<!-- ## Questions -->
+
+
+<!--   1. Calculate the median profit for the companies in the US and the median profit for the companies in the UK, France and Germany. -->
+<!--   2. Find all German companies with negative profit. -->
+<!--   3. To which business category do most of the Bermuda island companies belong? -->
+<!--   4. For the 50 companies in the Forbes data set with the highest profits, plot sales against assets (or some suitable transformation of each variable), labelling each point with the appropriate country name which may need to be abbreviated (using abbreviate) to avoid making the plot look too "messy". -->
+<!--   5. Find the average value of sales for the companies in each country in the Forbes data set, and find the number of companies in each country with profits above 5 billion US dollars. -->
+
+ 
+
+
+
+## Malignant Melanoma in the USA
+
+Fisher and Belle (1993) report mortality rates due to malignant melanoma of the skin for white males during the period 1950-1969, for each state on the US mainland. 
+
+
+```{r,echo=TRUE}
+data("USmelanoma",package="HSAUR2")
+```
+
+A data consists of 48 observations on the following 5 variables.
+
+  * `mortality`: number of white males died due to malignant melanoma 1950-1969 per one million inhabitants.
+
+  * `latitude`: latitude of the geographic centre of the state.
+
+  * `longitude`: longitude of the geographic centre of each state.
+
+  * `ocean`: a binary variable indicating contiguity to an ocean at levels `no` or `yes`.
+
+
+**Plotting mortality rates**
+
+```{r}
+xr <- range(USmelanoma$mortality) * c(0.9, 1.1)
+```
+
+Let us plot mortality rates in 
+
+```{r,fig.align='center',echo=TRUE}
+#layout(matrix(1:2, nrow = 2))
+boxplot(USmelanoma$mortality, ylim = xr, horizontal = TRUE,xlab = "Mortality")
+hist(USmelanoma$mortality, xlim = xr, xlab = "", main = "",axes = FALSE, ylab = "")
+axis(1)
+```
+
+Malignant melanoma mortality rates by contiguity to an ocean
+
+```{r,fig.align='center'}
+plot(mortality ~ ocean, data = USmelanoma, xlab = "Contiguity to an ocean", ylab = "Mortality")
+```
+
+Histograms can often be misleading for displaying distributions because of their dependence on the number of classes chosen. An alternative is to formally estimate the density function of a variable and then plot the resulting estimate.
+
+The estimated densities of malignant melanoma mortality rates by contiguity to an ocean looks like this:
+
+```{r,echo=TRUE,fig.width=12,fig.height=10,fig.align='center'}
+dyes <- with(USmelanoma, density(mortality[ocean == "yes"]))
+dno <- with(USmelanoma, density(mortality[ocean == "no"]))
+plot(dyes, lty = 1, xlim = xr, main = "", ylim = c(0, 0.018))
+lines(dno, lty = 2)
+legend("topright", lty = 1:2, legend = c("Coastal State","Land State"), bty = "n")
+```
+
+
+Now we might move on to look at how mortality rates are related to the geographic location of a state as represented by the latitude and longitude of the centre of the state. 
+
+```{r,echo=TRUE,fig.align='center'}
+layout(matrix(1:2, ncol = 2))
+plot(mortality ~ -longitude, data = USmelanoma)
+plot(mortality ~ latitude, data = USmelanoma)
+```
+
+## Mapping mortality rates
+
+The data contains the longitude and latitude of the centroids 
+
+```{r,echo=TRUE,fig.align='center',message=FALSE,warning=FALSE}
+plot(-USmelanoma$longitude,USmelanoma$latitude,asp=1.5,cex=.3,pch=19,col="blue")
+```
+
+
+```{r,echo=TRUE,fig.align='center',message=FALSE,warning=FALSE}
+library("sp")
+library("maps")
+library("maptools")
+library("RColorBrewer")
+map("state")
+points(-USmelanoma$longitude,USmelanoma$latitude,asp=1.5,cex=.3,pch=19,col="blue")
+```
+
+```{r,fig.align='center',message=FALSE,warning=FALSE,echo=TRUE}
+#Create a function to generate a continuous color palette
+rbPal <- colorRampPalette(c('blue','grey','red'))
+#This adds a column of color values
+# based on the y values
+USmelanoma$Col <- (rbPal(10)[as.numeric(cut(USmelanoma$mortality,breaks = 10))])
+map("state",xlim=c(-135,-65))
+points(-USmelanoma$longitude,USmelanoma$latitude,col=USmelanoma$Col,asp=1.5,pch=19,cex=1.2)
+legend("topleft",title="Decile",legend=quantile(USmelanoma$mortality,seq(0.1,1,l=10)),col =rbPal(10),pch=15,cex=1.,box.col = NA)
+```
+
+```{r,fig.width=12,fig.height=10,fig.align='center',message=FALSE,warning=FALSE,echo=TRUE}
+states <- map("state", plot = FALSE, fill = TRUE)
+IDs <- sapply(strsplit(states$names, ":"), function(x) x[1])
+rownames(USmelanoma) <- tolower(rownames(USmelanoma))
+
+us1 <- map2SpatialPolygons(states, IDs=IDs,proj4string = CRS("+proj=longlat +datum=WGS84"))
+us2 <- SpatialPolygonsDataFrame(us1, USmelanoma)
+
+col <- colorRampPalette(c('blue', 'gray80','red'))
+
+spplot(us2, "mortality", col.regions = col(200),par.settings = list(axis.line = list(col =  'transparent')),main="Map of the US showing malignant melanoma mortality rates") 
+```
+
+
+
+```{r,eval=FALSE,echo=FALSE,message=FALSE}
+library(knitr)
+purl("IntroSM.Rmd",output="IntroSM.R")
+```
+
