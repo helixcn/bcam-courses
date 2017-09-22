@@ -1,7 +1,7 @@
 ---
 title: '**Curso de Estadística básica para Data Scientists**'
 author: "Dae-Jin Lee < lee.daejin@gmail.com >"
-date: 'TEMA 1. Introducción a `R`'
+date: '**TEMA 1. Introducción a `R`**'
 output:
   html_document:
     highlight: haddock
@@ -41,7 +41,7 @@ bibliography: MMrefs.bib
 
 \newpage
 
-[Regresar a la página principal](https://idaejin.github.io/bcam-courses/R/datahack/)
+[Regresar a la página principal](https://idaejin.github.io/datahack/)
 
 # Introducción al software estadístico `R`
 
@@ -138,7 +138,7 @@ x <- c(7.82,8.00,7.95) # c de "combinar"
 x
 ```
 
-Otra forma es mediante la funci?n `scan()`
+Otra forma es mediante la función `scan()`
 
 ```{r,eval=FALSE}
 x <- scan()  # introducir n?meros seguidos de ENTER y terminar con un ENTER
@@ -271,7 +271,7 @@ bmi
 ```
 
 
-## Estad?sstica b?sica
+## Estadística básico
 
 * mean, median, st dev, variance
 
@@ -305,7 +305,7 @@ quantile(weight) # por defecto cuantil 25%, 50% y 75%
 quantile(weight,c(0.32,0.57,0.98))
 ```
 
-* Covarianza y correlaci?n  
+* Covarianza y correlación  
 
 La covarianza ($\sigma_{xy}$) indica el grado de variacion conjunta de dos variables aleatorias respecto a sus medias
 
@@ -321,7 +321,7 @@ $$
 cov(weight,height)
 ```
 
-El *coeficiente de correlacion* mide la relacion lineal (positiva o negativa) entre dos variables. Formalmente es el cociente entre la covarianza y el producto de las desviaciones t?picas de ambas variables. Siendo $\sigma_x$ y $\sigma_y$ las desviaciones estandar y  $\sigma_xy$ la covarianza entre $x$ e $y$.
+El *coeficiente de correlacion* mide la relacion lineal (positiva o negativa) entre dos variables. Formalmente es el cociente entre la covarianza y el producto de las desviaciones típicas de ambas variables. Siendo $\sigma_x$ y $\sigma_y$ las desviaciones estandar y  $\sigma_xy$ la covarianza entre $x$ e $y$.
 
 $$
       \rho_{xy}  = \frac{\sigma_{xy}}{\sigma_x~\sigma_y}
@@ -346,7 +346,7 @@ table(sex)
 ## Data frames
 ```{r}
 Dat <- data.frame(subject,sex,weight,height)
-# a?adir el bmi a Dat
+# añadir el bmi a Dat
 Dat$bmi <- bmi  # o Dat$bmi <- weight/height^2
 class(Dat)
 str(Dat) # Ver la estructura del data.frame
@@ -380,16 +380,16 @@ mean(Dat[sex=="MALE",3])  # weight average of MALEs
 mean(Dat[sex=="MALE","weight"])
 ```
 
-2. Mediante la funci?n `apply` por columnas
+2. Mediante la función `apply` por columnas
 ```{r, results='hide'}
 apply(Dat[sex=="FEMALE",3:5],2,mean)
 apply(Dat[sex=="MALE",3:5],2,mean)
 
-# podemos utilizar la funci?n apply con cualquier funci?n
+# podemos utilizar la función apply con cualquier función
 apply(Dat[sex=="FEMALE",3:5],2,function(x){x+2})
 ```
 
-3. funci?n `by` o `colMeans`
+3. función `by` o `colMeans`
 
 ```{r, results='hide'}
 # 'by' divide los datos en factores y realiza 
@@ -397,7 +397,7 @@ apply(Dat[sex=="FEMALE",3:5],2,function(x){x+2})
 by(Dat[,3:5],sex, colMeans) 
 ```
 
-4. funci?n `aggregate`
+4. función `aggregate`
 
 ```{r, results='hide'}
 # otra opcion
@@ -557,13 +557,13 @@ a <- c(1,2,3,4,NA)
 is.na(a) # YES or NO
 ```
 
-La funci?n `complete.cases()` devuelve un vector l?gico que indica los casos completos.
+La función `complete.cases()` devuelve un vector l?gico que indica los casos completos.
 
 ```{r}
 complete.cases(a)
 ```
 
-La funci?n `na.omit()` devuelve un objeto sin los elementos `NA`. 
+La función `na.omit()` devuelve un objeto sin los elementos `NA`. 
 
 ```{r}
 na.omit(a) 
@@ -620,9 +620,9 @@ describe(mtcars)
 
 
 
-# An?lisis de datos b?sico en `R`
+# Análisis de datos b?sico en `R`
 
-## Gr?ficos sencillos
+## Gráficos sencillos
 
 
 *  Scatterplot
@@ -691,7 +691,7 @@ rainforest
 names(rainforest)
 ```
 
-  * Crear una tabla de conteos para cada `species` y realiza un gr?fico descriptivo. 
+  * Crear una tabla de conteos para cada `species` y realiza un gráfico descriptivo. 
   
       + **Resultado:**
       
@@ -700,9 +700,9 @@ table(rainforest$species)
 barplot(table(rainforest$species))
 ```
 
-3. El `data.frame` `Acmena` est?  creado a partir de `rainforest` mediante la funci?n `subset`. 
+3. El `data.frame` `Acmena` est?  creado a partir de `rainforest` mediante la función `subset`. 
 
-  * Realiza un gr?fico que relacione la biomasa de la madera (`wood`) y el di?metro a la altura del pecho (`dbh`). Utiliza tambi?n la escala logar?tmica.
+  * Realiza un gráfico que relacione la biomasa de la madera (`wood`) y el di?metro a la altura del pecho (`dbh`). Utiliza tambi?n la escala logar?tmica.
 
 ```{r}
 Acmena <- subset(rainforest, species == "Acmena smithii")
@@ -716,7 +716,7 @@ plot(log(wood)~log(dbh),data=Acmena,pch=19,main="log transformation")
 ```
 
 
-  * Calcula un histograma de la variable `dbh` mediante la funci?n `hist`
+  * Calcula un histograma de la variable `dbh` mediante la función `hist`
 
 ```{r,echo=FALSE}
 hist(Acmena$dbh,col="grey")
@@ -777,9 +777,9 @@ Identificar un punto en la escala logar?tmica
 identify(log(x),log(y),species)
 ```
 
-## M?s opciones gr?ficas
+## más opciones gr?ficas
 
-**Varios conjuntos de datos en un s?lo gr?fico**
+**Varios conjuntos de datos en un s?lo gráfico**
 
 Una vez realizado un `plot`, el comando `points` permite aadir nuevas observaciones.
 
@@ -821,7 +821,7 @@ y2 <- 2.5*x2 - 1.0 + runif(8,-6,6)
 <!-- plot(1:20,0*(1:20),pch=1:20,cex=2) -->
 <!-- ``` -->
 
-**Varios gr?ficos en un s?la imagen**
+**Varios gráficos en un s?la imagen**
 
 ```{r}
 set.seed(1234)
@@ -847,9 +847,9 @@ d <- data.frame(u=uData,v=vData,w=wData,x=xData,y=yData)
 pairs(d)
 ```
 
-**Gr?fico de correlaciones**
+**Gráfico de correlaciones**
 
-La funci?n `corrplot` de la librer?a `corrplot` permite visualizar una matriz de correlaciones calculada mediante la funci?n `cor`
+La función `corrplot` de la librer?a `corrplot` permite visualizar una matriz de correlaciones calculada mediante la función `cor`
 
 ```{r, fig.width=8}
 library(corrplot)
@@ -857,7 +857,7 @@ M <- cor(d)
 corrplot(M, method="circle",type="upper")
 ```
 
-**Gr?ficos de superficies: `image`, `contour` y `persp`**
+**Gráficos de superficies: `image`, `contour` y `persp`**
 
 ```{r, fig.width=10, fig.height=10}
 x <- seq(0,2*pi,by=pi/50)
@@ -875,14 +875,14 @@ contour(x,y,f,nlevels=4,add=TRUE,col="red")
 ```
 
 
-Podemos utilizar la funci?n `persp`
+Podemos utilizar la función `persp`
 
 ```{r,fig.width=10,fig.height=10,fig.align='center'}
 persp(x,y,f,theta=-30,phi=55,col="lightgrey",shade=.01)
 ```
 
 
-o representar im?genes
+o representar imágenes
 
 ```{r,message=FALSE,warning=FALSE,fig.width=10,fig.height=10}
 library(fields)
@@ -890,7 +890,7 @@ data(lennon)
 image(lennon,col=grey(seq(0,1,l=256)))
 ```
 
-## Tablas de clasificaci?n cruzada o de contigencia
+## Tablas de clasificación cruzada o de contigencia
 
 ```{r}
 library(MASS)
@@ -937,13 +937,13 @@ Tabla de contigencia
 xtabs(~treatment+improved)
 ```
 
-De manera gr?fica,
+De manera grfica,
 ```{r}
 spineplot(improved ~ treatment)
 ```
 
 
-El conjunto de datos de `R`, `UCBAdmissions`contiene los datos agregadps de los solicitantes a universidad de Berkeley a los seis departamentos m?s grandes en 1973 clasificados por sexo y admisi?n.
+El conjunto de datos de `R`, `UCBAdmissions`contiene los datos agregadps de los solicitantes a universidad de Berkeley a los seis departamentos más grandes en 1973 clasificados por sexo y admisión.
 
 
 ```{r}
@@ -960,7 +960,7 @@ ftable(round(prop.table(UCBAdmissions), 3),
        row.vars="Dept", col.vars = c("Gender", "Admit"))
 ```
 
-Resulta m?s intereseante mostrar la informaci?n por g?nero `Gender` y `Dept` combinados (dimensiones 2 y 3 del array). N?tese que las tasas de admisi?n por `male` y `female` son m?s o menos similares en todos los departamentos, excepto en "A", donde las tasas de las mujeres es mayor.
+Resulta más intereseante mostrar la informaci?n por g?nero `Gender` y `Dept` combinados (dimensiones 2 y 3 del array). N?tese que las tasas de admisión por `male` y `female` son más o menos similares en todos los departamentos, excepto en "A", donde las tasas de las mujeres es mayor.
 
 ```{r}
 # prop.table(UCBAdmissions, c(2,3))
@@ -984,7 +984,7 @@ spineplot(margin.table(UCBAdmissions, c(3, 1)),
 
 ```
 
-Estos datos ilustran la denominada *paradoja de Simpson*. Este hecho ha sido analizado como un posible caso de discriminaci?n por sexo en las tasas de admisi?n en Berkeley. De los 2691 hombres que solicitaron se admitidos, 1198 (44.5%) fueron admitidos, comparado con las 1835 mujeres de las cuales tan s?lo 557 (30.4%) fueron admitidas. Se podr?a por tanto concluir que los hombres tienes tasas de admisi?n mayores que las mujeres. [Wikipedia: Gender Bias UC Berkeley](https://en.wikipedia.org/wiki/Simpson%27s_paradox#UC_Berkeley_gender_bias). See animation at [link](http://vudlab.com/simpsons/) 
+Estos datos ilustran la denominada *paradoja de Simpson*. Este hecho ha sido analizado como un posible caso de discriminaci?n por sexo en las tasas de admisión en Berkeley. De los 2691 hombres que solicitaron se admitidos, 1198 (44.5%) fueron admitidos, comparado con las 1835 mujeres de las cuales tan s?lo 557 (30.4%) fueron admitidas. Se podr?a por tanto concluir que los hombres tienes tasas de admisión mayores que las mujeres. [Wikipedia: Gender Bias UC Berkeley](https://en.wikipedia.org/wiki/Simpson%27s_paradox#UC_Berkeley_gender_bias). See animation at [link](http://vudlab.com/simpsons/) 
  
 
 
@@ -1019,7 +1019,7 @@ breaks <- seq(1.5,5.5,by=0.5)
 breaks
 ```
 
-La funci?n `cut` nos permite divider el rango en los intervalos que especifiquemos, con el argumento `right=FALSE`, consideramos el intervalo cerrado por la derecha. 
+La función `cut` nos permite divider el rango en los intervalos que especifiquemos, con el argumento `right=FALSE`, consideramos el intervalo cerrado por la derecha. 
 
 ```{r}
 duration.cut = cut(duration, breaks, right=FALSE) 
@@ -1104,14 +1104,14 @@ contour(Dens2d,add=TRUE,col="black",lwd=2,nlevels=5)
 detach("faithful")
 ```
 
-**Gr?ficos `persp`**
+**Gráficos `persp`**
 
 ```{r}
 persp(Dens2d,phi=30,theta=20,d=5,xlab="eruptions",ylab="waiting",zlab="",shade=.2,col="lightblue",expand=.85,ticktype = "detailed")
 ```
 
 
-# Introducción a la programación b?sica con `R`
+# Introducción a la programación básico con `R`
 
 ## Condicionales
 
@@ -1257,7 +1257,7 @@ ifelse(x<5 | x>8, x, 0)
 
 ## Loops o Bucles
 
-Los m?s empleados en `R` son `for`, `while` y `apply`. Los menos habituales `repeat`.  La funci?n `break` sirve para salir de un bucle loop.
+Los más empleados en `R` son `for`, `while` y `apply`. Los menos habituales `repeat`.  La función `break` sirve para salir de un bucle loop.
 
 ### `for`
 
