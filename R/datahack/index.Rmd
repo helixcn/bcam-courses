@@ -93,7 +93,7 @@ install.packages(c("MASS","DAAG","effects","ggplot2","gdata","foreign","Hmisc","
   
   * **Boston Housing data set** [(link)](http://lib.stat.cmu.edu/datasets/boston). This dataset contains information collected by the U.S Census Service concerning housing in the area of Boston Mass.
   
-  * ***Pima Indians data set** [(link)](https://archive.ics.uci.edu/ml/machine-learning-databases/pima-indians-diabetes/pima-indians-diabetes.data). This dataset is originally from the National Institute of Diabetes and Digestive and Kidney Diseases. The objective is to predict based on diagnostic measurements whether a patient has diabetes.
+  * **Pima Indians data set** [(link)](https://archive.ics.uci.edu/ml/machine-learning-databases/pima-indians-diabetes/pima-indians-diabetes.data). This dataset is originally from the National Institute of Diabetes and Digestive and Kidney Diseases. The objective is to predict based on diagnostic measurements whether a patient has diabetes.
   
 -----------------------------------------------------
 
