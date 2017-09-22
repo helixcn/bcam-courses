@@ -74,7 +74,7 @@ La inferencia estadística permite obtener conclusiones a partir de los datos. H
 
 <!-- It is difficult to infer much about the unknown distribution $F$ in this model. However, we may be interested in the population mean $\mu$ -->
 <!-- $$ -->
-<!--     \mu = E(X_i) =  \int_{-\infty}^{\infty} x f(x)dx  -->
+<!--     \mu = E(X_i) =  \int_{-\infty}^{\infty} x f(x)dx -->
 <!-- $$ -->
 <!-- where $f(x)$ is the density function of the distribution $F$. A common-sense estimator of $\mu$ is the sample mean -->
 <!-- $$ -->
@@ -85,7 +85,7 @@ La inferencia estadística permite obtener conclusiones a partir de los datos. H
 
 <!-- **Second question:** In our observed sample, $\bar{X}$ has the value 0.75.  Does this mean is exactly equal to $0.75$? Of course not.  Can we at least say that is positive (that is, giving hyoscyamine is better than giving no drug at all)?  Even that is not necessarily true. -->
 
-<!-- To see why, let us do some simulation.  It is expensive to perform experiments in real life, but it is cheap to do them in a computer.  Consider our model.  We do not know the parameter $F$, but let us suppose for a moment that $F$ was the standard Normal distribution $N(0,1)$.  -->
+<!-- To see why, let us do some simulation.  It is expensive to perform experiments in real life, but it is cheap to do them in a computer.  Consider our model.  We do not know the parameter $F$, but let us suppose for a moment that $F$ was the standard Normal distribution $N(0,1)$. -->
 
 <!-- ```{r} -->
 <!-- mean(rnorm(10)) -->
@@ -107,7 +107,7 @@ La inferencia estadística permite obtener conclusiones a partir de los datos. H
 
 
 
-## Estimation por intervalos
+## Estimación por intervalos
 
 Es un requisito común para estimar eficientemente los parámetros de población basados en datos de muestras aleatorias simples. 
 

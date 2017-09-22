@@ -265,7 +265,7 @@ div.tocify {
 <!-- $F$, which we refer to as the *parameter* of our model.  The link between the model and the actual observed data is completed by assuming that the observed data is one realization of these random variables.  If we repeated the experiment with $n$ other patients, the observed numbers would be different, but they would be realizations from the same distribution $F$. -->
 <!-- It is difficult to infer much about the unknown distribution $F$ in this model. However, we may be interested in the population mean $\mu$ -->
 <!-- $$ -->
-<!--     \mu = E(X_i) =  \int_{-\infty}^{\infty} x f(x)dx  -->
+<!--     \mu = E(X_i) =  \int_{-\infty}^{\infty} x f(x)dx -->
 <!-- $$ -->
 <!-- where $f(x)$ is the density function of the distribution $F$. A common-sense estimator of $\mu$ is the sample mean -->
 <!-- $$ -->
@@ -273,7 +273,7 @@ div.tocify {
 <!-- $$ -->
 <!-- is it self a random variable, i.e. it would have taken a different value if a different set of 10 patients had been selected from the experiment. The probability distribution of $E(\bar{X})$ (which depends on $F$) has its own mean and variance. $\bar{X}$ is *unbiased* because $E[\bar{X}] = \mu$ and has lower variance than any other (linear) unbiased estimator of $\mu$. -->
 <!-- **Second question:** In our observed sample, $\bar{X}$ has the value 0.75.  Does this mean is exactly equal to $0.75$? Of course not.  Can we at least say that is positive (that is, giving hyoscyamine is better than giving no drug at all)?  Even that is not necessarily true. -->
-<!-- To see why, let us do some simulation.  It is expensive to perform experiments in real life, but it is cheap to do them in a computer.  Consider our model.  We do not know the parameter $F$, but let us suppose for a moment that $F$ was the standard Normal distribution $N(0,1)$.  -->
+<!-- To see why, let us do some simulation.  It is expensive to perform experiments in real life, but it is cheap to do them in a computer.  Consider our model.  We do not know the parameter $F$, but let us suppose for a moment that $F$ was the standard Normal distribution $N(0,1)$. -->
 <!-- ```{r} -->
 <!-- mean(rnorm(10)) -->
 <!-- ``` -->
@@ -287,8 +287,8 @@ div.tocify {
 <!-- $$ -->
 <!--     X_i \sim N(\mu,\sigma^2) -->
 <!-- $$ -->
-<div id="estimation-por-intervalos" class="section level2">
-<h2><span class="header-section-number">1.1</span> Estimation por intervalos</h2>
+<div id="estimacion-por-intervalos" class="section level2">
+<h2><span class="header-section-number">1.1</span> Estimación por intervalos</h2>
 <p>Es un requisito común para estimar eficientemente los parámetros de población basados en datos de muestras aleatorias simples.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MASS)
 ?survey
