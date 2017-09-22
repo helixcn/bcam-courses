@@ -30,13 +30,13 @@ Este curso es una introducción a la Estadística con el software estadístico `
   
   [4.  Variables Aleatorias y probabilidad](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema4.html) [(*.pdf)](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema4.pdf)
   
-  5.  Introducción a la inferencia estadística
+  [5.  Introducción a la inferencia estadística](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema5.html) [(*.pdf)](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema5.pdf)
   
   6.  Modelos lineales
   
   7.  Regresión para datos binarios y de conteo
   
-  8.  Análisis de series temporales
+  8.  Análisis Multivariante y de series temporales
   
   9.  Casos de estudio
   
@@ -53,12 +53,11 @@ El objetivo final de este módulo será en análisis de una base de datos para r
 
   - Estadística Descriptiva de las Variables
   
-  - Intervalos de Confianza
-  
-  - Contrastes de Hipótesis
+  - Intervalos de Confianza/Contrastes de Hipótesis
   
   - Regresiones y análisis Multivariante y Cluster
   
+  - Interpretación y Análisis
 
 **Fecha de entrega: 16 de octubre**
 
