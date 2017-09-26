@@ -21,7 +21,7 @@ Este curso es una introducción a la Estadística con el software estadístico `
   
   [5.  Introducción a la inferencia estadística](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema5.html) [(*.pdf)](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema5.pdf)
   
-  6.  Modelos lineales
+  [6.  Modelos lineales](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema6.html) [(*.pdf)](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema6.pdf))
   
   7.  Regresión para datos binarios y de conteo
   

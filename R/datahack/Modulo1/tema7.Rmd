@@ -44,7 +44,7 @@ bibliography: MMrefs.bib
 
 # Logistic regression 
 
-A logistic regression is typically used when there is one dichotomous outcome variable (such as winning or losing), and a continuous predictor variable which is related to the probability or odds of the outcome variable. It can also be used with categorical predictors, and with multiple predictors. 
+Normalmente se utiliza una regresión logística cuando hay una variable de resultado dicotómica (como ganar o perder) y una variable predictora continua que está relacionada con la probabilidad o las probabilidades de la variable de resultado. También puede usarse con predictores categóricos y con múltiples predictores.
 
 
 ## ESR and Plasma Proteins
@@ -183,12 +183,12 @@ Hence, theoretically $\mathbb{E}[y] = \mathbb{V}\mbox{ar}[y] = \lambda$
 ```
 
 ```{r,eval=TRUE}
-turbinas <- read.table("https://idaejin.github.io/bcam-courses/R/datahack/Modulo1/data/fisuras.txt")
+turbinas <- read.table("data/fisuras.txt",header = TRUE)
 plot(turbinas,type="h"); points(turbinas,cex=.6,pch=19)
 ex2<- lm(fisuras~horas,data=turbinas)
 ```
 valores ajustados
-```{r,eval=TRUE}
+```{r,eval=FALSE}
 ex2$fitted
 ```
 
