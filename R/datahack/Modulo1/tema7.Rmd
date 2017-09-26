@@ -1,0 +1,211 @@
+---
+title: '**Curso de Estadística básica para Data Scientists**'
+author: "Dae-Jin Lee < lee.daejin@gmail.com >"
+date: "TEMA 7. Regresión para datos binarios y de conteo"
+output:
+  html_document:
+    highlight: haddock
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 4
+    toc_float:
+      collapsed: yes
+      smooth_scroll: yes
+  pdf_document:
+    fig_caption: no
+    fig_height: 4
+    fig_width: 5
+    highlight: tango
+    includes:
+      in_header: mystyle.sty
+    keep_tex: yes
+    number_sections: yes
+    template: datahack_template.tex
+    toc: yes
+    toc_depth: 2
+  word_document: default
+header-includes:
+- \usepackage{hyperref}
+- \usepackage{mathtools}
+- \usepackage{palatino}
+- \usepackage[spanish]{babel}
+- \usepackage[official]{eurosym}
+- \renewcommand{\tablename}{Tabla}
+subtitle: null
+bibliography: MMrefs.bib
+---
+
+\newpage
+
+[Regresar a la página principal](https://idaejin.github.io/bcam-courses/R/datahack/)
+
+
+
+# Logistic regression 
+
+A logistic regression is typically used when there is one dichotomous outcome variable (such as winning or losing), and a continuous predictor variable which is related to the probability or odds of the outcome variable. It can also be used with categorical predictors, and with multiple predictors. 
+
+
+## ESR and Plasma Proteins
+
+The erythrocyte sedimentation rate (ESR) is the rate at which red blood cells (erythrocytes) settle out of suspension in blood plasma, when measured under standard conditions. If the ESR increases when the level of certain proteins in the blood plasma rise in association with conditions such as rheumatic diseases, chronic infections and malignant diseases, its determination might be useful in screening blood samples taken from people suspected of suffering from one of the conditions mentioned. The absolute value of the ESR is not of great importance; rather, less than 20mm/hr indicates a "healthy" individual. To assess whether the ESR is a useful diagnostic tool, the question of interest is whether there is any association between the probability of an ESR reading greater than 20mm/hr and the levels of the two plasma proteins. If there is not then the determination of ESR would not be useful for diagnostic purposes. A data frame with 32 observations on the following 3 variables.
+
+  * `fibrinogen` the fibrinogen level in the blood.
+  * `globulin`   the globulin level in the blood.
+  * `ESR`  the erythrocyte sedimentation rate, either less or greater 20 mm / hour.
+
+```{r}
+data("plasma", package = "HSAUR")
+head(plasma)
+```
+
+```{r}
+layout(matrix(1:2, ncol = 2))
+boxplot(fibrinogen ~ ESR, data = plasma, varwidth = TRUE, main="Fibrinogen level in the blood")
+boxplot(globulin ~ ESR, data = plasma, varwidth = TRUE, main="Globulin level in the blood")
+```
+
+The question of interest is whether there is any association between the probability of an ESR reading greater than 20mm/hr and the levels of the two plasma proteins. If there is not then the determination of ESR would not be useful for diagnostic purposes.
+
+Since the response variable is binary, a multiple regression model is not suitable for a regression analysis.
+
+We may write
+$$
+\mathbb{P}\mbox{r}(y_i=1)=\pi_i \qquad \mathbb{P}\mbox{r}(y_i=0)=1-\pi_i
+$$
+
+Normally, we will have a set of covariates $X=(x_1,..., x_p)$ associated with each individual, and our goal will be to investigate the relationship between the response probability $\pi=\pi(X)$ and
+the explanatory variables.
+
+So instead of modelling the expected value of the response directly as a linear function of explanatory variables, a suitable transformation is modelled. In this case the most suitable transformation is the logistic or logit function of $\pi$ leading to the model
+
+
+$$
+  \mbox{logit}(\pi) = \mbox{logit}\left(\frac{\pi}{1-\pi}\right) = \beta_0 + \beta_1x_1 + ... + \beta_p x_p
+$$
+
+The logit of a probability is simply the log of the odds of the response taking the value one or logit transformation, of p: $logit(p) = \log(p/1-p)$. Logit is sometimes called "log odds." Because of the properties of odds given in the list above, the logit has these properties:
+
+  *  If `odds(y=1s) = 1`, then `logit(p) = 0`.
+  *  If `odds(y=1) < 1`, then `logit(p) < 0`.
+  *  If `odds(y=1) > 1`, then `logit(p) > 0`.
+  
+The logit transform fails if p = 0`.
+
+When the response is a binary (dichotomous) variable, and x is numeric, logistic regression fits a logistic curve to the relationship between $x$ and $y$. Hence, logistic regression is linear regression on the logit transform of y, where y is the proportion (or probability) of success at each value of x. However, you should avoid the temptation to do a traditional least-squares regression at this point, as neither the normality nor the homoscedasticity assumption will be met.
+
+```{r}
+x <- seq(-6,6,0.01)
+logistic <- exp(x)/(1+exp(x))
+plot(x,logistic,t='l',main="Logistic curve",ylab="")
+abline(h=c(0,0.5,1),v=0,col="grey")
+points(0,0.5,pch=19,col=2)
+```
+
+Logistic regression model in `R` can be fitted using the function `glm`. First, we start with a model that includes only a single predictor `fibrinogen` 
+
+```{r}
+plasma_glm_1 <- glm(ESR ~ fibrinogen, data = plasma,family = binomial())
+summary(plasma_glm_1)
+```
+
+We see that the regression coefficient for `fibrinogen` is significant at the $5\%$ level. An increase of one unit
+in this variable increases the log-odds in favour of an ESR value greater than 20 by an estimated $1.83$ with $95\%$ confidence interval.
+
+```{r}
+confint(plasma_glm_1,parm="fibrinogen")
+```
+These values are more helpful if converted to the corresponding values for the odds themselves by exponentiating the estimate
+
+```{r}
+exp(coef(plasma_glm_1)["fibrinogen"])
+```
+and the confidence interval
+```{r}
+exp(confint(plasma_glm_1, parm = "fibrinogen"))
+```
+
+<!-- ```{r} -->
+<!-- layout(matrix(1:2, ncol = 2)) -->
+<!-- cdplot(ESR ~ fibrinogen, data = plasma) -->
+<!-- cdplot(ESR ~ globulin, data = plasma) -->
+<!-- ``` -->
+
+
+The confidence interval is very wide because there are few observations overall and very few where the ESR value is greater than 20. Nevertheless it seems likely that increased values of fibrinogen lead to a greater probability of an ESR value greater than 20. We can now fit a logistic regression model that includes both explanatory variables using the code
+
+```{r}
+plasma_glm_2 <- glm(ESR ~ fibrinogen + globulin, data = plasma,family = binomial())
+summary(plasma_glm_2)
+```
+
+The coefficient for gamma globulin is not significantly different from zero.
+
+Both nested models can be compared using a likelihood ratio test with `anova` function 
+```{r}
+anova(plasma_glm_1, plasma_glm_2, test = "Chisq")
+```
+So we conclude that gamma globulin is not associated with ESR level.
+
+
+The plot clearly shows the increasing probability of an ESR value above 20 (larger circles) as the values of fibrinogen, and to a
+lesser extent, gamma globulin, increase.
+
+```{r}
+prob <- predict(plasma_glm_2,type="response")
+plot(globulin ~ fibrinogen, data = plasma, xlim = c(2, 6),ylim = c(25, 55), pch = ".")
+symbols(plasma$fibrinogen, plasma$globulin, circles = prob,add = TRUE)
+```
+
+# Regresión de Poisson
+
+The data follows a \alert{Poisson} distribution, i.e. $y \sim \mathcal{P}\mbox{ois}(\lambda)$
+
+Hence, theoretically $\mathbb{E}[y] = \mathbb{V}\mbox{ar}[y] = \lambda$
+
+
+**Ejemplo**
+
+```
+ horas   fisuras
+ 400        0
+ 1000      212
+ 1400       66
+ 1800      511
+ 2200      150
+ 2600      351
+ 3000      378
+ 3400       78
+ 3800      748
+ 4200      840
+ 4600      756
+```
+
+```{r,eval=TRUE}
+turbinas <- read.table("https://idaejin.github.io/bcam-courses/R/datahack/Modulo1/data/fisuras.txt")
+plot(turbinas,type="h"); points(turbinas,cex=.6,pch=19)
+ex2<- lm(fisuras~horas,data=turbinas)
+```
+valores ajustados
+```{r,eval=TRUE}
+ex2$fitted
+```
+
+```{r,eval=TRUE}
+plot(turbinas,type="h"); points(turbinas,cex=.6,pch=19)
+abline(ex2,col=2,lwd=2)
+```
+
+## family="Poisson"
+
+```{r,eval=TRUE}
+ex3 <- glm(fisuras ~ horas,data=turbinas, family = "poisson")
+plot(turbinas,type="h"); points(turbinas,cex=.6,pch=19)
+lines(turbinas$horas,fitted(ex3),col=4,lwd=2)
+```
+
+
+
+
+

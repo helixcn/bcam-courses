@@ -1,0 +1,685 @@
+---
+title: '**Curso de Estadística básica para Data Scientists**'
+author: "Dae-Jin Lee < lee.daejin@gmail.com >"
+date: "TEMA 6. Modelos lineales"
+output:
+  pdf_document:
+    fig_caption: no
+    fig_height: 4
+    fig_width: 5
+    highlight: tango
+    includes:
+      in_header: mystyle.sty
+    keep_tex: yes
+    number_sections: yes
+    template: datahack_template.tex
+    toc: yes
+    toc_depth: 2
+  html_document:
+    highlight: haddock
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 4
+    toc_float:
+      collapsed: yes
+      smooth_scroll: yes
+  word_document: default
+header-includes:
+- \usepackage{hyperref}
+- \usepackage{mathtools}
+- \usepackage{palatino}
+- \usepackage[spanish]{babel}
+- \usepackage[official]{eurosym}
+- \renewcommand{\tablename}{Tabla}
+subtitle: null
+bibliography: MMrefs.bib
+---
+
+\newpage
+
+[Regresar a la página principal](https://idaejin.github.io/bcam-courses/R/datahack/)
+
+
+
+# Modelos lineales en `R` 
+
+
+## Regresión lineal simple
+
+- La regresión es un método estadístico utilizado para predecir el valor de una variable de respuesta basada en los valores de un conjunto de variables explicativas.
+
+- Una forma muy general para el modelo sería
+
+$$
+      y = f(x_1,x_2,...,x_p) + \epsilon,
+$$
+
+donde $f$ es una función desconocida y $\epsilon$ es el error en esta representación. Dado que usualmente no tenemos suficientes datos para tratar de estimar $f$ directamente (*problema inverso*), normalmente tenemos que suponer que tiene alguna forma restringida.
+
+
+- Cualquier modelo estadístico intenta aproximar la variable de respuesta o variable dependiente $y$ como una función matemática de las variables explicativas o regresores $X$ (también llamadas covariables o variables independientes).
+
+- La forma más sencilla y más común es la **regresión lineal**
+
+$$
+    y = \beta_0 + \beta_1 x_1 + \beta_2 x_z + \epsilon,
+$$
+donde $\beta_i$ $i=0,1,2$ son parametros *desconocidos*. $\beta_0$ se llama el intercepto. Por lo tanto, el problema se reduce a la estimación de cuatro valores en lugar de la complicada infinita dimensión $f$.
+
+- Un modelo lineal simple con una sola variable explicativa se define como:
+
+$$
+         \hat{y} = \beta_0 + \beta_1 x
+$$
+
+donde $\hat y$ son los valores ajustados para $\beta_0$ (intercepto) y $\beta_1$ (pendiente). Entonces para un $x_i$ dado obtenemos un $\hat{y}_i$ que se aproxima a $y_i$
+
+
+Supongamos el siguiente ejemplo simulado (con $p=1$):
+
+```{r}
+set.seed(1)
+n <- 50 
+
+x <- seq(1,n)
+ beta0 <- 15
+ beta1 <- 0.5
+
+sigma <- 3 # standar deviation of the errors
+eps <- rnorm(n,mean=0,sd=3) # generate gaussian random errors
+
+# Generate random data
+ y <- beta0 + beta1*x  +  eps
+```
+
+Plot de los datos
+
+```{r,fig.width=8,fig.height=6}
+plot(x,y,ylim = c(8,45), cex=1.3, xlab = "x", ylab="y",pch=19)
+```
+Procedimiento matemático para encontrar la curva que mejor se ajuste a un conjunto de puntos dado, resulta de minimizar la suma de los cuadrados de los residuos de los puntos de la línea ajustada. Ilustración del ajuste de mínimos cuadrados
+
+```{r,echo=FALSE,fig.width=8,fig.height=6}
+  sel <- 25
+  plot(x, y, xlab = "x", ylab = "y", ylim=c(8,45), cex=.65,pch=19)
+   text(x[sel], 8.1, "x=25",cex=2)
+   abline(v = x[sel], lty = 2)
+    points(x[sel], y[sel], pch = 16, col = "red",cex=1.2)
+    text(sel-8, 35,paste("y = ",paste(round(y[sel],2))),cex=2)
+    abline(h=y[sel],lty=2)
+   lines(x,fitted(lm(y~x)),col="blue",lwd=2)
+   points(x[sel],fitted(lm(y~x))[sel],col="blue",lwd=2,pch=15,cex=1.2)
+    #text(36, 24,paste("y.hat =", paste(round(fitted(lm(y~x))[sel],2))),cex=2)
+   text(36,24,substitute(paste(hat(y),"=",p),list(p=round(fitted(lm(y~x))[sel],2))),cex=2)
+   points(cbind(rep(sel,10),seq(y[sel],fitted(lm(y~x))[sel],l=10)),col="grey",t='l',lwd=2,lty=2)
+   points(cbind(rep(40,10),seq(y[sel],fitted(lm(y~x))[sel],l=10)),col=1,t='l',lwd=4,lty=1)
+   points(cbind(seq(sel,40,l=10),rep(fitted(lm(y~x))[sel],10)),col=1,t='l',lwd=1,lty=2)
+   text(46,29, (expression(hat(y)-y)),cex=1.55)
+# abline(h = coefficients(lm(y~x))[1],v=0,lty=2)
+```
+
+
+
+
+<!-- ```{r, message=FALSE, warning=FALSE} -->
+<!-- library(faraway) -->
+<!-- data(gala, package = "faraway") -->
+<!-- ?gala -->
+<!-- head(gala) -->
+<!-- lmod <- lm(Species ~ Area + Elevation + Nearest + Scruz + Adjacent, data = gala) -->
+<!-- summary(lmod) -->
+<!-- ``` -->
+
+Por ejemplo, en el conjunto de datos `faithful`, contiene datos de ejemplo de dos variables aleatorias denominadas `waiting` y `eruptions`. La variable `waiting` indica el tiempo de espera hasta las próximas erupciones, y` eruptions` denota la duración.
+ 
+```{r}
+plot(eruptions~waiting,data=faithful)
+```
+
+El modelo lineal viene dado por:
+
+$$
+Eruptions = \beta_0 + \beta_1*Waiting + \epsilon
+$$
+
+
+Si seleccionamos los parámetros $\beta_0$ y $\beta_1$ en el modelo de regresión lineal simple para minimizar la suma de cuadrados del término de error $\epsilon$. Supongamos que para el conjunto de datos `faithful`, pretendemos estimar la siguiente duración de la erupción si el tiempo de espera desde la última erupción ha sido de 80 minutos.
+Aplicamos la función `lm` a una fórmula que describe la variable erupciones por la variable waiting, y guardamos el modelo de regresión lineal en una nueva variable `eruption.lm`. 
+
+
+```{r}
+data("faithful")
+eruption.lm <- lm(eruptions~waiting,data=faithful)
+```
+
+Extraemos los parámetros de la ecuación de regresión estimada con la función de coeficientes. 
+
+```{r}
+coeffs <- coefficients(eruption.lm); coeffs 
+```
+
+Ahora ajustamos la duración de la erupción usando la ecuación de regresión estimada.
+
+```{r}
+waiting = 80           # the waiting time 
+duration = coeffs[1] + coeffs[2]*waiting 
+duration 
+```
+
+En base al modelo de regresión lineal simple, si el tiempo de espera desde la última erupción ha sido de 80 minutos, esperamos que los próximos minutos de duración `r duration`. 
+
+
+Podemos incluir el valor de `waiting=80` en `newdata` como un `data.frame`
+```{r}
+newdata = data.frame(waiting=80) # wrap the parameter 
+```
+Y aplicar la función `predict` a modelo `eruption.lm` con `newdata`. 
+
+```{r}
+predict(eruption.lm, newdata)    # apply predict 
+```
+
+
+Podemos calcular directamente las cantidades de interés, es decir, la solución de mínimos cuadrados ordinarios consiste en:
+
+$$
+\min_{\beta_0,\beta_1} = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2  
+$$
+
+Por tanto
+$\hat{\beta}_1  = \frac{\sum_{i=1}^{n}x_iy_i}{\sum_{i=1}^n x_i^2}$ and 
+$\hat{\beta}_0 = \bar{y} - \hat{\beta}_1\bar{x}$
+
+En forma de matricial, con $X=[1:x_1:...:x_p]$
+
+$$
+\hat{\beta}  = (X^\prime X)^{-1} X^\prime
+$$
+
+donde $\hat{\beta} = (\hat{\beta}_0,\hat{\beta}_1)$
+
+
+## Definir modelos en `R`
+
+Para completar una regresión lineal usando `R` es necesario primero entender la sintaxis para definir modelos.
+
+|     Syntax        |                  Model                    |                               Comments                               |
+|:------------------:|:----------------------------------------:|:--------------------------------------------------------------------:|
+| `y ~ x`           | $y = \beta_0+\beta_1x$                    | Linea recta con intercepto                             |
+| `y ~ -1 + x`      | $y = \beta_1x$                            | Linea recta sin intercepto, i.e. la recta pasa por (0,0) |  
+| `y ~ x + I(x^2) ` | $y = \beta_0+\beta_1x+\beta_2x^2$         | Modelo polinomial; `I()` permite incluir símbolos matemáticos
+| `y ~ x + z`       | $y = \beta_0+\beta_1x+\beta_2z$           | Model de regresión múltiple           |        
+| `y ~ x:z`         | $y = \beta_0+\beta_1xz$                   | Modelo con interacción entre $x$ y $z$                           |        
+| `y ~ x*z`         | $y = \beta_0+\beta_1x+\beta_2z+\beta_3xz$ | Equivale a `y~x+z+x:z`                                            |  
+
+
+En `R` la función `model.matrix` permite crear la matriz de diseño $X$.
+
+```{r}
+x <- model.matrix(~waiting, data = faithful)
+y <- faithful$eruptions
+xtxi <- solve(t(x) %*% x)
+betas <- xtxi %*% t(x) %*% y
+betas
+```
+
+o
+
+```{r}
+solve(crossprod(x, x), crossprod(x, y))
+```
+La función `lm()` permite calcular internamente el modelo lineal de regresión 
+
+
+Se puede obtener $(X^\prime X)^{-1}$ como
+```{r}
+summary(eruption.lm)$cov.unscaled
+```
+
+Con el comando `names()` podemos ver los componentes de un objeto de `R`
+
+
+```{r}
+names(eruption.lm)
+```
+
+Por ejemplo:
+
+- Valores ajustados (o predichos) ($\hat{y}$):
+
+```{r,eval=FALSE}
+eruption.lm$fitted.values
+```
+
+- Residuos ($y-\hat{y}$)
+
+```{r,eval=FALSE}
+eruption.lm$residuals
+```
+
+Podemos estimar $\sigma$ como $\sigma = \frac{(y_i-\hat{y}_i)^2}{n-p}$ en `R`
+
+
+```{r}
+eruption.lm.sum <- summary(eruption.lm)
+names(eruption.lm.sum)
+
+sqrt(deviance(eruption.lm)/df.residual(eruption.lm))
+# is obtained directly as
+eruption.lm.sum$sigma
+```
+
+También podemos obtener los errores estándar para los coeficientes. También `diag()` devuelve la diagonal de un
+matriz:
+
+```{r}
+xtxi 
+sqrt(diag(xtxi)) * eruption.lm.sum$sigma
+
+eruption.lm.sum$coef[, 2]
+```
+
+
+## Coeficiente de determinación
+
+El **coeficiente de determinación** de un modelo de regresión lineal es el cociente de las varianzas de los valores ajustados y los valores observados de la variable dependiente. Si denotamos $y_i$ como los valores observados de la variable dependiente, $\bar{y}$ como su media, y $\bar{y}_i$ como el valor ajustado, entonces el coeficiente de determinación es:
+
+$$
+    R^2 = \frac{\sum (\hat{y}_i-\bar{y})^2}{(y_i - \bar{y})^2}
+$$
+
+```{r}
+summary(eruption.lm)$r.squared 
+```
+
+o
+
+```{r}
+1-sum(eruption.lm$res^2)/sum((y-mean(y))^2)
+```
+
+Más opciones:
+
+  - `fitted.values()` o  `fitted()` valores ajustados
+
+  - `predict()`: valores predichos $\hat{y}_*$ para valores de $x_*$
+
+  - `confint()`: intervalos de confianza para los parámetros del modelo
+
+  - `resid()`: residuos del modelo
+
+  - `anova()`: Tabla de analisis de la varianza para los residuos
+
+  - `deviance()`: devianza del modelo ajustado, en el caso de la regresión lineal $\sum_i^{n}(\hat{y}_i - y_i)^2$
+
+*Ver libro de Faraway (2002) book (Chapters 1-7)*[aquí](http://www.maths.bath.ac.uk/~jjf23/book/)
+
+
+
+## Prueba de significancia para la regresión lineal
+
+Supongamos que el término de error en el modelo de regresión lineal es independiente de $x$, y se distribuye normalmente, con media cero y varianza constante. Podemos decidir si existe alguna relación significativa entre $x$ e $y$ probando la hipótesis nula de que $\beta_1 = 0$.
+
+El resultado del test es el estadístico $F
+$
+```{r}
+summary(eruption.lm) 
+```
+
+## Intervalo de confianza para la regresión lineal
+
+Supongamos que el término de error $\epsilon$ en el modelo de regresión lineal es independiente de $x$, y se distribuye normalmente, con media cero y varianza constante. Para un valor dado de $x$, la estimación de intervalo para la media de la variable dependiente, $\bar{y}$, se llama intervalo de confianza.
+
+Un intervalo de confianza del 95% de la duración media de la erupción para el tiempo de espera de 80 minutos está dado por
+
+```{r}
+predict(eruption.lm, newdata, interval="confidence") 
+```
+El intervalo de confianza del 95% de la duración media de la erupción para el tiempo de espera de 80 minutos está entre 4.1048 y 4.2476 minutos.
+
+
+##  Intervalo de predicción para la regresión lineal
+
+Para un valor dado de $x$, la estimación de intervalo de la variable dependiente $y$ se denomina intervalo de predicción.
+
+```{r}
+predict(eruption.lm, newdata, interval="predict") 
+```
+
+El intervalo de predicción del 95% de la duración de la erupción para el tiempo de espera de 80 minutos está entre 3.1961 y 5.1564 minutos.
+
+
+## Residual Plot
+
+Los residuos del modelo de regresión lineal simple son la diferencia entre los datos observados de la variable dependiente $y$ y los valores ajustados $ \ hat{y}$.
+
+$$
+    Residuos = y -\hat{y}
+$$
+
+```{r}
+eruption.res = resid(eruption.lm) 
+```
+
+
+```{r}
+plot(faithful$waiting,
+    eruption.res, 
+    ylab="Residuals", xlab="Waiting Time", 
+    main="Old Faithful Eruptions") 
+abline(0, 0)
+```
+
+
+## Residuo estandarizado
+
+El residuo estandarizado es el residuo dividido por su desviación estándar.
+
+$$
+\mbox{Standardized residual}_i =  \frac{Residual_i}{SD.of.Residual_i}
+$$
+
+```{r}
+eruption.stdres <- rstandard(eruption.lm) 
+```
+
+```{r}
+plot(faithful$waiting, eruption.stdres, 
+      ylab="Standardized Residuals", 
+      xlab="Waiting Time", 
+      main="Old Faithful Eruptions") 
+abline(0, 0)
+```
+
+
+Como el p-valor es mucho menor que $0.05$, rechazamos la hipótesis nula de que $\beta_1 = 0$. Por lo tanto, existe una relación significativa entre las variables en el modelo de regresión lineal del conjunto de datos `faithful`.
+
+
+## Gráfico de normalidad de los residuos
+
+El gráfico de probabilidad normal es una herramienta gráfica para comparar un conjunto de datos con la distribución normal. Podemos usarlo con el residuo estandarizado del modelo de regresión lineal y ver si el término de error $\epsilon$ es realmente distribuido normalmente.
+
+```{r}
+eruption.lm = lm(eruptions ~ waiting, data=faithful) 
+eruption.stdres = rstandard(eruption.lm) 
+```
+
+Ahora creamos el gráfico de probabilidad normal con la función `qqnorm` y añadimos` qqline` para una comparación posterior.
+
+```{r}
+ qqnorm(eruption.stdres, 
+     ylab="Standardized Residuals", 
+     xlab="Normal Scores", 
+     main="Old Faithful Eruptions") 
+ qqline(eruption.stdres) 
+```
+
+
+## Regresión lineal múltiple
+
+Un modelo de regresión lineal múltiple describe una variable dependiente $y$ por variables independientes $x_1, x_2, ..., x_p$ $(p> 1)$ se expresa mediante la ecuación:
+
+$$
+    y  = \beta_0 + \sum_{k}^{p} \beta_k + \epsilon
+$$
+donde $\beta_0$ y $\beta_k$ ($k = 1, 2, ..., p$) son los parámetros y $\epsilon$ el término de error. 
+
+
+
+**Example:**
+
+Consideremos los datos `stackloss`, sea `stackloss` la variable dependiente, y`Air.Flow` (cooling air flow), `Water.Temp` (inlet water temperature) y `Acid.Conc.` (acid concentration) las variables independientes, la regresión multiple es:
+
+$$
+      stack.loss = \beta_0 + \beta_1 * Air.Flow + \beta_2 * Water.Temp + \beta_3 * Acid.Conc + \epsilon
+$$
+
+```{r}
+data("stackloss")
+?stackloss
+head(stackloss)
+```
+
+El modelo de regresión multiple es:
+
+```{r}
+stackloss.lm = lm(stack.loss ~ Air.Flow + Water.Temp + Acid.Conc., data=stackloss) 
+stackloss.lm
+summary(stackloss.lm)
+```
+
+La función  `termplot` permite representar los términos de la regresión frente a las variables predictoras:
+
+```{r,fig.width=10,fig.height=10}
+?termplot
+par(mfrow=c(2,2))
+termplot(stackloss.lm, partial.resid = TRUE, se=TRUE,col.se = "blue")
+```
+
+
+**What is the stack loss if the air flow is 72, water temperature is 20 and acid concentration is 85?**
+
+Crear un nuevo `data.frame`:
+
+```{r}
+newdata <- data.frame(Air.Flow=72,Water.Temp=20,Acid.Conc.=85)
+```
+
+Con `predict`
+
+```{r}
+predict(stackloss.lm, newdata) 
+```
+
+Basado en el modelo de regresión lineal múltiple y los parámetros dados, la pérdida prevista es `r predict(stackloss.lm, newdata)`.
+
+Para obtener el coeficiente de determinación múltiple
+
+```{r}
+summary(stackloss.lm)$r.squared 
+```
+
+### Coeficiente de determinación ajustado
+
+El coeficiente de determinación ajustado de un modelo de regresión lineal múltiple se define en términos del coeficiente de determinación como sigue, donde $n$ es el número de observaciones en el conjunto de datos y $p$ es el número de variables independientes.
+
+$$
+R^2_{adj} = 1-(1-R^2)\frac{n-1}{n-p-1}
+$$
+
+```{r}
+summary(stackloss.lm)$adj.r.squared 
+```
+
+### Pruebas de significación e intervalos de confianza / predicción
+
+```{r}
+summary(stackloss.lm)
+```
+
+Como los p-valores de `Air.Flow` y` Water.Temp` son inferiores a 0,05, ambos son estadísticamente significativos en el modelo de regresión lineal múltiple de `stackloss`.
+
+El intervalo de confianza al 95\% de `stackloss` es
+
+```{r}
+predict(stackloss.lm, newdata, interval="confidence")
+```
+
+Y el invervalo de predicción al 95\%
+
+```{r}
+predict(stackloss.lm, newdata, interval="prediction")
+```
+
+
+
+## Regresión lineal con variables factor
+
+Supongamos el conjunto de datos `mtcars`.
+
+```{r}
+data(mtcars)
+t.test(mpg ~ am, data=mtcars) 
+```
+
+
+Los resultados de las pruebas estadísticas se centran en `mpg` y` am` solamente, sin controlar las influencias de otras variables.
+
+```{r}
+fit0 <- lm(mpg ~ factor(am), data = mtcars)
+summary(fit0)
+```
+
+
+Si aplicamos una regresión multiple para controlar ciertas variables disponibles de diseño y rendimiento, el impacto marginal de los automóviles de transmisión automática o manual no resulta significativo. Las variables de confusión incluyen desplazamiento (`disp`), relación del eje trasero (`drat`) y peso del coche (`wt`). Supongamos el peso del coche (`wt`) por ejemplo. La regresión sugiere que, manteniendo constantes otras variables (ceteris paribus), los automóviles traídos por tracción consumen -0.024 galones más de gas por milla y los resultados ya no son estadísticamente significativos. Un análisis similar se puede observar para las otras dos variables: `drat` y `wt`.
+
+
+```{r}
+fit1 <- lm(mpg ~ factor(am) + wt, data = mtcars)
+summary(fit1)
+```
+
+```{r}
+fit2 <- lm(mpg ~ factor(am) + drat, data = mtcars)
+summary(fit2)
+
+fit3 <- lm(mpg ~ factor(am) + disp, data = mtcars)
+summary(fit3)
+```
+
+Con `termplot` 
+
+```{r}
+termplot(fit0,partial.resid = TRUE,se=TRUE)
+```
+
+```{r}
+par(mfrow=c(1,2))
+termplot(fit1,partial.resid = TRUE,se=TRUE)
+termplot(fit2,partial.resid = TRUE,se=TRUE)
+```
+
+
+## Inferencia de modelos lineales
+
+**Comparación de modelos: test de razón de verosimitudes**
+
+Es una prueba estadística utilizada para comparar la bondad de ajuste de dos modelos, uno de los cuales (el modelo nulo) es un caso especial del otro (el modelo alternativo). La prueba se basa en la razón de verosimilitud, que expresa cuántas veces más probabilidades de que los datos estén bajo un modelo que el otro.
+
+La comparación de dos modelos ajustados a los mismos datos se puede configurar como un problema de prueba de hipótesis. Sea $M_0$ y $M_1$ los modelos.
+
+Consideremos como la hipótesis nula *"$ M_1 $ no es una mejora significativa en $ M_0 $"*, y la alternativa la negación. Esta hipótesis se puede formular a menudo de modo que un estadístico se pueda generar de los dos modelos.
+
+Normalmente, los modelos se anidan en que las variables en $M_0$ son un subconjunto de los de $M_1$. La estadística a menudo involucra los valores $RSS$ (suma residual de cuadrados) para ambos modelos, ajustados por el número de parámetros utilizados. En la regresión lineal esto se convierte en una prueba de `anova` (comparando las varianzas).
+
+<!--
+More robust is a likelihood ratio test for nested models.  When models are sufficiently specific to define a probability distribution for
+$y$, the model will report the log-likelihood, $\hat{L}$.  Under some mild assumptions, $-2(\hat{L}_0 - \hat{L}_1)$ follows a Chi-squared distribution with degrees of freedom = difference in number of parameters on the two models.
+
+The utility of a single model $M_1$ is often assessed by comparing it with the null model, that reflects no dependence of $y$ on the explanatory variables. The model formula for the null model is `y~1`, i.e. we use a constant to approximate `y` (e.g.: the mean of `y`). The likelihood ratio test is implemented in the function `anova`:
+-->
+
+```{r}
+M0 <- lm(mpg ~ 1, data = mtcars)
+M1 <- lm(mpg ~ factor(am), data = mtcars)
+summary(M0)
+summary(M1)
+anova(M0,M1)
+```
+La prueba/test de razón de verosimilitud también puede probar la significación de los predictores. Por lo tanto, podemos comparar el modelo `fit0` (donde` am` es significativo) con `fit1`,` fit2` o `fit3`, es decir:
+
+```{r}
+anova(fit0, fit1)
+anova(fit0, fit2)
+anova(fit0, fit3)
+```
+
+Sin embargo, las pruebas de razón de verosimilitud sugieren que es importante considerar estas dimensiones (es decir, el desplazamiento, la relación del eje trasero y el peso) ya que estas variables aumentan el ajuste del modelo.
+
+<!--
+
+## Analysis-Of-Variance (ANOVA)
+
+
+In an experiment study, various treatments are applied to test subjects and the response data is gathered for analysis. A critical tool for carrying out the analysis is the **Analysis of Variance (ANOVA)**. It enables a researcher to differentiate treatment results based on easily computed statistical quantities from the treatment outcome.
+
+The statistical process is derived from estimates of the population variances via two separate approaches. The first approach is based on the variance of the sample means, and the second one is based on the mean of the sample variances. Under the ANOVA assumptions as stated below, the ratio of the two statistical estimates follows the $F$-distribution. Hence we can test the null hypothesis on the equality of various response data from different treatments via estimates of critical regions.
+
+    The treatment responses are independent of each other.
+    The response data follow the normal distribution.
+    The variances of the response data are identical.
+
+In the following tutorials, we demonstrate how to perform ANOVA on a few basic experimental designs. 
+
+
+```{r}
+# Two-way Interaction Plot
+data(mtcars)
+attach(mtcars)
+gear <- factor(gear)
+cyl <- factor(cyl)
+interaction.plot(cyl, gear, mpg, type="b", col=c(1:3),
+   leg.bty="o", leg.bg="beige", lwd=2, pch=c(18,24,22),
+   xlab="Number of Cylinders",
+   ylab="Mean Miles Per Gallon",
+   main="Interaction Plot")
+```   
+   
+```{r,message=FALSE,warning=FALSE}
+# Plot Means with Error Bars
+library(gplots)
+attach(mtcars)
+cyl <- factor(cyl)
+plotmeans(mpg~cyl,xlab="Number of Cylinders",
+  ylab="Miles Per Gallon", main="Mean Plot\nwith 95% CI") 
+```
+-->
+
+
+<!-- ```{r, eval=FALSE} -->
+<!-- library(faraway) -->
+<!-- data(pima, package="faraway") -->
+<!-- head(pima) -->
+<!-- summary(pima) -->
+<!-- sort(pima$diastolic) -->
+<!-- pima$diastolic[pima$diastolic == 0]  <- NA -->
+<!-- pima$glucose[pima$glucose == 0] <- NA -->
+<!-- pima$triceps[pima$triceps == 0]  <- NA -->
+<!-- pima$insulin[pima$insulin == 0] <- NA -->
+<!-- pima$bmi[pima$bmi == 0] <- NA -->
+<!-- pima$test <- factor(pima$test) -->
+<!-- summary(pima$test) -->
+<!-- levels(pima$test) <- c("negative","positive") -->
+<!-- summary(pima) -->
+<!-- hist(pima$diastolic,xlab="Diastolic",main="") -->
+<!-- plot(density(pima$diastolic,na.rm=TRUE),main="") -->
+<!-- plot(sort(pima$diastolic),ylab="Sorted Diastolic") -->
+<!-- plot(diabetes ~ diastolic,pima) -->
+<!-- plot(diabetes ~ test,pima) -->
+<!-- require(ggplot2) -->
+<!-- ggplot(pima,aes(x=diastolic))+geom_histogram() -->
+<!-- ggplot(pima,aes(x=diastolic))+geom_density() -->
+<!-- ggplot(pima,aes(x=diastolic,y=diabetes))+geom_point() -->
+<!-- ggplot(pima,aes(x=diastolic,y=diabetes,shape=test))+geom_point()+theme(legend.position = "top", legend.direction = "horizontal") -->
+<!-- ggplot(pima,aes(x=diastolic,y=diabetes)) + geom_point(size=1) + facet_grid(~ test) -->
+<!-- data(manilius, package="faraway") -->
+<!-- head(manilius) -->
+<!-- (moon3 <- aggregate(manilius[,1:3],list(manilius$group), sum)) -->
+<!-- solve(cbind(9,moon3$sinang,moon3$cosang), moon3$arc) -->
+<!-- lmod <- lm(arc ~ sinang + cosang, manilius) -->
+<!-- coef(lmod) -->
+<!-- data(GaltonFamilies, package="HistData") -->
+<!-- plot(childHeight ~ midparentHeight, GaltonFamilies) -->
+<!-- lmod <- lm(childHeight ~ midparentHeight, GaltonFamilies) -->
+<!-- coef(lmod) -->
+<!-- abline(lmod) -->
+<!-- (beta <- with(GaltonFamilies, cor(midparentHeight, childHeight) * sd(childHeight) / sd(midparentHeight))) -->
+<!-- (alpha <- with(GaltonFamilies, mean(childHeight) - beta * mean(midparentHeight))) -->
+<!-- (beta1 <- with(GaltonFamilies, sd(childHeight) / sd(midparentHeight))) -->
+<!-- (alpha1 <- with(GaltonFamilies, mean(childHeight) - beta1 * mean(midparentHeight))) -->
+<!-- abline(alpha1, beta1, lty=2) -->
+
+<!-- ``` -->
+
+<!-- [link](http://ms.mcmaster.ca/peter/s2ma3/s2ma3_0102/classnotes/notes20020328.html) -->
