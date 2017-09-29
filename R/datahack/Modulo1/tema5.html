@@ -318,8 +318,8 @@ div.tocify {
 <span class="kw">mean</span>(<span class="kw">na.omit</span>(survey$Height))</code></pre></div>
 <pre><code>## [1] 172.3809</code></pre>
 <p>Una vez calculada uns estimación puntual de la media de la población, necesitaríamos una manera de cuantificar su exactitud.</p>
-<div id="intervalo-para-la-estimacion-de-la-media-poblacinal-con-varianza-conocida" class="section level3">
-<h3><span class="header-section-number">1.1.1</span> Intervalo para la estimación de la media poblacinal (con varianza conocida)</h3>
+<div id="intervalo-para-la-estimacion-de-la-media-poblacional-con-varianza-conocida" class="section level3">
+<h3><span class="header-section-number">1.1.1</span> Intervalo para la estimación de la media poblacional (con varianza conocida)</h3>
 <p>Sea <span class="math inline">\(100~(1-\alpha/2)\)</span> el percentile de la distribución Normal estándar <span class="math inline">\(z_{\alpha/2}\)</span>. Para una muestra aleatoria de tamaño suficientemente grande, la estimación del intervalo al nivel de confianza <span class="math inline">\((1-\alpha/2)\)</span> es: <span class="math display">\[
   \bar{x} \pm \frac{\sigma}{\sqrt{n}}
 \]</span></p>
@@ -352,10 +352,10 @@ xbar +<span class="st"> </span><span class="kw">c</span>(-E,E)</code></pre></div
 ## sample estimates:
 ## mean of x 
 ##  172.3809</code></pre>
-<p>Suponiendo que la desviación estándar de la población $  sigma $ sea 9.48, el margen de error para la encuesta de altura del estudiante al nivel de confianza del 95% es 1.2852372 centímetros. El intervalo de confianza está entre 171.095624 y 173.6660984 centimetros.</p>
+<p>Suponiendo que la desviación estándar de la población <span class="math inline">\(\sigma\)</span> sea 9.48, el margen de error para la encuesta de altura del estudiante al nivel de confianza del 95% es 1.2852372 centímetros. El intervalo de confianza está entre 171.095624 y 173.6660984 centimetros.</p>
 </div>
-<div id="intervalo-para-la-estimacion-de-la-media-poblacinal-con-varianza-desconocida" class="section level3">
-<h3><span class="header-section-number">1.1.2</span> Intervalo para la estimación de la media poblacinal (con varianza desconocida)</h3>
+<div id="intervalo-para-la-estimacion-de-la-media-poblacional-con-varianza-desconocida" class="section level3">
+<h3><span class="header-section-number">1.1.2</span> Intervalo para la estimación de la media poblacional (con varianza desconocida)</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">s =<span class="st"> </span><span class="kw">sd</span>(x)
 SE &lt;-<span class="st"> </span>s/<span class="kw">sqrt</span>(n)
 E =<span class="st"> </span><span class="kw">qt</span>(.<span class="dv">975</span>, <span class="dt">df=</span>n<span class="dv">-1</span>)*SE; E</code></pre></div>
@@ -551,7 +551,7 @@ zstar^<span class="dv">2</span> *<span class="st"> </span>p *<span class="st"> <
 </div>
 <div id="prueba-chi-cuadrada-de-la-independencia" class="section level2">
 <h2><span class="header-section-number">1.6</span> Prueba Chi-cuadrada de la independencia</h2>
-<p>Dos variables aleatorias <span class="math inline">\(x\)</span> y <span class="math inline">\(y\)</span> se llaman independientes si la distribución de probabilidad de una variable no es afectada por la presencia de otra. Supongamos que $f_ {ij} $ es el recuento de frecuencia observada de los eventos que pertenecen a la categoría <span class="math inline">\(i\)</span>-th de x y la categoría <span class="math inline">\(j\)</span> -th de <span class="math inline">\(y\)</span>. También suponga que <span class="math inline">\(e_{ij}\)</span> sea el recuento esperado correspondiente si <span class="math inline">\(x\)</span> y <span class="math inline">\(y\)</span> son independientes. La hipótesis nula de la suposición de la independencia debe ser rechazada si el <span class="math inline">\(p\)</span>-valor de las siguientes estadísticas de la prueba de Chi cuadrado es menor que un nivel de significación dado <span class="math inline">\(\alpha\)</span>.</p>
+<p>Dos variables aleatorias <span class="math inline">\(x\)</span> y <span class="math inline">\(y\)</span> se llaman independientes si la distribución de probabilidad de una variable no es afectada por la presencia de otra. Supongamos que <span class="math inline">\(f_ {ij}\)</span> es el recuento de frecuencia observada de los eventos que pertenecen a la categoría <span class="math inline">\(i\)</span>-th de x y la categoría <span class="math inline">\(j\)</span> -th de <span class="math inline">\(y\)</span>. También suponga que <span class="math inline">\(e_{ij}\)</span> sea el recuento esperado correspondiente si <span class="math inline">\(x\)</span> y <span class="math inline">\(y\)</span> son independientes. La hipótesis nula de la suposición de la independencia debe ser rechazada si el <span class="math inline">\(p\)</span>-valor de las siguientes estadísticas de la prueba de Chi cuadrado es menor que un nivel de significación dado <span class="math inline">\(\alpha\)</span>.</p>
 <p><span class="math display">\[
   \chi^2 = \sum_{i,j}\frac{(f_i - e_i)^2}{e_i}
 \]</span></p>
