@@ -264,7 +264,7 @@ class(weight)
 height<-c(1.75,1.80,1.65,1.90,1.74,1.91)
 ```
 
-* calcular el Body Mass Index (*?ndice de masa corporal*)
+* calcular el Body Mass Index (*Índice de masa corporal*)
 ```{r} 
 bmi<- weight/height^2
 bmi
@@ -311,7 +311,7 @@ La covarianza ($\sigma_{xy}$) indica el grado de variacion conjunta de dos varia
 
   - Si $\sigma_{xy}> 0$, hay dependencia directa (positiva), es decir, a grandes valores de $x$ corresponden grandes valores de $y$.
   - Si $\sigma_{xy}= 0$, hay una covarianza 0 se interpreta como la no existencia de una relación lineal entre las dos variables estudiadas.
-  - Si $\sigma_{xy}< 0$m hay dependencia inversa o negativa, es decir, a grandes valores de $x$ corresponden peque?os valores de $y$.
+  - Si $\sigma_{xy}< 0$m hay dependencia inversa o negativa, es decir, a grandes valores de $x$ corresponden pequeños valores de $y$.
 
 $$
 \rm{Cov}(x,y) = \frac{1}{n}\sum_{i=1}^{n}(x_i - \bar{x})(y_i - \bar{y})
@@ -415,7 +415,7 @@ as.numeric(bmi>22) # convierte a numerico 0/1
 which(bmi>22)  # nos devuelve la posicion del valor donde bmi>22
 ```
 
-* Qu? valores est?n entre 20 y 25?
+* Qué valores están entre 20 y 25?
 
 ```{r,results='hide'}
 bmi > 20 & bmi < 25
@@ -456,7 +456,7 @@ seq(1,9,by=0.5)
 seq(1,9,length=20)
 ```
 
-* R?plicas
+* Réplicas
 
 ```{r,results='hide'}
 oops <- c(7,9,13)
@@ -620,7 +620,7 @@ describe(mtcars)
 
 
 
-# Análisis de datos b?sico en `R`
+# Análisis de datos básico en `R`
 
 ## Gráficos sencillos
 
@@ -659,7 +659,7 @@ pie(tab)
 
 1. El `data.frame` `VADeaths` contiene las tasas de mortalidad por cada 1000 habitantes en Virginia (EEUU) en 1940
 
-  + Las tasas de mortalidad se miden cada 1000 habitantes por a?o. Se encuentran clasificadas por grupo de edad (filas) y grupo de población (columnas). Los grupos de edad son: 50-54, 55-59, 60-64, 65-69, 70-74 y los grupos de población: `Rural/Male`, `Rural/Female`, `Urban/Male` and `Urban/Female`.
+  + Las tasas de mortalidad se miden cada 1000 habitantes por año. Se encuentran clasificadas por grupo de edad (filas) y grupo de población (columnas). Los grupos de edad son: 50-54, 55-59, 60-64, 65-69, 70-74 y los grupos de población: `Rural/Male`, `Rural/Female`, `Urban/Male` and `Urban/Female`.
 
 ```{r}
 data(VADeaths)
@@ -700,9 +700,9 @@ table(rainforest$species)
 barplot(table(rainforest$species))
 ```
 
-3. El `data.frame` `Acmena` est?  creado a partir de `rainforest` mediante la función `subset`. 
+3. El `data.frame` `Acmena` está  creado a partir de `rainforest` mediante la función `subset`. 
 
-  * Realiza un gráfico que relacione la biomasa de la madera (`wood`) y el di?metro a la altura del pecho (`dbh`). Utiliza también la escala logarítmica.
+  * Realiza un gráfico que relacione la biomasa de la madera (`wood`) y el diámetro a la altura del pecho (`dbh`). Utiliza también la escala logarítmica.
 
 ```{r}
 Acmena <- subset(rainforest, species == "Acmena smithii")

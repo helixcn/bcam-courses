@@ -571,3 +571,48 @@ Var
 ```
 -->
 
+
+
+
+# Introducción a la probabilidad
+
+## Sucesos 
+Cuando se realiza un experimento aleatorio diversos resultados son posibles. El conjunto de todos los resultados posibles se llama espacio muestral (E).
+
+
+
+Se llama suceso a un subconjunto de resultados
+
+  + **Suceso elemental.** Siempre ocurre uno de ellos Son mutuamente excluyentes
+  
+  + **Suceso compuesto.** Uniones de sucesos elementales
+  
+  
+<center>![](pics/espacio_muestral2.png){width=65%}</center>
+
+
+  + **Suceso contrario** (complementario) de un suceso A, al formado por los sucesos que no están en A. Se denota como $\bar{A}$
+  
+<center>![](pics/espacio_muestral3.png){width=50%}</center>
+
+
+  + El **suceso seguro**, $E$, es aquel que siempre ocurre al realizar el experimento
+  
+  + El **suceso imposible**, $\emptyset$, es aquel que nunca ocurre como resultado del experimento
+  
+
+## Operaciones con sucesos
+
+Se llama **suceso intersección** de $A$ y $B$, $A\in B$ o $AB$, al formado por los resultados experimentales que están simultáneamente en $A$ y $B$
+
+<center>![](pics/espacio_muestral5.png){width=50%}</center>
+
+
+Se dice que dos sucesos $A$ y $B$ son incompatibles si no pueden ocurrir a la vez, $A\in B=\emptyset$
+
+<center>![](pics/espacio_muestral4.png){width=50%}</center>
+
+
+Se llama **suceso unión** de $A$ y $B$, $A\cup B$, al suceso formado por los resultados experimentales que están en $A$ o en $B$ (incluyendo los que están en ambos)
+
+

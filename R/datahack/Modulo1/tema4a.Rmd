@@ -1,0 +1,235 @@
+---
+title: '**Curso de Estadística básica para Data Scientists**'
+author: "Dae-Jin Lee < lee.daejin@gmail.com >"
+date: "TEMA 4. Variables Aleatorias y Probabilidad"
+output:
+  html_document:
+    highlight: haddock
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 4
+    toc_float:
+      collapsed: yes
+      smooth_scroll: yes
+  pdf_document:
+    fig_caption: no
+    fig_height: 4
+    fig_width: 5
+    highlight: tango
+    includes:
+      in_header: mystyle.sty
+    keep_tex: yes
+    number_sections: yes
+    template: datahack_template.tex
+    toc: yes
+    toc_depth: 2
+  word_document: default
+header-includes:
+- \usepackage{hyperref}
+- \usepackage{mathtools}
+- \usepackage{palatino}
+- \usepackage[spanish]{babel}
+- \usepackage[official]{eurosym}
+- \renewcommand{\tablename}{Tabla}
+subtitle: null
+bibliography: MMrefs.bib
+---
+
+\newpage
+
+[Regresar a la página principal](https://idaejin.github.io/bcam-courses/R/datahack/)
+
+
+
+
+# Introducción a la probabilidad
+
+## Sucesos 
+Cuando se realiza un experimento aleatorio diversos resultados son posibles. El conjunto de todos los resultados posibles se llama espacio muestral (E).
+
+
+
+Se llama suceso a un subconjunto de resultados
+
+  + **Suceso elemental.** Siempre ocurre uno de ellos Son mutuamente excluyentes
+  
+  + **Suceso compuesto.** Uniones de sucesos elementales
+  
+  
+<center>![](pics/espacio_muestral2.png){width=65%}</center>
+
+
+  + **Suceso contrario** (complementario) de un suceso A, al formado por los sucesos que no están en A. Se denota como $\bar{A}$
+  
+<center>![](pics/espacio_muestral3.png){width=50%}</center>
+
+
+  + El **suceso seguro**, $E$, es aquel que siempre ocurre al realizar el experimento
+  
+  + El **suceso imposible**, $\emptyset$, es aquel que nunca ocurre como resultado del experimento
+  
+
+## Operaciones con sucesos
+
+Se llama **suceso intersección** de $A$ y $B$, $A\in B$ o $AB$, al formado por los resultados experimentales que están simultáneamente en $A$ y $B$
+
+<center>![](pics/espacio_muestral5.png){width=50%}</center>
+
+
+Se dice que dos sucesos $A$ y $B$ son incompatibles si no pueden ocurrir a la vez, $A\in B=\emptyset$
+
+<center>![](pics/espacio_muestral4.png){width=50%}</center>
+
+
+Se llama **suceso unión** de $A$ y $B$, $A\cup B$, al suceso formado por los resultados experimentales que están en $A$ o en $B$ (incluyendo los que están en ambos)
+
+<center>![](pics/espacio_muestral6.png){width=90%}</center>
+
+
+Se llama **suceso diferencia** de $A$ y $B$, $A-B$, al formado por todos los sucesos de $A$ que no están en $B$, es decir, $A\in \bar{B}$. En consecuencia
+$$
+    \bar{A} = E - A
+$$
+
+<center>![](pics/espacio_muestral7.png){width=45%}</center>
+
+
+## Leyes de Morgan
+
+Hay ciertas propiedades de la unión, intersección y suceso contrario que son conocidas bajo las leyes de Morgan
+
+<center>![](pics/Morgan.png){width=90%}</center>
+
+## Concepto de Probabilidad
+
+En un experimento aleatorio, cuando el número de veces que se repite aumenta, la frecuencia relativa
+
+$$
+    f_n(A)  = \frac{\mbox{Nº Veces que ocurre $A$}}{n}
+$$
+
+converge hacia una cantidad que llamamos probabilidad
+
+$$
+    Pr(A) = \lim_{n\rightarrow \infty} f_n(A)
+$$
+
+Esta noción de probabilidad no se usa en la práctica, porque necesitaríamos de $n\rightarrow\infty$. Pero en la práctica podemos simular con el ordenador.
+
+**Ejemplo**
+La frecuencia relativa del número de caras obtenidos en lanzamientos sucesivos de una moneda
+
+
+```{r}
+set.seed(1234)
+prob <- NULL
+for(i in 1:1000){
+prob <- c(prob,mean(rbinom(i,1,0.5)))
+}
+plot(prob,t="l",xlab="Lanzamientos", ylab="Probabilidad de cara",ylim=c(0,1))
+abline(h=c(0,0.5,1),col=c("grey","red","grey"),lwd=c(1,3,1))
+```
+
+## Axiomas de probabilidad
+
+Dado un espacio muestral, $E$, definimos probabilidad como una función, $P$, que asigna a un suceso $A$ un valor numérico $P(A)$, verificando las siguientes reglas (axiomas)
+
+   1. $0\leq P(A) \leq 1$
+ 
+   2. $P(E)=1$
+ 
+   3. $P(A\cup B)=P(A)+P(B)$ si $A\in B  = \emptyset$
+ 
+ El tercer axioma se generaliza a cualquier número de sucesos de disjuntos:
+ 
+ <center>![](pics/union.png){width=75%}</center>
+ 
+ y por tanto
+ 
+ $$
+  Pr\left( \cup_{i=1}^{5}A_i\right) = \sum_{i}^5 Pr(A_i)
+ $$
+ 
+ 
+ Estos axiomas no asignan probabilidades a sucesos, pero facilitan el cálculo de probabilidades de unos sucesos a partir de la probabilidad de otros:
+ 
+  1. $Pr(\bar{A}) = 1-Pr(A) \rightarrow E = A \cup \bar{A} \rightarrow Pr(A) + Pr(\bar{A})$
+  
+  2. $Pr(\emptyset) = 0$ $\rightarrow \emptyset = E$ 
+ 
+  3. Si $A \subseteq B \rightarrow P(A) \leq P(B)$
+ 
+ 
+ <!--
+**Ejemplo: **
+
+Un fabricante de faros de coches controla con regularidad la duración y la intensidad de la luz cuando son sometidos a elevada humedad y temperatura. En la siguiente tabla se presentan las probabilidades de tener un comportamiento satisfactorio en cuanto a intensidad y duración:
+
+<center>![](pics/prob1.png){width=90%}</center>
+-->
+
+## Teorema de Bayes
+
+Si $A_1, A_2 ,... , A_n$ son:
+
+  + Sucesos incompatibles 2 a 2.
+
+  + Cuya unión es el espacio muestral ($A_1  \cup A_2  \cup... \cup A_n = E$).
+
+  + Y $B$ es otro suceso.
+
+El teorema de Bayes nos dice que:
+
+$$
+P(A_i|B)  = \frac{P(A_i) \cdot P(B|A_i)}{P(B)}
+$$
+
+donde 
+$$
+ P(B) = P(A_1) \cdot P(B|A_1) + P(A_2) \cdot P(B|A_2) + ... +P(A_n) \cdot P(B|A_n)
+$$
+
+
+Las probabilidades $p(A_i)$ se denominan probabilidades a priori.
+
+Las probabilidades $p(A_i/B)$ se denominan probabilidades a posteriori.
+
+Las probabilidades $p(B/A_i)$ se denominan verosimilitudes.
+
+\medskip
+
+**Ejemplo 1**
+El 20\% de los empleados de una empresa son ingenieros y otro 20\% son economistas. El 75\% de los ingenieros ocupan un puesto directivo y el 50\% de los economistas también, mientras que los no ingenieros y los no economistas solamente el 20\% ocupa un puesto directivo. ¿Cuál es la probabilidad de que un empleado directivo elegido al azar sea ingeniero?
+
+*Solucion*
+
+¿$P(Ingeniero|Directivo)$?
+
+<center>![](pics/bayes1.png){width=60%}</center>
+
+
+\begin{eqnarray*}
+P(Ingeniero|Directivo) & = & \frac{P(Ingeniero) \times P(Directivo|Ingeniero)}{P(Directivo)} = \\ 
+& = & \frac{0.2\times 0.75}{0.2 \times 0.75 + 0.2 \times 0.5 + 0.6 \times 0.2} = 0.405
+\end{eqnarray*}
+
+**Ejemplo 2**
+
+La probabilidad de que haya un accidente en una fábrica que dispone de alarma es 0.1. La probabilidad de que suene esta sí se ha producido algún incidente es de 0.97 y la probabilidad de que suene si no ha sucedido ningún incidente es 0.02.
+
+En el supuesto de que haya funcionado la alarma, ¿cuál es la probabilidad de que no haya habido ningún incidente?
+
+
+*Solucion*
+
+Sean los sucesos:
+
+$I = \mbox{`Producirse incidente'}$.
+
+$A = \mbox{`Sonar la alarma'}$.
+
+<center>![](pics/bayes2.png){width=60%}</center>
+
+
+$P(\bar{I}|A) = \frac{P(\bar{I}) \times P(A|\bar{I})}{P(A)} = \frac{0,9\times 0,03}{0,1\times 0,97 + 0,9 \times 0,02}=0,157$

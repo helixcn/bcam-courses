@@ -1461,4 +1461,34 @@ importante considerar estas dimensiones (es decir, el desplazamiento, la
 relación del eje trasero y el peso) ya que estas variables aumentan el
 ajuste del modelo.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(faraway)}
+\KeywordTok{data}\NormalTok{(pima, }\DataTypeTok{package=}\StringTok{"faraway"}\NormalTok{)}
+\KeywordTok{head}\NormalTok{(pima)}
+\KeywordTok{summary}\NormalTok{(pima)}
+\KeywordTok{sort}\NormalTok{(pima$diastolic)}
+\NormalTok{pima$diastolic[pima$diastolic ==}\StringTok{ }\DecValTok{0}\NormalTok{]  <-}\StringTok{ }\OtherTok{NA}
+\NormalTok{pima$glucose[pima$glucose ==}\StringTok{ }\DecValTok{0}\NormalTok{] <-}\StringTok{ }\OtherTok{NA}
+\NormalTok{pima$triceps[pima$triceps ==}\StringTok{ }\DecValTok{0}\NormalTok{]  <-}\StringTok{ }\OtherTok{NA}
+\NormalTok{pima$insulin[pima$insulin ==}\StringTok{ }\DecValTok{0}\NormalTok{] <-}\StringTok{ }\OtherTok{NA}
+\NormalTok{pima$bmi[pima$bmi ==}\StringTok{ }\DecValTok{0}\NormalTok{] <-}\StringTok{ }\OtherTok{NA}
+\NormalTok{pima$test <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(pima$test)}
+\KeywordTok{summary}\NormalTok{(pima$test)}
+\KeywordTok{levels}\NormalTok{(pima$test) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"negative"}\NormalTok{,}\StringTok{"positive"}\NormalTok{)}
+\KeywordTok{summary}\NormalTok{(pima)}
+\KeywordTok{hist}\NormalTok{(pima$diastolic,}\DataTypeTok{xlab=}\StringTok{"Diastolic"}\NormalTok{,}\DataTypeTok{main=}\StringTok{""}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(}\KeywordTok{density}\NormalTok{(pima$diastolic,}\DataTypeTok{na.rm=}\OtherTok{TRUE}\NormalTok{),}\DataTypeTok{main=}\StringTok{""}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(}\KeywordTok{sort}\NormalTok{(pima$diastolic),}\DataTypeTok{ylab=}\StringTok{"Sorted Diastolic"}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(diabetes ~}\StringTok{ }\NormalTok{diastolic,pima)}
+\KeywordTok{plot}\NormalTok{(diabetes ~}\StringTok{ }\NormalTok{test,pima)}
+\KeywordTok{require}\NormalTok{(ggplot2)}
+\KeywordTok{ggplot}\NormalTok{(pima,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{diastolic))+}\KeywordTok{geom_histogram}\NormalTok{()}
+\KeywordTok{ggplot}\NormalTok{(pima,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{diastolic))+}\KeywordTok{geom_density}\NormalTok{()}
+\KeywordTok{ggplot}\NormalTok{(pima,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{diastolic,}\DataTypeTok{y=}\NormalTok{diabetes))+}\KeywordTok{geom_point}\NormalTok{()}
+\KeywordTok{ggplot}\NormalTok{(pima,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{diastolic,}\DataTypeTok{y=}\NormalTok{diabetes,}\DataTypeTok{shape=}\NormalTok{test))+}\KeywordTok{geom_point}\NormalTok{()+}\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position =} \StringTok{"top"}\NormalTok{, }\DataTypeTok{legend.direction =} \StringTok{"horizontal"}\NormalTok{)}
+\KeywordTok{ggplot}\NormalTok{(pima,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{diastolic,}\DataTypeTok{y=}\NormalTok{diabetes)) +}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{size=}\DecValTok{1}\NormalTok{) +}\StringTok{ }\KeywordTok{facet_grid}\NormalTok{(~}\StringTok{ }\NormalTok{test)}
+\end{Highlighting}
+\end{Shaded}
+
 \end{document}

@@ -1,0 +1,110 @@
+---
+title: '**Curso de Estadística básica para Data Scientists**'
+author: "Dae-Jin Lee < lee.daejin@gmail.com >"
+date: "TEMA 8. Análisis multivariante y de series temporales"
+output:
+  html_document:
+    highlight: haddock
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 4
+    toc_float:
+      collapsed: yes
+      smooth_scroll: yes
+  pdf_document:
+    fig_caption: no
+    fig_height: 4
+    fig_width: 5
+    highlight: tango
+    includes:
+      in_header: mystyle.sty
+    keep_tex: yes
+    number_sections: yes
+    template: datahack_template.tex
+    toc: yes
+    toc_depth: 2
+  word_document: default
+header-includes:
+- \usepackage{hyperref}
+- \usepackage{mathtools}
+- \usepackage{palatino}
+- \usepackage[spanish]{babel}
+- \usepackage[official]{eurosym}
+- \renewcommand{\tablename}{Tabla}
+subtitle: null
+bibliography: MMrefs.bib
+---
+
+\newpage
+
+[Regresar a la página principal](https://idaejin.github.io/bcam-courses/R/datahack/)
+
+
+
+# Análisis multivariante y de series temporales
+
+
+El análisis multivariante es conjunto de métodos estadísticos cuya finalidad es analizar simultáneamente conjuntos de datos multivariantes: hay varias variables medidas para cada caso.
+
+Permiten un mejor entendimiento del fenómeno objeto de estudio, obteniendo información que los métodos univariantes y bivariantes son incapaces de conseguir.
+
+## Clasificación de las técnicas multivariantes
+
+Las técnicas multivariantes se pueden clasificar según dos posibles criterios:
+
+
+  1. **Métodos Dependientes.** Se está interesado en la asociación entre las distintas variables, es decir, en las relaciones entre las mismas, donde parte de estas variables dependen o se miden en función de las otras. Subyace en ellos siempre un interés predictivo. Por ejemplo: regresión lineal multiple, análisis discriminante, modelos log-lineales, correlaciones canónicas, análisis multivariante de la varianza.
+
+  2. **Métodos Independientes.** Se está interesado en investigar las asociaciones que se presentan entre variables sin distinción de tipos entre ellas. Tienen un interés descriptivo. Por ejemplo: análisis factorial, escalado multidimensional, análisis de correspondencias, análisis cluster.
+  
+  
+## Análisis de componentes principales ó Principal Components Analysis (PCA)
+
+Cuando se recoge la información de una muestra de datos, lo más frecuente es tomar el mayor número posible de variables. Sin embargo, si tomamos demasiadas variables sobre un conjunto de objetos, por ejemplo 20 variables, tendremos que considerar $\binom{20}{2}=180$ posibles coeficientes de correlación, si son 40 variables el número aumenta a 780. Por tanto, en este caso es difícil visualizar relaciones entre las variables.
+
+Otro problema que se presenta es la fuerte correlación que muchas veces se presenta entre las variables: si tomamos demasiadas variables (cosa que en general sucede cuando no se sabe demasiado sobre los datos o sólo se tiene ánimo exploratorio), lo normal es que estén relacionadas o que midan lo mismo bajo distintos puntos de vista. Por ejemplo, en estudios médicos, la presión sanguínea a la salida del corazón y a la salida de los pulmones
+están fuertemente relacionadas.
+
+Se hace necesario, pues, reducir el número de variables. Es importante resaltar el hecho de que el concepto de mayor información se relaciona con el de mayor variabilidad o varianza. Cuanto mayor sea la variabilidad de los datos (varianza) se considera que existe mayor información, lo cual está relacionado con el concepto de entropía.
+
+**Matemáticamente**
+
+Supongamos que existe una muestra con $n$ individuos para cada uno de los cuales se han medido $m$ variables (aleatorias) $F_j$.  El PCA permite encontrar un número de factores subyacentes $p < m$ que explican aproximadamente el valor de las $m$ variables para cada individuo. El hecho de que existan estos $p$ factores subyacentes puede interpretarse como una reducción de la dimensionalidad de los datos: donde antes necesitabamos $m$ valores para caracterizar a cada individuo ahora nos bastan $p$ valores. Cada uno de los $p$ encontrados se llama *componente principal*.
+
+Existen dos formas básicas de aplicar el ACP:
+
+  + Método basado en la matriz de correlación, cuando los datos no son dimensionalmente homogéneos o el orden de magnitud de las variables aleatorias medidas no es el mismo.
+    
+  + Método basado en la matriz de covarianzas, que se usa cuando los datos son dimensionalmente homogéneos y presentan valores medios similares.
+
+El primer paso para definir los componentes principales de p variables originales es encontrar una función lineal $a_1^\prime y$, donde $a_1$ es un vector de $p$ constantes, para los vectores con varianza máxima.
+
+$$
+a_1^\prime y = a_{11}x_1 + a_{12}x_2 + \cdots + a_{1p}x_p = \sum_{j=1}^p a_{1j}x_j
+$$
+
+El análisis de componentes principales continúa encontrando una función lineal $a_2^\prime y$ que no está correlacionada con $a_1^\prime y$ con máxima varianza y así sucesivamente hasta $k$ componentes principales.
+
+
+```{r}
+houses <- read.table("http://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.data",header = F, na.string = "?")
+colnames(houses) <- c("CRIM", "ZN", "INDUS","CHAS","NOX","RM","AGE","DIS","RAD","TAX","PTRATIO","B","LSTAT","MEDV")
+
+# Perform PCA
+pcaHouses <- prcomp(scale(houses[,-14]))
+scoresHouses <- pcaHouses$x
+ 
+# Fit lm using the first 3 PCs
+modHouses <- lm(houses$MEDV ~ scoresHouses[,1:3])
+summary(modHouses)
+
+```
+
+
+
+
+## Análisis Cluster y de k-medias
+
+  
+

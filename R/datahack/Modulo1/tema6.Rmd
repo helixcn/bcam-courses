@@ -3,6 +3,15 @@ title: '**Curso de Estadística básica para Data Scientists**'
 author: "Dae-Jin Lee < lee.daejin@gmail.com >"
 date: "TEMA 6. Modelos lineales"
 output:
+  html_document:
+    highlight: haddock
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 4
+    toc_float:
+      collapsed: yes
+      smooth_scroll: yes
   pdf_document:
     fig_caption: no
     fig_height: 4
@@ -15,15 +24,6 @@ output:
     template: datahack_template.tex
     toc: yes
     toc_depth: 2
-  html_document:
-    highlight: haddock
-    number_sections: yes
-    theme: journal
-    toc: yes
-    toc_depth: 4
-    toc_float:
-      collapsed: yes
-      smooth_scroll: yes
   word_document: default
 header-includes:
 - \usepackage{hyperref}
@@ -637,6 +637,11 @@ plotmeans(mpg~cyl,xlab="Number of Cylinders",
 -->
 
 
+<!-- **Ejemplo: Diabetes survey on Pima Indians** -->
+
+<!-- The National Institute of Diabetes and Digestive and Kidney Diseases conducted a study on 768 adult female Pima Indians living near Phoenix. -->
+
+
 <!-- ```{r, eval=FALSE} -->
 <!-- library(faraway) -->
 <!-- data(pima, package="faraway") -->
@@ -663,6 +668,7 @@ plotmeans(mpg~cyl,xlab="Number of Cylinders",
 <!-- ggplot(pima,aes(x=diastolic,y=diabetes))+geom_point() -->
 <!-- ggplot(pima,aes(x=diastolic,y=diabetes,shape=test))+geom_point()+theme(legend.position = "top", legend.direction = "horizontal") -->
 <!-- ggplot(pima,aes(x=diastolic,y=diabetes)) + geom_point(size=1) + facet_grid(~ test) -->
+<!-- ``` -->
 <!-- data(manilius, package="faraway") -->
 <!-- head(manilius) -->
 <!-- (moon3 <- aggregate(manilius[,1:3],list(manilius$group), sum)) -->

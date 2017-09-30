@@ -30,11 +30,13 @@ Este curso es una introducción a la Estadística con el software estadístico `
   
   [4.  Variables aleatorias y probabilidad](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema4.html) [(*.pdf)](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema4.pdf)
   
+  [4a.  Introducción a la probabilidad](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema4a.html) [(*.pdf)](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema4a.pdf)
+  
   [5.  Introducción a la inferencia estadística](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema5.html) [(*.pdf)](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema5.pdf)
   
   [6.  Modelos lineales](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema6.html) [(*.pdf)](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema6.pdf))
   
-  7.  Regresión para datos binarios y de conteo
+  [7.  Regresión para datos binarios y de conteo](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema7.html) [(*.pdf)](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema7.pdf))
   
   8.  Análisis Multivariante y de series temporales
   
@@ -60,6 +62,7 @@ El objetivo final de este módulo será en análisis de una base de datos para r
   - Interpretación y Análisis
 
 **Fecha de entrega: 16 de octubre**
+[TrabajoFinal.zip](http://idaejin.github.io/bcam-courses/R/datahack/TrabajoFinal.zip)
 
 
 <!---

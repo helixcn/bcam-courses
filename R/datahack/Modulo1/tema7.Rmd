@@ -42,18 +42,41 @@ bibliography: MMrefs.bib
 
 
 
-# Logistic regression 
+# Regresión Logística
 
 Normalmente se utiliza una regresión logística cuando hay una variable de resultado dicotómica (como ganar o perder) y una variable predictora continua que está relacionada con la probabilidad o las probabilidades de la variable de resultado. También puede usarse con predictores categóricos y con múltiples predictores.
 
 
-## ESR and Plasma Proteins
+Si usamos una regresión lineal para modelar una variable dicotómica (como $Y$), el modelo resultante podría no restringir los $Y$'s previstos dentro de $0$ y $1$. Además, otros supuestos de regresión lineal como la normalidad de errores pueden ser violados. Así que en su lugar, modelamos las probabilidades $\log$ del evento $\ln (\frac{p}{1-p})$ o logit, donde, $p$ es la probabilidad del evento.
 
-The erythrocyte sedimentation rate (ESR) is the rate at which red blood cells (erythrocytes) settle out of suspension in blood plasma, when measured under standard conditions. If the ESR increases when the level of certain proteins in the blood plasma rise in association with conditions such as rheumatic diseases, chronic infections and malignant diseases, its determination might be useful in screening blood samples taken from people suspected of suffering from one of the conditions mentioned. The absolute value of the ESR is not of great importance; rather, less than 20mm/hr indicates a "healthy" individual. To assess whether the ESR is a useful diagnostic tool, the question of interest is whether there is any association between the probability of an ESR reading greater than 20mm/hr and the levels of the two plasma proteins. If there is not then the determination of ESR would not be useful for diagnostic purposes. A data frame with 32 observations on the following 3 variables.
+$$
+    z_i = \ln (\frac{p_i}{1-p_i}) =   \beta_0 + \beta_1 x_1 + ... + \beta_p x_p
+$$
 
-  * `fibrinogen` the fibrinogen level in the blood.
-  * `globulin`   the globulin level in the blood.
-  * `ESR`  the erythrocyte sedimentation rate, either less or greater 20 mm / hour.
+
+La ecuación anterior se puede modelar usando `glm()` colocando el argumento  `family`  `"binomial"`. Pero estamos más interesados en la probabilidad del evento, que en las probabilidades logarítmicas del evento. Por lo tanto, los valores predichos del modelo anterior, es decir, las probabilidades logarítmicas del evento, se pueden convertir en probabilidad de evento como sigue:
+
+$$
+  p_i = 1- \frac{1}{1 + \exp(z_i)}
+$$
+Esta conversión se logra utilizando la función `plogis()`.
+
+La función `logit` tiene la forma
+
+
+<center>![](pics/logit.png){width=65%}</center>
+
+
+
+
+## ESR y proteínas de plasma
+
+
+La velocidad de sedimentación de eritrocitos (ESR - *erythrocyte sedimentation rate*) es la velocidad a la que los glóbulos rojos (eritrocitos) se asientan fuera de suspensión en el plasma sanguíneo, cuando se miden en condiciones estándar. Si la ESR aumenta cuando el nivel de ciertas proteínas en el plasma sanguíneo se eleva en asociación con afecciones tales como enfermedades reumáticas, infecciones crónicas y enfermedades malignas, su determinación podría ser útil en el cribado de muestras de sangre tomadas de personas sospechosas de padecer una de las condiciones mencionados. El valor absoluto de la ESR no es de gran importancia; más bien, menos de 20mm/hr indica un individuo "sano". Para evaluar si la ESR es una herramienta de diagnóstico útil, la cuestión de interés es si existe alguna asociación entre la probabilidad de una lectura de ESR mayor de 20mm/hr y los niveles de las dos proteínas plasmáticas. Si no es así, la determinación de ESR no sería útil para fines de diagnóstico. Un marco de datos con 32 observaciones sobre las 3 variables siguientes.
+
+  * `fibrinogen` el nivel de fibrinógeno en la sangre.
+  * `globulin`   el nivel de globulina en la sangre.
+  * `ESR`  la velocidad de sedimentación de los eritrocitos, sea menor o mayor de 20 mm/hora.
 
 ```{r}
 data("plasma", package = "HSAUR")
@@ -66,62 +89,58 @@ boxplot(fibrinogen ~ ESR, data = plasma, varwidth = TRUE, main="Fibrinogen level
 boxplot(globulin ~ ESR, data = plasma, varwidth = TRUE, main="Globulin level in the blood")
 ```
 
-The question of interest is whether there is any association between the probability of an ESR reading greater than 20mm/hr and the levels of the two plasma proteins. If there is not then the determination of ESR would not be useful for diagnostic purposes.
+La cuestión de interés es si existe alguna asociación entre la probabilidad de una lectura ESR superior a 20 mm / hr y los niveles de las dos proteínas plasmáticas. Si no es así, la determinación de ESR no sería útil para fines de diagnóstico.
 
-Since the response variable is binary, a multiple regression model is not suitable for a regression analysis.
+Dado que la variable de respuesta es binaria, un modelo de regresión múltiple no es adecuado para un análisis de regresión.
 
-We may write
+Podemos escribir
 $$
 \mathbb{P}\mbox{r}(y_i=1)=\pi_i \qquad \mathbb{P}\mbox{r}(y_i=0)=1-\pi_i
 $$
 
-Normally, we will have a set of covariates $X=(x_1,..., x_p)$ associated with each individual, and our goal will be to investigate the relationship between the response probability $\pi=\pi(X)$ and
-the explanatory variables.
-
-So instead of modelling the expected value of the response directly as a linear function of explanatory variables, a suitable transformation is modelled. In this case the most suitable transformation is the logistic or logit function of $\pi$ leading to the model
-
+El modelo
 
 $$
   \mbox{logit}(\pi) = \mbox{logit}\left(\frac{\pi}{1-\pi}\right) = \beta_0 + \beta_1x_1 + ... + \beta_p x_p
 $$
 
-The logit of a probability is simply the log of the odds of the response taking the value one or logit transformation, of p: $logit(p) = \log(p/1-p)$. Logit is sometimes called "log odds." Because of the properties of odds given in the list above, the logit has these properties:
+El logit de una probabilidad es simplemente el log de las probabilidades de la respuesta tomando el valor una transformación logit o de p: $logit(p) = \log(p/1-p)$. Propiedades
 
-  *  If `odds(y=1s) = 1`, then `logit(p) = 0`.
-  *  If `odds(y=1) < 1`, then `logit(p) < 0`.
-  *  If `odds(y=1) > 1`, then `logit(p) > 0`.
+  *  Si `odds(y=1) = 1`, entonces `logit(p) = 0`.
+  *  Si `odds(y=1) < 1`, entonces `logit(p) < 0`.
+  *  Si `odds(y=1) > 1`, entonces `logit(p) > 0`.
   
-The logit transform fails if p = 0`.
 
-When the response is a binary (dichotomous) variable, and x is numeric, logistic regression fits a logistic curve to the relationship between $x$ and $y$. Hence, logistic regression is linear regression on the logit transform of y, where y is the proportion (or probability) of success at each value of x. However, you should avoid the temptation to do a traditional least-squares regression at this point, as neither the normality nor the homoscedasticity assumption will be met.
+Cuando la respuesta es una variable binaria (dicotómica), y $x$ es numérica, la regresión logística ajusta una curva logística a la relación entre $x$ y $y$. Por lo tanto, la regresión logística es la regresión lineal en la transformación logit de y, donde y es la proporción (o probabilidad) de éxito en cada valor de $x$. Sin embargo, se evitar la tentación de hacer una regresión lineal, ya que ni la normalidad ni la suposición de homoscedasticidad se satisfacen.
 
 ```{r}
 x <- seq(-6,6,0.01)
 logistic <- exp(x)/(1+exp(x))
-plot(x,logistic,t='l',main="Logistic curve",ylab="")
+plot(x,logistic,t='l',main="Logistic curve",ylab="p",xlab="log(p(1-p)")
 abline(h=c(0,0.5,1),v=0,col="grey")
 points(0,0.5,pch=19,col=2)
 ```
 
-Logistic regression model in `R` can be fitted using the function `glm`. First, we start with a model that includes only a single predictor `fibrinogen` 
+La regresión logística en `R` se ajusta mediante la función `glm`. En primer lugar, comenzamos con el modelo que incluye como variable explicativa `fibrinogen` 
 
 ```{r}
 plasma_glm_1 <- glm(ESR ~ fibrinogen, data = plasma,family = binomial())
 summary(plasma_glm_1)
 ```
 
-We see that the regression coefficient for `fibrinogen` is significant at the $5\%$ level. An increase of one unit
-in this variable increases the log-odds in favour of an ESR value greater than 20 by an estimated $1.83$ with $95\%$ confidence interval.
+Vemos que el coeficiente de regresión para `fibrinogen` es significativo al nivel de $5\%$. Un aumento de una unidad
+en esta variable aumenta log-odds en favor de un valor ESR mayor que 20 por un $1,83$ estimado con $95\%$ intervalo de confianza.
 
 ```{r}
 confint(plasma_glm_1,parm="fibrinogen")
 ```
-These values are more helpful if converted to the corresponding values for the odds themselves by exponentiating the estimate
+Estos valores son más útiles si se convierten a los valores correspondientes para las probabilidades ellos mismos exponenciando la estimación.
 
 ```{r}
 exp(coef(plasma_glm_1)["fibrinogen"])
 ```
-and the confidence interval
+y el intervalo de confianza
+
 ```{r}
 exp(confint(plasma_glm_1, parm = "fibrinogen"))
 ```
@@ -133,36 +152,260 @@ exp(confint(plasma_glm_1, parm = "fibrinogen"))
 <!-- ``` -->
 
 
-The confidence interval is very wide because there are few observations overall and very few where the ESR value is greater than 20. Nevertheless it seems likely that increased values of fibrinogen lead to a greater probability of an ESR value greater than 20. We can now fit a logistic regression model that includes both explanatory variables using the code
+El intervalo de confianza es muy amplio porque hay pocas observaciones en general y muy pocos donde el valor ESR es mayor de 20. Sin embargo, parece probable que el aumento de los valores de fibrinógeno conducir a una mayor probabilidad de un valor ESR mayor de 20. Ahora podemos caber un modelo de regresión logística que incluye ambas variables explicativas utilizando el código.
 
 ```{r}
 plasma_glm_2 <- glm(ESR ~ fibrinogen + globulin, data = plasma,family = binomial())
 summary(plasma_glm_2)
 ```
 
-The coefficient for gamma globulin is not significantly different from zero.
+El coeficiente de gamma globulina no es significativamente diferente de cero.
 
-Both nested models can be compared using a likelihood ratio test with `anova` function 
+Ambos modelos anidados se pueden comparar utilizando una prueba de razón de verosimilitud con la función `anova`
+
 ```{r}
 anova(plasma_glm_1, plasma_glm_2, test = "Chisq")
 ```
-So we conclude that gamma globulin is not associated with ESR level.
+Por lo tanto, concluimos que la gamma globulina no está asociada con el nivel de ESR.
 
 
-The plot clearly shows the increasing probability of an ESR value above 20 (larger circles) as the values of fibrinogen, and to a
-lesser extent, gamma globulin, increase.
+La gráfica muestra claramente la probabilidad creciente de un valor de `ESR` por encima de 20 (círculos más grandes) como los valores de `fibrinogen` ya una en menor medida, un aumento de la gamma globulina.
 
-```{r}
+
+```{r,eval=TRUE}
 prob <- predict(plasma_glm_2,type="response")
 plot(globulin ~ fibrinogen, data = plasma, xlim = c(2, 6),ylim = c(25, 55), pch = ".")
 symbols(plasma$fibrinogen, plasma$globulin, circles = prob,add = TRUE)
 ```
 
+## Casos de Estudio con la Regresión Logística
+
+**Ejemplo:**
+
+Supongamos el fichero de datos `adult.csv` disponible [aquí](data/adult.csv)
+
+
+Vamos a tratar de predecir la variable respuesta `ABOVE50k` (sueldo >50k) a través de una regresión logistica en base a variables explicativas demográficas.
+
+
+```{r}
+inputData <- read.csv("http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/data/adult.csv")
+```
+
+## Sesgo de clase
+Idealmente, la proporción de eventos y no eventos en la variable $Y$ debe ser aproximadamente la misma. Por lo tanto, primero vamos a comprobar la proporción de clases en la variable dependiente `ABOVE50K`.
+
+Claramente, hay un *sesgo de clase*, una condición observada cuando la proporción de eventos es mucho menor que la proporción de no-eventos. Por lo tanto, debemos muestrear las observaciones en proporciones aproximadamente iguales para obtener mejores modelos.
+```{r}
+table(inputData$ABOVE50K)
+```
+
+## Crear muestra de entrenamiento y de validación (o test)
+
+Una forma de abordar el problema del sesgo de clase es dibujar los 0 y 1 para el trainingData (muestra de desarrollo) en proporciones iguales. Al hacerlo, pondremos el resto del inputData no incluido en el entrenamiento en testData (muestra de validación). Como resultado, el tamaño de la muestra de desarrollo será menor que la validación, lo que está bien, porque, hay un gran número de observaciones (> 10K).
+
+```{r, echo=FALSE,warning=FALSE}
+# Crear datos de entrenamiento
+ input_ones <- inputData[which(inputData$ABOVE50K == 1), ]  # 1's
+input_zeros <- inputData[which(inputData$ABOVE50K == 0), ]  # 0's
+
+set.seed(100)
+
+ input_ones_training_rows <- sample(1:nrow(input_ones), 0.7*nrow(input_ones))   # 1's training
+input_zeros_training_rows <- sample(1:nrow(input_zeros), 0.7*nrow(input_ones))  # 0's training. Pick as many 0's as 1's
+
+ training_ones <- input_ones[input_ones_training_rows, ]
+training_zeros <- input_zeros[input_zeros_training_rows, ]
+
+trainingData <- rbind(training_ones, training_zeros)  # row bind the 1's and 0's
+write.csv(trainingData,file="data/trainingData.csv",row.names = FALSE)
+
+# Crear datos de test
+ test_ones <- input_ones[-input_ones_training_rows, ]
+test_zeros <- input_zeros[-input_zeros_training_rows, ]
+testData <- rbind(test_ones, test_zeros)  # row bind
+write.csv(testData,file="data/testData.csv",row.names = FALSE)
+```
+
+```{r}
+logitMod <- glm(ABOVE50K ~ RELATIONSHIP + AGE + CAPITALGAIN 
+                + OCCUPATION + EDUCATIONNUM, data=trainingData, 
+                family=binomial(link="logit"))
+
+predicted <- plogis(predict(logitMod, testData))  # predicted scores or
+# or
+# predicted <- predict(logitMod, testData,type="response")  # predicted scores
+```
+
+Cuando usamos la función `predict()` en este modelo, se predice el `log(odds)` de la variable $Y$ ($log(\frac{1}{1-p})$). Esto no es lo que queremos en última instancia porque, los valores predichos pueden no estar dentro del rango 0 y 1 como se esperaba. Por lo tanto, para convertirlo en puntajes de probabilidad de predicción que están enlazados entre 0 y 1, usamos el `plogis()` o *type="response"* como argumento de `predict()`.
+
+## Decidir el límite óptimo de probabilidad de predicción para el modelo
+
+La puntuación de probabilidad de predicción de corte por defecto es `0,5` o la proporción de 1 y 0 en los datos de entrenamiento. Pero a veces, afinar el límite de probabilidad puede mejorar la precisión tanto en el desarrollo como en las muestras de validación. La función del paquete `InformationValue` llamada `optimalCutoff` proporciona maneras de encontrar el punto de corte óptimo para mejorar la predicción de 1's, 0's, tanto 1 como 0's y o reducir el error de clasificación errónea.
+
+```{r}
+library(InformationValue)
+optCutOff <- optimalCutoff(testData$ABOVE50K, predicted)[1]
+optCutOff
+```
+
+## Error de clasificación errónea
+
+El error de clasificación errónea es el porcentaje de desajuste de los valores reales predichos, independientemente de los 1 o los 0. Cuanto menor sea el error de clasificación errónea, mejor será su modelo.
+
+```{r}
+misClassError(testData$ABOVE50K, predicted, threshold = optCutOff)
+```
+
+## Curva ROC
+
+La curva ROC (Receiver Operating Characteristics) es una representación gráfica de la sensibilidad frente a la especificidad para un sistema clasificador binario según se varía el umbral de discriminación.
+
+Otra interpretación de este gráfico es la representación de la razón o ratio de verdaderos positivos (VPR = Razón de Verdaderos Positivos) frente a la razón o ratio de falsos positivos (FPR = Razón de Falsos Positivos) también según se varía el umbral de discriminación (valor a partir del cual decidimos que un caso es un positivo).
+
+Proporciona herramientas para seleccionar los modelos posiblemente óptimos y descartar modelos subóptimos independientemente de (y antes de especificar) el coste de la distribución de las dos clases sobre las que se decide.
+
+
+  - Verdaderos Positivos (VP) o también éxitos
+
+  - Verdaderos Negativos (VN) o también rechazos correctos
+
+  - Falsos Positivos (FP) o también falsas alarmas o Error tipo I
+
+  - Falsos Negativos (FN) o también, Error de tipo II
+
+  - Sensibilidad o Razón de Verdaderos Positivos (VPR) o también razón de éxitos y, recuerdo en recuperación de información,
+
+$$
+VPR=VP/P=VP/(VP+FN)
+$$
+
+  - Especificidad o Razón de Verdaderos Negativos
+
+$$
+\mbox{ESPECIFICIDAD}=VN/N=VN/(FP+VN)=1-FPR
+$$
+
+```{r}
+plotROC(testData$ABOVE50K, predicted)
+```
+
+### German credit Data
+
+```{r}
+
+data <- read.table("http://ftp.ics.uci.edu/pub/machine-learning-databases/statlog/german/german.data", header = FALSE)
+
+colnames(data)<-c("account.status","months",
+				"credit.history","purpose","credit.amount",
+				"savings","employment","installment.rate","personal.status",
+				"guarantors","residence","property","age","other.installments",
+				"housing","credit.cards","job","dependents","phone","foreign.worker","credit.rating")
+
+head(data)
+
+levels(data$account.status) <- c("<0DM","<200DM",">200DM","NoStatus")
+levels(data$credit.history) <- c("No","Allpaid","Allpaidtillnow","Delayinpaying","Critical")
+levels(data$purpose) <- c("car(new)","car(used)","furniture/equipment","radio/television","domesticappliances",
+"repairs","education","vacation-doesnotexist?","retraining","business","others")
+
+```
+
+Vamos a dividir el conjunto de datos en 0.7: 0.3 para el entrenamiento y la prueba del modelo. Para la regresión logística, también necesitamos transformar el marco de datos con factores en la matriz con valor biométrico.
+
+```{r}
+mat1 <- model.matrix(credit.rating ~ . , data = data)
+n<- dim(data)[1]
+
+set.seed(1234)
+train<- sample(1:n , 0.7*n)
+xtrain<- mat1[train,]
+xtest<- mat1[-train,]
+
+ytrain<- data$credit.rating[train]
+ytrain <- as.factor(ytrain-1) # convert to 0/1 factor
+ ytest<- data$credit.rating[-train]
+ytest  <- as.factor(ytest-1) #  convert to 0/1 factor
+```
+
+Build the logistic Regression model
+
+```{r}
+m1 <- glm(credit.rating ~ . , family = binomial, data= data.frame(credit.rating= ytrain, xtrain))
+```
+
+Key Variables for the regression model.
+
+```{r}
+sig.var<- summary(m1)$coeff[-1,4] <0.01
+names(sig.var)[sig.var == T]
+```
+
+Predict outcome with Logistic Regression model, then use the test dataset to evaluate the model.
+
+```{r}
+pred1<- predict.glm(m1,newdata = data.frame(ytest,xtest), type="response")
+result1<- table(ytest, floor(pred1+1.5))
+result1
+```
+
+```{r}
+error1<- sum(result1[1,2], result1[2,1])/sum(result1)
+error1
+```
+
+Curva ROC con el paquete `ROCR`
+
+```{r}
+library(ROCR)
+pred = prediction(pred1,ytest)
+perf <- performance(pred, "tpr", "fpr")
+plot(perf)
+AUCLog1=performance(pred, measure = "auc")@y.values[[1]]
+cat("AUC: ",AUCLog1,"n")
+```
+
+
 # Regresión de Poisson
 
-The data follows a \alert{Poisson} distribution, i.e. $y \sim \mathcal{P}\mbox{ois}(\lambda)$
+En la regresión de Poisson la variable respuesta/resultado $Y$ es un conteo. Pero también podemos tener $Y/t$, la tasa (o incidencia) como la variable de respuesta, donde $t$ es un intervalo que representa el tiempo, el espacio o algún otro agrupamiento.
 
-Hence, theoretically $\mathbb{E}[y] = \mathbb{V}\mbox{ar}[y] = \lambda$
+
+**Variables explicativas:**
+
+  - Las variables explicativas, $X = (X_1, X_2, ... X_k)$, pueden ser continuas o una combinación de variables continuas y categóricas.
+
+  - Las variables explicativas, $X = (X_1, X_2, ... X_k)$, pueden ser TODAS categóricas. Entonces los conteos se representan en una tabla de contingencia, y la convención es llamar a tal modelo modelo log-lineal.
+
+  - Si $Y/t$ es la variable de interés, entonces, incluso con todos los predictores categóricos, el modelo de regresión será conocido como regresión de Poisson, no un modelo log-lineal.
+
+En la regresión de Poisson, los datos siguen una distribución de {Poisson} distribution, i.e. $y \sim \mathcal{P}\mbox{ois}(\mu)$. En la regresión se utiliza la transformación del logaritmo
+
+$$
+\log(\mu)=\beta_0+\beta_1x_1
+$$
+Por tanto, en teoría  $\mathbb{E}[y] = \mathbb{V}\mbox{ar}[y] = \mu$
+
+
+Por simplicidad, con una sola variable explicativa, escribimos: $\log(\mu)=\alpha + \beta_x$, que es equivalente a $\mu=exp(\alpha+\beta_x)=exp(\alpha)exp(\beta_x)$.
+
+
+**Interpretación de las estimaciones de parámetros:**
+
+  - $exp(\alpha) =$ es el efecto sobre la media de $Y$, es decir $\mu$, cuando $X = 0$
+
+  - $exp(\beta) =$ para cada unidad adicional de $X$, la variable predictora tiene un efecto multiplicativo de $exp(\beta)$ sobre la media de $Y$, esto es $\mu$
+
+
+
+    + Si $\beta = 0$, entonces $exp(\beta) = 1$, y el conteo esperado, $\mu = E(y) = exp(\alpha)$, por tanto $Y$ y $X$ no están relacionadas.
+
+    + Si $\beta > 0$, entonces $exp(\beta) > 1$, y el conteo esperado $\mu = E(y)$ es $exp(\beta)$ veces más grande cuando $X = 0$
+
+    + Si $\beta < 0$, entonces $exp(\beta) < 1$, y el conteo esperado $\mu = E(y)$ es $exp(\beta)$ veces más pequeño cuando $X = 0$
+
+
+
 
 
 **Ejemplo**
@@ -183,7 +426,7 @@ Hence, theoretically $\mathbb{E}[y] = \mathbb{V}\mbox{ar}[y] = \lambda$
 ```
 
 ```{r,eval=TRUE}
-turbinas <- read.table("data/fisuras.txt",header = TRUE)
+turbinas <- read.table("https://idaejin.github.io/bcam-courses/R/datahack/Modulo1/data/fisuras.txt",header = TRUE)
 plot(turbinas,type="h"); points(turbinas,cex=.6,pch=19)
 ex2<- lm(fisuras~horas,data=turbinas)
 ```
@@ -197,14 +440,188 @@ plot(turbinas,type="h"); points(turbinas,cex=.6,pch=19)
 abline(ex2,col=2,lwd=2)
 ```
 
-## family="Poisson"
+**`family="poisson"`**
 
 ```{r,eval=TRUE}
 ex3 <- glm(fisuras ~ horas,data=turbinas, family = "poisson")
 plot(turbinas,type="h"); points(turbinas,cex=.6,pch=19)
-lines(turbinas$horas,fitted(ex3),col=4,lwd=2)
+lines(turbinas$horas,fitted(ex3,type="response"),col=4,lwd=2)
 ```
 
+## Regresión de Poisson para tasas
+
+Logaritmo de la tasa: $\log(Y/t)$
+
+El modelo de regresión para la tasa esperada de ocurrencia es:
+$$
+\log(\mu/t)= \alpha + \beta x
+$$
+
+que se puede reescribir como
+
+\begin{eqnarray*}
+\log(\mu)-\log(t) &= & \alpha +  \beta x \\
+\log(\mu) & =& \alpha + \beta x + \log(t) \\
+\end{eqnarray*}
+
+
+El termino  $\log(t)$  se denomina *offset*. Es un término de ajuste y un grupo de observaciones puede tener el mismo `offset` o cada individuo puede tener un valor diferente de $t$. $\log(t)$ es una observación y cambiará el valor de los recuentos estimados:
+
+$$
+\mu =exp(\alpha+\beta x+\log(t))=(t)exp(\alpha)exp(\beta_x)
+$$
+
+Esto significa que el conte medio es proporcional a $t$.
+
+
+
+**Ejemplo:**
+
+Los datos `credit.data` son una muestra de sujetos seleccionados aleatoriamente para un estudio italiano sobre la relación entre ingresos y si se posee una tarjeta de crédito de viaje (como American Express o Diner's Club). En cada nivel de ingresos anuales en millones de liras (la moneda en Italia antes del euro), el cuadro indica el número de sujetos que se tomaron muestras y el número de estos sujetos que poseen al menos una tarjeta de crédito de viaje.
+
+Este ejemplo tiene información sobre los individuos agrupados por sus ingresos, el número de individuos (casos) dentro de ese grupo de ingresos y el número de tarjetas de crédito.
+
+```{r}
+credit.card <- read.table("https://idaejin.github.io/bcam-courses/R/datahack/Modulo1/data/creditcard.txt")
+names(credit.card) <- c("Income","NumberCases","CreditCards")
+
+# creamos la variable lcases como offset
+lcases <- log(credit.card[,2])
+
+data <- cbind(credit.card,lcases)
+```
+
+`offset` sirve para normalizar los valores de la celda celda ajustada por algún espacio, agrupación o intervalo de tiempo con el fin de modelar las tasas.
+
+variable serves to normalize the fitted cell means per some space, grouping or time interval in order to model the rates
+
+```{r}
+poisson.mod <- glm(CreditCards~Income+offset(lcases),family=poisson, data)
+summary(poisson.mod)
+```
+
+El modelo es:
+$$
+log(\mu/t) = -2.3866 + 0.0208 × Income
+$$
+donde $log(t)$ = casos.
+
+¿Cuál es la tasa promedio estimada de incidencia, es decir, el uso de tarjetas de crédito dado el ingreso?
+
+También podemos obtener el número predicho/ajustado/ esperado de tarjetas de crédito basado en el modelo ajustado.
+
+```{r}
+fitted(poisson.mod)
+```
+
+Así, en el grupo de seis personas que ganan unos 65 millones de liras, el número esperado en el grupo con al menos una tarjeta de crédito de viaje es 2.126, mientras que el número observado es de 6.
+
+```{r}
+predict(poisson.mod,data.frame(lcases=log(6),Income=65),type="response")
+```
+
+$\hat{\mu}=2.1264053$.
+
+Notese, que `lcases = log(t) = log(6)` para este caso específico. La tasa esperada sería
+
+$$
+ \frac{\hat{\mu}}{t} \approx 0.3544
+$$
+
+**Desastre del transbordador Challenger**
+
+El 7 de Enero de 1986, la noche antes del despegue del transbordador, hubo una reunión en la que se discutio sobre la la temperatura mínima predicha para del día siguiente, 31F, y el efecto de la misma sobre el sello en las juntas de los O-rings. En la discusión utilizaron el siguiente gráfico en el que se muestra la relación entre la temperatura y el número de O-rings que sufrian problemas
+
+```{r}
+challenger<-read.table("http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/data/challenger.csv", header=TRUE, sep=",")
+m<-challenger[,1]
+r<-challenger[,2]
+temperature<-challenger[,3]
+
+### plot all data
+plot(temperature, r,pch=19,cex=1.65,xlim=c(50,85),ylim=c(-0.05,2.5),
+     xlab='Joint temperature / F', ylab='No. of O-ring failures',col="blue")
+par(xaxs="i", yaxs="i")
+x.at <- seq(20, 80, by=5)
+y.at <- seq(0, 6, by=1)
+plot(temperature, r, xlim=range(x.at), ylim=range(y.at),
+     xlab='Joint temperature / F', ylab='No. of O-ring failures',
+     pch= 19,type="p",axes=FALSE)
+axis(1, at= x.at, lwd.ticks = 0)
+axis(2, at= y.at, lwd.ticks = 0)
+abline(v=31, col='blue')
+abline(h=6, col="black")
+abline(v=80, col="black")
+```
+
+El primer error que cometieron, fue el no dibujar los casos en los que no había incidentes, para saber cuál eran las temperaturas más propicias. La decisición final fue permitir el despegue en el que murieron 7 astronautas debido a la combustión de gas a través de un O-ring.
+ng.
+
+```{r}
+### original misleading plot!
+par(xaxs="i", yaxs="i")
+x.at <- seq(45, 80, by=5)
+y.at <- seq(0, 3, by=1)
+failures <- which(r!=0) ## selects failure cases
+plot(temperature[failures], r[failures],xlim = range(x.at), ylim= range(y.at),
+     pch= 19,type= "p", xlab='Calculated Joint Temperature F',
+     ylab='Number of Incidents', axes=FALSE,col="blue",cex=1.65)
+axis(1, at= x.at, lwd.ticks = -1)
+axis(2, at= y.at, lwd.ticks = -1)
+grid(ny=3, col="grey", lty="solid");
+abline(h=3, col="grey")
+```
+
+Regresión lineal?
+
+```{r,eval=TRUE}
+### plot only launches with at least one failure and their fitted curve
+failures <- which(r!=0)
+par(xaxs="i", yaxs="i")
+x.at <- seq(20, 80, by=5)
+y.at <- seq(0, 3, by=1)
+plot(temperature[failures], r[failures], xlim=range(x.at), ylim=range(y.at),
+     xlab='Joint temperature / F', ylab='No. O-ring failures',pch= 19,
+     type= "p", axes = F, cex=1.65,col="blue")
+axis(1, at= x.at, lwd.ticks = 0)
+axis(2, at= y.at, lwd.ticks = 0)
+grid(ny=3, col="grey", lty="solid");
+abline(h=3, col="grey")
+testtemp <- seq(10,100,1)
+fit.lm <- lm(r ~ temperature, data=challenger, subset=which(r!=0))
+lines(testtemp, predict(fit.lm, data.frame(temperature=testtemp)),
+      col="red",lwd=2)
+```
+
+```{r,eval=TRUE}
+### plot all data
+par(xaxs="i", yaxs="i")
+x.at <- seq(20, 80, by=5)
+y.at <- seq(0, 10, by=1)
+plot(temperature, r, main = "Scatterplot of all Data", xlim=range(x.at),
+     ylim=range(-0.1,y.at), xlab='Joint temperature / F', 
+     ylab='No. of O-ring failures',cex=1.65, col="blue",
+     pch= 19,type= "p",axes=FALSE)
+axis(1, at= x.at, lwd.ticks = 0)
+axis(2, at= y.at, lwd.ticks = 0)
+abline(v=31, col='red',lwd=3)
+abline(h=10, col="black")
+abline(v=80, col="black")
+legend("topright", inset=.05,c("Fitted Curve","Temp at 31 F"),
+       fill=c("orange", "red"))
+### Fit and plot a curve using all data
+fit.glm <- glm(cbind(r,m-r) ~ temperature, data=challenger, family=binomial)
+# predict probability of failure of a single O-ring joint at the following temperature
+testtemp <- seq(10,100,1)
+pred.glm <- predict(fit.glm, data.frame(temperature=testtemp), 
+                    type="response",se.fit = TRUE )
+lines(testtemp, 6*pred.glm$fit, col="orange",lwd=3)
+lines(testtemp, 6*pred.glm$fit-1.96*pred.glm$fit, col="orange",lwd=3,lty=3)
+lines(testtemp, 6*pred.glm$fit+1.96*pred.glm$fit, col="orange",lwd=3,lty=3)
+points(temperature, r, main = "Scatterplot of all Data", xlim=range(x.at),
+       ylim=range(-0.1,y.at), xlab='Joint temperature/F',
+       ylab='No. of O-ring failures',cex=1.65, col="blue",pch= 19,type= "p")
+```
 
 
 
