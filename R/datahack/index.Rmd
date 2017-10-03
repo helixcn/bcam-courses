@@ -61,7 +61,7 @@ El objetivo final de este módulo será en análisis de una base de datos para r
   
   - Interpretación y Análisis
 
-**Fecha de entrega: 16 de octubre**
+**Fecha de entrega: 23 de octubre**
 [TrabajoFinal.zip](http://idaejin.github.io/bcam-courses/R/datahack/TrabajoFinal.zip)
 
 
