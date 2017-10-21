@@ -49,8 +49,6 @@ No background knowledge about `R` or advance programming is needed. Some backgro
 
 # Complementary material
 
-  * [Examples of Data Analysis with `R`](http://idaejin.github.io/bcam-courses/R/intro/examples.html)
-
   * [Additional material: R for Data Science](http://r4ds.had.co.nz/) or [here](http://courses.had.co.nz/)
 
   * Some interesting links:
@@ -60,6 +58,7 @@ No background knowledge about `R` or advance programming is needed. Some backgro
       + [Plots to avoid](http://genomicsclass.github.io/book/pages/plots_to_avoid.html)
       
       + [RSeek](http://rseek.org/) - a Google search engine for R documentation and help. A MUST see!
+      
 -----------------------------------------------------
 
 **Contact**
