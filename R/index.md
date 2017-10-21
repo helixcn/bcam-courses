@@ -34,7 +34,7 @@ No background knowledge about `R` or advance programming is needed. Some backgro
 
 # Course Material
 
-  [0. About this course](2017/Ch0.html)
+  [0. About this course](/2017/Ch0.html)
   
   1. Introduction to `R` language
   
