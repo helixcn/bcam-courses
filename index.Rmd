@@ -24,9 +24,13 @@ I have been teaching several courses on *Generalized Linear Models*, *Mixed-effe
 
 
 ### Latest courses
-
+* **2016** 
+      + *BCAM-UPV/EHU*: "Introduction to Statistical Modelling in `R`"
+  
+    
 * **2016** 
       + *Neiker*: "Introduction to Generalized Linear Models and Mixed-effects Models with `R`" ([material](http://idaejin.github.io/bcam-courses/neiker-2016))
+      + *BCAM-UPV/EHU*: "Introduction to Statistical Modelling in `R`"
       
 * **2015**
       + *Azti*: "Introduction to Mixed-effects Models and Generalized Additive Models with `R`"

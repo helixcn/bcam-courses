@@ -23,13 +23,14 @@ Este curso es una introducción a la Estadística con el software estadístico `
   
   [5.  Introducción a la inferencia estadística](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema5.html) [(*.pdf)](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema5.pdf)
   
-  [6.  Modelos lineales](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema6.html) [(*.pdf)](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema6.pdf))
+  [6.  Modelos lineales](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema6.html) [(*.pdf)](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema6.pdf)
   
-  [7.  Regresión para datos binarios y de conteo](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema7.html) [(*.pdf)](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema7.pdf))
+  [7.  Regresión para datos binarios y de conteo](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema7.html) [(*.pdf)](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema7.pdf)
   
-  8.  Análisis Multivariante y de series temporales
-  
-  9.  Casos de estudio
+  [8.  Análisis Multivariante y de series temporales](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema8.html)
+[(*.pdf)](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/tema8.pdf)
+
+  [9.  Extra](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/extra.html) [(material de datahack Madrid sobre `R`)](http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/Intro_R_DataHack_v3.pdf) [Ejercicios](http://idaejin.github.io/bcam-courses/R/datahack/ejercicios.zip)
   
   
   
@@ -52,6 +53,7 @@ El objetivo final de este módulo será en análisis de una base de datos para r
 
 **Fecha de entrega: 23 de octubre**
 [TrabajoFinal.zip](http://idaejin.github.io/bcam-courses/R/datahack/TrabajoFinal.zip)
+[Descripción de la variables](http://idaejin.github.io/bcam-courses/R/datahack/Variables.xls)
 
 
 <!---

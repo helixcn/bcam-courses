@@ -1,0 +1,59 @@
+---
+title: '**Curso de Estadística básica para Data Scientists**'
+author: "Dae-Jin Lee < lee.daejin@gmail.com >"
+date: ''
+output:
+  html_document:
+    highlight: haddock
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 4
+    toc_float:
+      collapsed: yes
+      smooth_scroll: yes
+  pdf_document:
+    fig_caption: no
+    fig_height: 4
+    fig_width: 5
+    highlight: tango
+    includes:
+      in_header: mystyle.sty
+    keep_tex: yes
+    number_sections: yes
+    template: datahack_template.tex
+    toc: yes
+    toc_depth: 2
+  word_document: default
+header-includes:
+- \usepackage{hyperref}
+- \usepackage{mathtools}
+- \usepackage{palatino}
+- \usepackage[spanish]{babel}
+- \usepackage[official]{eurosym}
+- \renewcommand{\tablename}{Tabla}
+subtitle: null
+bibliography: MMrefs.bib
+---
+
+\newpage
+
+[Regresar a la página principal](https://idaejin.github.io/bcam-courses/R/datahack/)
+
+
+# `R markdown`
+
+[link](http://rmarkdown.rstudio.com/lesson-1.html)
+
+# `ggplot2`
+
+[link](http://tutorials.iq.harvard.edu/R/Rgraphics/Rgraphics.html)
+
+
+# `data.table`
+
+[link](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.html)
+
+# `tidyr`
+
+[link](https://blog.rstudio.com/2014/07/22/introducing-tidyr/)

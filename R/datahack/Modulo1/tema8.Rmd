@@ -49,7 +49,7 @@ El análisis multivariante es conjunto de métodos estadísticos cuya finalidad 
 
 Permiten un mejor entendimiento del fenómeno objeto de estudio, obteniendo información que los métodos univariantes y bivariantes son incapaces de conseguir.
 
-## Clasificación de las técnicas multivariantes
+**Clasificación de las técnicas multivariantes**
 
 Las técnicas multivariantes se pueden clasificar según dos posibles criterios:
 
@@ -57,8 +57,43 @@ Las técnicas multivariantes se pueden clasificar según dos posibles criterios:
   1. **Métodos Dependientes.** Se está interesado en la asociación entre las distintas variables, es decir, en las relaciones entre las mismas, donde parte de estas variables dependen o se miden en función de las otras. Subyace en ellos siempre un interés predictivo. Por ejemplo: regresión lineal multiple, análisis discriminante, modelos log-lineales, correlaciones canónicas, análisis multivariante de la varianza.
 
   2. **Métodos Independientes.** Se está interesado en investigar las asociaciones que se presentan entre variables sin distinción de tipos entre ellas. Tienen un interés descriptivo. Por ejemplo: análisis factorial, escalado multidimensional, análisis de correspondencias, análisis cluster.
-  
-  
+
+<!-- ## Análisis discriminante -->
+
+<!-- Supongamos que un conjunto de objetos está ya clasificado en una serie de grupos, es decir, se sabe previamente a qué grupos pertenecen. El Análisis Discriminante se puede considerar como un análisis de regresión donde la variable dependiente es categórica y -->
+<!-- tiene como categorías la etiqueta de cada uno de los grupos, y las variables independientes son continuas y determinan a qué grupos pertenecen los objetos. Se pretende encontrar relaciones lineales entre las variables continuas que mejor discriminen en los grupos dados a los objetos. -->
+
+<!-- Un segundo objetivo es construir una regla de decisión que asigne un objeto nuevo, que no sabemos clasificar previamente, a uno de los grupos prefijados con un cierto grado de riesgo. -->
+
+<!-- Es necesario considerar una serie de restricciones o supuestos: -->
+
+<!--   - Se tiene una variable categórica y el resto de variables son de intervalo o de razón y son -->
+<!-- independientes respecto de ella. -->
+
+<!--   - Es necesario que existan al menos dos grupos, y para cada grupo se necesitan dos o más -->
+<!-- casos. -->
+
+
+<!--   - El número de variables discriminantes debe ser menor que el número de objetos menos 2: -->
+
+<!-- $$ -->
+<!--     x_1,x_2,...,x_p, \mbox{ donde $p<(n-2)$ y $n$ es el número de objetos} -->
+<!-- $$ -->
+
+
+<!--   - Ninguna variable discriminante puede ser combinación lineal de otras variables discriminantes. -->
+
+
+<!--   - El número máximo de funciones discriminantes es igual al mínimo entre el número de variables y el número de grupos menos 1 (con -->
+<!-- $q$ grupos, $(q−1)$ funciones discriminantes). -->
+
+
+<!--   - Las matrices de covarianzas dentro de cada grupo deben ser aproximadamente iguales. -->
+
+
+<!--   - Las variables continuas deben seguir una distribución normal multivariante. -->
+
+
 ## Análisis de componentes principales ó Principal Components Analysis (PCA)
 
 Cuando se recoge la información de una muestra de datos, lo más frecuente es tomar el mayor número posible de variables. Sin embargo, si tomamos demasiadas variables sobre un conjunto de objetos, por ejemplo 20 variables, tendremos que considerar $\binom{20}{2}=180$ posibles coeficientes de correlación, si son 40 variables el número aumenta a 780. Por tanto, en este caso es difícil visualizar relaciones entre las variables.
@@ -67,6 +102,9 @@ Otro problema que se presenta es la fuerte correlación que muchas veces se pres
 están fuertemente relacionadas.
 
 Se hace necesario, pues, reducir el número de variables. Es importante resaltar el hecho de que el concepto de mayor información se relaciona con el de mayor variabilidad o varianza. Cuanto mayor sea la variabilidad de los datos (varianza) se considera que existe mayor información, lo cual está relacionado con el concepto de entropía.
+
+Las nuevas variables son combinaciones lineales de las anteriores y se van construyendo según el orden de importancia en cuanto a la variabilidad total que recogen de la muestra. De modo ideal, se buscan $p<m$ variables que sean combinaciones lineales de las $m$ originales y que estén incorreladas, recogiendo la mayor parte de la información o variabilidad de los datos.
+
 
 **Matemáticamente**
 
@@ -87,24 +125,551 @@ $$
 El análisis de componentes principales continúa encontrando una función lineal $a_2^\prime y$ que no está correlacionada con $a_1^\prime y$ con máxima varianza y así sucesivamente hasta $k$ componentes principales.
 
 
+
+**Ejemplo:**
+
+Vamos a realizar un análisis de componentes principales sobre los resultados obtenidos en la competición de heptathlon femenino en los juegos Olímpicos de Seúl (1988). 
+
 ```{r}
-houses <- read.table("http://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.data",header = F, na.string = "?")
-colnames(houses) <- c("CRIM", "ZN", "INDUS","CHAS","NOX","RM","AGE","DIS","RAD","TAX","PTRATIO","B","LSTAT","MEDV")
+library(HSAUR2)
+data("heptathlon")
+head(heptathlon)
+```
+
+Recodificamos las pruebas relativas a 3 carreras `hurdles`, `run200m` y `run800m`, restando al mayor valor en cada carrera, cada uno de los tiempos de las 35 atletas.
+
+```{r}
+heptathlon$hurdles <- max(heptathlon$hurdles) - heptathlon$hurdles
+heptathlon$run200m <- max(heptathlon$run200m) - heptathlon$run200m
+heptathlon$run800m <- max(heptathlon$run800m) - heptathlon$run800m
+```
+
+Diagrama de dispersion
+```{r}
+score <- which(colnames(heptathlon) == "score")
+plot(heptathlon[,-score])
+```
+
+Matriz de correlaciones
+```{r}
+round(cor(heptathlon[,-score]),3)
+```
+el resultado confirma que la gran mayoría de las correlaciones entre las pruebas son positivas, con una correlación alta entre el salto de longitud (`longjump`) y los 100m vallas (`hurdles`). Algunos menos como el salto de altura (`highjump`) y el lanzamiento de peso (`shot`) y la jabalina (`javelin`) que presenta una correlación cercana a cero con el resto de pruebas. 
+
+Una posible expliación a este resultado puede deberse a que el entrenamiento para las otras 6 pruebas, no aporta demasiado al de la prueba de jabalina, que es una prueba más técnica. 
+
+Se puede observar que hay un valor atípico en casi todas las pruebas que corresponde a una atleta `Launa (PNG)` de Papua Nueva Guinea- Eliminaremos esta observación para ver si la matriz de correlaciones es sensiblemente distinta:
+
+```{r}
+heptathlon <- heptathlon[-which(rownames(heptathlon)=="Launa (PNG)"),]
+plot(heptathlon[,-score])
+```
+
+Eliminando a la atleta de Papua Nueva Guinea, las correlaciones cambian sustancialmente y en el diagrama de dispersión de la matriz, no se observan valores extremos. 
+```{r}
+round(cor(heptathlon[,-score]),3)
+```
+
+
+Para realizar el PCA, partiremos de la matriz de correlaciones, ya que las 7 pruebas están medidas en diferentes escalas (metros, segundos). A este procedimiento se le denomina PCA normalizado (`scale=TRUE` en la función `prcomp`).
+
+```{r}
+?prcomp
+heptathlon_pca <- prcomp(heptathlon[,-score],scale=TRUE)
+head(heptathlon_pca)
+
+a1 <- heptathlon_pca$rotation[,1]
+
+```
+
+Podemos resumir el análisis con `summary`
+
+```{r}
+summary(heptathlon_pca)
+```
+
+Los primeros 2 componentes explican un 75% de la varianza explicada y las 3 primeras un 86%.
+
+```{r}
+head(heptathlon_pca$x)
+```
+
+Graficamente, se observa que la primera componente principal es la más dominante.
+```{r}
+plot(heptathlon_pca)
+```
+
+
+El *biplot* es una representación gráfica de datos multivariantes. De la misma manera que un diagrama de dispersión muestra la distribución conjunta de dos variables, un **biplot** representa tres o más variables.
+
+
+Si ordenamos de mayor a menor la variable `score` tenemos a las tres medallas de oro, plata y bronce.
+```{r}
+head(heptathlon[order(heptathlon$score,decreasing = TRUE),],3)
+```
+
+El biplot, nos muestra a las atletas proyectadas sobres sus 2 primeras componentes principales, pero además las flechas nos dan información de las varianzas y covarianzas de las variables (direcciones de máxima variabilidad). 
+```{r, fig.align='center', fig.width=15, fig.height=10}
+biplot(heptathlon_pca)
+```
+Por ejemplo, la ganadora de la prueba `Joyner-Kersee (USA)` acumula mayores puntuaciones en las pruebas `longjump`, `hurdles` y `run200m`.
+
+
+Podemos analizar la correlación entre la variable `score` y la PC1. Lo cual indica que la correlación es muy negativa y muy fuerte con el `score`.
+```{r}
+cor(heptathlon$score, heptathlon_pca$x[,1])
+plot(heptathlon$score, heptathlon_pca$x[,1])
+```
+
+Los objetos de la funcion `prcomp`
+```{r}
+class(heptathlon_pca)
+```
+permiten utilizar la funcion `predict`. Por ejemplo:
+
+```{r, fig.width=15,fig.height=10}
+new.athlete <- as.data.frame(t(as.vector(c(3.5,2,13,5,7,41,33))))
+colnames(new.athlete) <- c("hurdles","highjump",
+                           "shot","run200m","longjump",
+                           "javelin","run800m")
+rownames(new.athlete) <- "Mrs XYZ (XXX)"
+pp<-predict(heptathlon_pca,newdata = new.athlete)
+pp
+
+biplot(heptathlon_pca)
+text(pp[,1],pp[,2],"Mrs XYZ (XXX)",col="blue",cex=.65)
+```
+
+
+### Regresion y PCA
+
+Volvamos al ejemplo `housing,data`. Vamos a tratar de predecir el valor medio de las casas ocupadas por sus dueños en miles de dólares (MEDV) usando las tres primeras PCs de un PCA.
+
+```{r}
+houses <- read.table("http://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.data",
+                     header = F, na.string = "?")
+colnames(houses) <- c("CRIM", "ZN", "INDUS","CHAS",
+                      "NOX","RM","AGE","DIS","RAD",
+                      "TAX","PTRATIO","B","LSTAT","MEDV")
 
 # Perform PCA
-pcaHouses <- prcomp(scale(houses[,-14]))
+pcaHouses <- prcomp(houses[,-14],scale=TRUE)
+
+summary(pcaHouses)
+
 scoresHouses <- pcaHouses$x
  
 # Fit lm using the first 3 PCs
 modHouses <- lm(houses$MEDV ~ scoresHouses[,1:3])
 summary(modHouses)
+```
+
+Comparamos con el modelo lineal con todas las variables
+```{r}
+# Fit lm using all 14 vars
+modHousesFull <- lm(MEDV ~ ., data = houses)
+summary(modHousesFull) # R2 = 0.741
+ 
+# Compare obs. vs. pred. plots
+par(mfrow = c(1,2))
+plot(houses$MEDV, predict(modHouses), 
+     xlab = "Observed MEDV", ylab = "Predicted MEDV", main = "PCR", abline(a = 0, b = 1, col = "red"))
+plot(houses$MEDV, predict(modHousesFull),
+     xlab = "Observed MEDV", ylab = "Predicted MEDV", main = "Full model", abline(a = 0, b = 1, col = "red"))
+```
+
+**Ejemplo**
+
+```{r}
+data(USArrests)
+head(USArrests)
+```
+
+
+```{r}
+# PCA with function prcomp
+pca1 = prcomp(USArrests, scale. = TRUE)
+
+# sqrt of eigenvalues
+pca1$sdev
+
+# loadings
+head(pca1$rotation)
+
+# PCs (aka scores)
+head(pca1$x)
+
+plot(pca1)
+```
+```{r, fig.width=12, fig.height=10}
+biplot(pca1)
+```
+
+Podemos cambiar el eje
+```{r, fig.width=12, fig.height=10}
+pca.out <- pca1
+pca.out$rotation <- -pca.out$rotation
+pca.out$x <- -pca.out$x
+biplot(pca.out,scale=0, cex=.7)
+```
+
+**Interpretación del biplot:** Para cada una de los 50 estados en los Estados Unidos, el conjunto de datos contiene el número de arrestos por cada 100.000 residentes por cada tres crímenes: Asalto, Asesinato y Violación. También `Urbanpop` representa el porcentaje de la población en cada estado que vive en áreas urbanas. La gráfica muestra las dos primeras puntuaciones de los componentes principales y el vector `loading`s en gráfico simple.
+
+```{r}
+pca.out$rotation[,1:2]
+```
+
+El PC1, muestra como el peso de las variables `Murder`, `Assault` y `Rape` es similar, y más pequeño para `UrbanPop`.  Por lo tanto, este componente corresponde aproximadamente a una medida de las tasas globales de delitos graves.
+
+El PC2, tiene un peso mucho mayor en `Urbanpop`, y mucho menor en el resto. Por lo tanto, este componente corresponde aproximadamente al nivel de urbanización del estado.
+
+En general, vemos que las variables relacionadas con el delito están situadas cerca unas de otras, y que la variable urbanpop está lejos de las otras tres. Esto indica que las variables relacionadas con el delito están correlacionadas entre sí. Los estados con altas tasas de homicidio tienden a tener altas tasas de agresión y violación. La variable `Urbanpop` está menos correlacionada con las otras tres.
+Otro paquete de `R` es `FactorMineR`
+
+```{r}
+# PCA with function PCA
+library(FactoMineR)
+
+# apply PCA
+pca3 = PCA(USArrests, graph = FALSE)
+
+# matrix with eigenvalues
+pca3$eig
+
+# correlations between variables and PCs
+pca3$var$coord
+
+plot(pca3)
+
+```
+
+**Ejemplo** 
+```{r}
+data("USairpollution")
+head(USairpollution)
+```
+
+```{r, fig.width=15, fig.height=15}
+library(TeachingDemos)
+faces(USairpollution)
+faces2(USairpollution)
+```
+
+```{r}
+panel.hist <- function(x, ...) 
+{ 
+          usr <- par("usr"); on.exit(par(usr)) 
+          par(usr = c(usr[1:2], 0, 1.5) ) 
+          h <- hist(x, plot = FALSE) 
+          breaks <- h$breaks; nB <- length(breaks) 
+          y <- h$counts; y <- y/max(y) 
+          rect(breaks[-nB], 0, breaks[-1], y, col="blue", ...) 
+} 
+pairs(USairpollution,diag.panel=panel.hist)
+```
+
+
+```{r}
+# Calculo la matriz de correlaciones 
+cor(USairpollution[,-1]) 
+```
+
+Otra funcion para calcular PCA en `princomp`
+
+```{r}
+# Calculo los componentes principales basados en la matriz de correlaciones 
+USair.pc<-princomp(USairpollution[,-1],cor=TRUE) 
+summary(USair.pc,loadings=TRUE)
+```
+
+
+```{r}
+#scores
+head(USair.pc$scores[,1:3])
+```
+
+```{r, fig.width=8, fig.height=6}
+# PC1 vs PC2
+par(pty="s") 
+plot(USair.pc$scores[,1],USair.pc$scores[,2], 
+ylim=range(USair.pc$scores[,1]), 
+xlab="PC1",ylab="PC2",type="n",lwd=2) 
+text(USair.pc$scores[,1],USair.pc$scores[,2], 
+labels=abbreviate(row.names(USairpollution)),cex=0.7,lwd=2)
+
+# PC1 vs PC3
+par(pty="s") 
+plot(USair.pc$scores[,1],USair.pc$scores[,3], 
+ylim=range(USair.pc$scores[,1]), 
+xlab="PC1",ylab="PC3",type="n",lwd=2) 
+text(USair.pc$scores[,1],USair.pc$scores[,3], 
+labels=abbreviate(row.names(USairpollution)),cex=0.7,lwd=2)
+
+# PC2 vs PC3
+par(pty="s") 
+plot(USair.pc$scores[,2],USair.pc$scores[,3], 
+ylim=range(USair.pc$scores[,2]), 
+xlab="PC1",ylab="PC3",type="n",lwd=2) 
+text(USair.pc$scores[,2],USair.pc$scores[,3], 
+labels=abbreviate(row.names(USairpollution)),cex=0.7,lwd=2)
+```
+
+## Análisis Cluster
+
+El análisis de cluster es una técnica cuya idea básica es agrupar un conjunto de observaciones en un número dado de
+clusters o grupos. Este agrupamiento se basa en la idea de distancia o similitud entre las observaciones. Por tanto, la obtención de dichos clusters depende del criterio o distancia considerados.
+
+Ejemplos de distancias:
+
+  - **Distancia euclídea:** Dados dos objetos $I_1$ e $I_2$ medidos según dos variables $x_1$ y $x_2$, la distancia euclídea
+entre ambos es
+  $$
+        d_{I_1,I_2} = \sqrt{(x_{11} - x_{21})^2+(x_{12} - x_{22})^2}  
+  $$
+  Con $p$ dimensiones
+  $$
+        d_{I_1,I_2} = \sqrt{\sum_{i=1}^{p}(x_{1k} - x_{2k})^2}  
+  $$
+  - **Distancia de Mahalanobis:** 
+  
+  $$
+        d_{I_1,I_2} = (x_i - x_j)^{\prime} W^{-1} (x_i - x_j)
+  $$
+  donde $W$ es la matriz de covarianzas entre las variables. De este modo, las variables se
+ponderan según el grado de relación que exista entre ellas, es decir, si están más o menos
+correlacionadas. Si la correlación es nula y las variables están estandarizadas, se obtiene la distancia euclídea.
+
+
+  - **Distancia de Minkowski:**
+  $$
+      d_{I_1,I_2}^2 = \left[ \sum_{k} |x_{ik} - x_{ij} |^m \right]^{1/m}
+  $$
+donde $m$ en un número natural, si $m=1$ la distancia es en valor absoluto y $m=2$ la euclídea.
+
+### Métodos de cluster jerárquicos
+
+En la práctica, no se pueden examinar todas las posibilidades de agrupar los elementos, incluso con los ordenadores más rápidos. Una solución se encuentra en los llamados métodos jerárquicos. 
+
+  
+  - *Métodos aglomerativos:* se comienza con los objetos o individuos de modo individual; de este modo, se tienen tantos clusters iniciales como objetos. Luego se van agrupando de modo que los primeros en hacerlo son los más similares y al final, todos los
+subgrupos se unen en un único cluster.
+
+  - *Métodos divisivos o de particionado:* al contrario. Se parte de un grupo único con todas las observaciones y se van dividiendo según lo lejanos que estén.
+  
+  
+  En cualquier caso, de ambos métodos se deriva un **dendograma**, que es un gráfico que ilustra cómo se van haciendo las subdivisiones o los agrupamientos, etapa a etapa. 
+  
+  Consideramos aquí los métodos aglomerativos con diferentes métodos de unión (linkage methods). Los más importantes son:
+
+  1. Mínima distancia o vecino más próximo.
+
+  2. Máxima distancia o vecino más lejano.
+
+
+  3. Distancia media (average distance). 
+  
+  
+  Se puede observar que, de este modo, se define una posible distancia entre dos clusters: la correspondiente a la pareja de elementos más cercana, la más lejana o la media de todas las posibles parejas de elementos de ambos clusters.
+  
+### Métodos no jerárquicos
+
+Se usan para agrupar objetos, pero no variables, en un conjunto de $k$ clusters ya predeterminado. No se tiene que especificar una matriz de distancias, lo cual entre otras razones permite trabajar con un número de datos mayor que en el caso de los métodos jerárquicos.
+
+Se parte de un conjunto inicial de clusters elegidos al azar, que son los representantes de todos ellos; luego se van cambiando de modo iterativo. Se usa habitualmente el método de las $k$-medias.
+
+**Método de las k-medias** permite asignar a cada observación el cluster que se encuentra más próximo en términos del centroide (media). En general, la distancia empleada es la euclídea.
+
+
+Pasos:
+
+  1. Se toman al azar $k$ clusters iniciales.
+  
+  2. Para el conjunto de observaciones, se vuelve a calcular las distancias a los centroides de los clusters y se reasignan a los que estén más próximos. Se vuelven a recalcular los centroides de los $k$ clusters después de las reasignaciones de los elementos.
+
+
+  3. Se repiten los dos pasos anteriores hasta que no se produzca ninguna reasignación, es decir, hasta que los elementos se estabilicen en algún grupo. Usualmente, se especifican $k$ centroides iniciales y se procede al paso (2) y, en la
+práctica, se observan la mayor parte de reasignaciones en las primeras iteraciones.
+
+
+  ### Ejemplos:
+  
+En este conjunto de datos se observa la composición de diferentes vinos.
+```{r}
+# install.packages('rattle')
+data(wine, package='rattle')
+head(wine)
+```
+
+Siempre es recomendable estandarizar las variables
+```{r}
+wine.stand <- scale(wine[-1])  # To standarize the variables
+
+# K-Means
+k.means.fit <- kmeans(wine.stand, 3) # k = 3
+```
+
+```{r}
+attributes(k.means.fit)
+```
+
+
+```{r, echo=FALSE}
+# Centroids:
+k.means.fit$centers
+
+# Clusters:
+k.means.fit$cluster
+
+# Cluster size:
+k.means.fit$size
 
 ```
 
 
+Una pregunta fundamental es cómo determinar el valor del parámetro $k$. Si consideramos el porcentaje de varianza explicado como una función del número de grupos: 
+
+Uno debe elegir un número de grupos de modo que la adición de otro grupo no da mucho mejor modelado de los datos. Más precisamente, si se traza el porcentaje de varianza explicado por los conglomerados en función del número de racimos, los primeros grupos agregarán mucha información (explican mucha varianza), pero en algún momento la ganancia marginal disminuirá, dando un ángulo en la gráfico. El número de racimos se elige en este punto, de ahí el "criterio del codo".
+
+```{r}
+wssplot <- function(data, nc=15, seed=1234){
+  wss <- (nrow(data)-1)*sum(apply(data,2,var))
+  for (i in 2:nc){
+    set.seed(seed)
+    wss[i] <- sum(kmeans(data, centers=i)$withinss)}
+  plot(1:nc, wss, type="b", xlab="Number of Clusters",
+       ylab="Within groups sum of squares")}
+
+wssplot(wine.stand, nc=6) 
+```
+
+La `library(cluster)` permite (con el paso previo de un PCA) representar los clusters en 2 dimensiones
+
+```{r}
+library(cluster)
+clusplot(wine.stand, k.means.fit$cluster, 
+         main='2D representation of the Cluster solution',
+         color=TRUE, shade=TRUE,
+         labels=2, lines=0)
+```
 
 
-## Análisis Cluster y de k-medias
+Sabiendo que hay tres tipos de vinos `wine$Type`, podemos calcular una matriz de confusión 
+```{r}
+table(wine$Type)
+table(wine[,1],k.means.fit$cluster)
+```
 
-  
+
+**Cluster jerarquico**
+
+Los métodos jerárquicos utilizan una matriz de distancia como una input para el algoritmo de agrupación. La elección de una métrica apropiada influirá en la forma de los clusters, ya que algunos elementos pueden estar cerca uno del otro según una distancia y más lejos de acuerdo con otro.
+
+```{r}
+d <- dist(wine.stand, method = "euclidean") # Euclidean distance matrix.
+```
+
+Ward’s minimum variance criterion minimizes the total within-cluster variance
+```{r}
+H.fit <- hclust(d, method="ward")
+class(H.fit)
+```
+La opcion `plot` de un objeto `hclust` nos devuelve el dendograma:
+
+```{r}
+plot(H.fit) # display dendogram
+groups <- cutree(H.fit, k=3) # cut tree into 5 clusters
+# draw dendogram with red borders around the 5 clusters
+rect.hclust(H.fit, k=3, border="red") 
+```
+
+```{r}
+table(wine[,1],groups)
+```
+
+
+
+## Análisis de Series temporales
+
+
+
+`R` tiene amplias facilidades para analizar datos de series temporales. Esta sección describe la creación de una serie de tiempo, descomposición estacional, predicción con el paquete `forecast`.
+
+```{r}
+# save a numeric vector containing 84 monthly observations
+# from Jan 2009 to Dec 2015 as a time series object
+set.seed(1234)
+myvector <- rnorm(84) 
+myts <- ts(myvector, start=c(2009, 1), end=c(2015, 12), frequency=12)
+class(myts)
+# subset the time series (June 2014 to December 2014)
+myts2 <- window(myts, start=c(2014, 6), end=c(2014, 12))
+# plot series
+plot(myts)
+```
+
+Ejemplo con datos reales:
+
+```{r}
+data(AirPassengers)
+class(AirPassengers)
+?AirPassengers
+start(AirPassengers)
+end(AirPassengers)
+frequency(AirPassengers)
+cycle(AirPassengers)
+plot(AirPassengers)
+```
+
+
+**¿Qué patrones ves?**
+
+La tendencia interanual muestra claramente que el número de pasajeros ha ido en aumento.
+
+```{r}
+# plot of aggregated by months
+plot(aggregate(AirPassengers,FUN=mean))
+```
+La varianza y el valor medio en julio y agosto es mucho mayor que el resto de los meses.
+```{r}
+# boxplots accross months will show seasonal effects
+boxplot(AirPassengers~cycle(AirPassengers))
+```
+También observamos un fuerte efecto estacional con un ciclo de 12 meses o menos.
+ 
+
+La función `decompose()` descompone una serie de tiempo en la estacionalidad, la tendencia y los componentes irregulares utilizando promedios móviles. El componente estacional puede ser aditivo: 
+$$
+      Y_t = T_t + S_t + e_t
+$$
+
+
+### La libreria `forecast`
+
+```{r, message=FALSE, warning=FALSE}
+library(forecast)
+tsData <- EuStockMarkets[, 1] # ts data
+decomposedRes <- decompose(tsData,
+                           type="mult")
+                # use type = "additive" for additive components
+plot (decomposedRes) # see plot below
+stlRes <- stl(tsData, s.window = "periodic")
+```
+
+
+```{r}
+library(forecast)
+ts.stl <- stl(AirPassengers,"periodic")  # decompose the TS
+ts.sa <- seasadj(ts.stl)  # de-seasonalize
+plot(AirPassengers, type="l")  # original series
+plot(ts.sa, type="l")  # seasonal adjusted
+seasonplot(ts.sa, 12, col=rainbow(12), year.labels=TRUE,
+          main="Seasonal plot: Airpassengers")
+              # seasonal frequency set as 12 for monthly data.
+```
+
+
+```{r}
+library(forecast)
+plot(forecast(ts.stl,h=10))
+```
 
