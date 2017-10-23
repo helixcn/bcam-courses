@@ -44,17 +44,19 @@ No background knowledge about `R` or advance programming is needed. Some backgro
 
 # Course Material
 
-  [0. About this course](/2017/Ch0.html)
+  [0. About this course](http://idaejin.github.io/bcam-courses/R/2017/Ch0.html)
   
-  1. Introduction to `R` language
+  [1. Introduction to `R` language](http://idaejin.github.io/bcam-courses/R/2017/Ch1.html) [*.pdf](http://idaejin.github.io/bcam-courses/R/2017/Ch1.pdf)
   
-  2. Basic data analysis and plotting in `R`
+  [2. Basic data analysis and plotting in `R`](http://idaejin.github.io/bcam-courses/R/2017/Ch2.html) [*.pdf](http://idaejin.github.io/bcam-courses/R/2017/Ch2.pdf)
    
-  3. Basic Statistical Models in `R`
+  [3. Introduction to basic programming in `R`](http://idaejin.github.io/bcam-courses/R/2017/Ch3.html) [*.pdf](http://idaejin.github.io/bcam-courses/R/2017/Ch3.pdf)
 
-  4. Advance statistical modelling
+  [4. Probability distributions in `R`](http://idaejin.github.io/bcam-courses/R/2017/Ch4.html) [*.pdf](http://idaejin.github.io/bcam-courses/R/2017/Ch4.pdf)
   
-  5. Case studies and examples
+  5. Basic Statistical Modelling in `R`
+  
+  6. Case studies and examples
   
 
 # Complementary material

@@ -1,0 +1,373 @@
+---
+title: "Introduction to Statistical Modelling with `R`"
+author: "Dae-Jin Lee < dlee@bcamath.org >"
+date: "BCAM-UPV/EHU Courses 2017-2018"
+output: 
+  slidy_presentation: 
+    highlight: tango
+    keep_md: yes
+  ioslides_presentation: 
+    fig_caption: yes
+    highlight: kate
+    incremental: yes
+    smaller: no
+    widescreen: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Introduction to the `R` language
+
+This course is an introduction to statistical software `R`. 
+
+The course will introduce the student to the basics of using `R` for statistical programming, computation, graphics, and basic statistical modelling. 
+
+This course is oriented to undergraduate and Master students, or any researcher interested in learning the statistical software `R`.
+
+  
+# Objectives of this course:
+
+- Use `R` for basic data analysis. 
+
+- Write functions in and use `R` in an efficient way,
+
+- Perform basic statistical analysis and basic statistical models.
+
+- This is **NOT** a course on Statistics !!!
+
+- Learn `R` by doing 
+
+
+# What is `R`?
+  
+  * `R` is a free software environment for statistical computing and graphics <http://www.r-project.org> developed by [John Chambers](https://en.wikipedia.org/wiki/John_Chambers_(statistician)) and friends
+
+  * `R` is a command-driven statistical package.
+
+  * `R` provides a wide variety of statistical and graphical techniques, and is highly extensible.
+  
+  * The most important reasons to use `R` are:
+
+  + `R` is free and multiplatform (Windows/Linux/MacOS)
+
+  + `R` allows you to do all the statistical tests/models/analysis you need :)
+
+  + Excellent graphics and programming capabilities
+  
+  + Growing community of users and developers 
+
+  + Lots of online resources (e.g.: [`R` for Data Science](http://r4ds.had.co.nz/))
+
+
+# Statistical features
+
++ Graphical Techniques (Exploratory Data Analysis)
+
++ Classical statistical tests
+    
++ Time-series analysis
+
++ Survival analysis
+    
++ Classification and clustering (data mining, machine learning)
+    
++ Optimization and Mathematical Programming
+    
++ Bayesian inference etc.
+
+**Visit** http://cran.r-project.org/web/views
+ or http://stackoverflow.com/questions/tagged/r
+ 
+ 
+
+
+# Example: The Forbes 2000 Ranking of the World's Biggest Companies (Year 2004)
+
+The data handling and manipulation techniques explained will be illustrated by means of a data set of 2000 world leading companies, the Forbes 2000 list for the year 2004 collected by Forbes Magazine. This list is originally available from [www.forbes.com](http://www.forbes.com)
+
+Here we show a subset of the data set:
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+library("HSAUR2")
+data("Forbes2000")
+library(knitr)
+kable(head(Forbes2000))
+```
+
+The data consists of 2000 observations on the following 8 variables.
+    
+  * `rank`: the ranking of the company.
+  * `name`: the name of the company.
+  * `country`: a factor giving the country the company is situated in.
+  * `category`: a factor describing the products the company produces.
+  * `sales`: the amount of sales of the company in billion USD.
+  * `profits`: the profit of the company in billion USD. 
+  * `assets`: the assets of the company in billion USD.
+  * `marketvalue`: the market value of the company in billion USD.
+    
+## Types of variables
+
+`R` output
+
+```{r,echo=FALSE}
+str(Forbes2000)
+```
+
+## Factor levels
+
+Nominal measurements are represented by factor variables in `R`, such as the country of the company or the category of the business segment.
+
+A factor in `R` is divided into levels
+
+
+
+How many countries are on the top 2000 ranking?
+
+`R` output
+
+
+```{r,echo=FALSE}
+nlevels(Forbes2000[,"country"])
+```
+
+Which countries?
+
+`R` output
+
+```{r,echo=FALSE}
+levels(Forbes2000[,"country"])
+```
+
+And in the top 20?
+
+`R` output
+
+```{r}
+top20 <- droplevels(subset(Forbes2000,rank<=20))
+levels(top20[,"country"])
+```
+
+As a simple summary statistic, the frequencies of the levels of such a factor variable can be found from
+
+```{r}
+table(top20[,"country"])
+```
+
+
+Which type of companies?
+
+```{r}
+levels(Forbes2000[,"category"])
+```
+
+How many of each category?
+
+```{r}
+table(Forbes2000[,"category"])
+```
+
+A simple summary statistics such as the mean, median, quantiles and range can be found from continuous variables such as `sales`
+
+`R` output
+
+```{r}
+summary(Forbes2000[,"sales"])
+```
+
+## Simple Graphics
+
+**Chambers et al. (1983)**, "there is no statistical tool that is as powerful as a well chosen graph"
+
+
+Histograms and boxplots
+
+```{r,fig.width=12,fig.height=10}
+layout(matrix(1:4, nrow = 2,ncol=2))
+hist(Forbes2000$marketvalue, col="lightgrey",main="Histogram of market value")
+hist(log(Forbes2000$marketvalue),col="lightgrey",main="Histogram of log(market value)")
+boxplot(Forbes2000$marketvalue, col="lightgrey",main="Boxplot of market value")
+boxplot(log(Forbes2000$marketvalue),col="lightgrey",main="Boxplot of log(market value)")
+```
+
+Scatterplots to visualize the relationship betwen variables
+
+
+```{r,fig.width=12,fig.height=10}
+layout(matrix(1:2, nrow = 2))
+plot(marketvalue ~ sales, data = Forbes2000, pch = ".")
+plot(log(marketvalue) ~ log(sales), data = Forbes2000, pch = ".")
+```
+
+## Cool Graphics
+
+Using the `ggplot2` library
+
+```{r,message=FALSE,warning=FALSE}
+library(ggplot2)
+#?qplot
+qplot(marketvalue,data = Forbes2000)
+qplot(log(marketvalue),  data = Forbes2000)
+qplot(marketvalue,sales, data=Forbes2000)
+qplot(log(marketvalue),log(sales),size=assets,alpha = I(0.1),data=Forbes2000)
+```
+
+
+```{r,message=FALSE,warning=FALSE}
+library(calibrate)
+profits_all = na.omit(Forbes2000$profits)  # all_profts without No data
+order_profits = order(profits_all)     # index of the profitable companies in decreasing order
+top_50 = rev(order_profits)[1:50]      # top 50 profitable companies
+
+sales = Forbes2000$sales[top_50]       # sales of the 50 top profitable companies
+assets = Forbes2000$assets[top_50]     # assets of the 50 top profitable companies
+countries = Forbes2000$country[top_50] # countries where the 50 top profitable companies are found
+
+plot(assets,sales,pch =1)
+textxy(assets,sales, abbreviate(countries,2),col = "blue",cex=0.5)  # used to put the countries where the companies are found
+title(main = "Sales and Assets in billion USD \n of the 50 most profitable companies ", col.main = "gray")
+```
+
+## Graphics by factor
+
+Boxplots of the logarithms of the market value for four selected countries, the width of the boxes is proportional to the square roots of the number of companies.
+
+```{r, echo=FALSE}
+tmp <- subset(Forbes2000,
+        country %in% c("United Kingdom", "Germany",
+                       "India", "Turkey"))
+tmp$country <- tmp$country[,drop = TRUE]
+plot(log(marketvalue) ~ country, data = tmp, col = 3:6,
+       ylab = "log(marketvalue)", varwidth = TRUE)
+```
+
+Scatterplots by country
+
+`lattice` package
+
+
+```{r. , warning=FALSE}
+library(lattice)
+xyplot(log(marketvalue)~log(sales)|country,data=tmp)
+```
+
+<!-- ## Questions -->
+
+
+<!--   1. Calculate the median profit for the companies in the US and the median profit for the companies in the UK, France and Germany. -->
+<!--   2. Find all German companies with negative profit. -->
+<!--   3. To which business category do most of the Bermuda island companies belong? -->
+<!--   4. For the 50 companies in the Forbes data set with the highest profits, plot sales against assets (or some suitable transformation of each variable), labelling each point with the appropriate country name which may need to be abbreviated (using abbreviate) to avoid making the plot look too "messy". -->
+<!--   5. Find the average value of sales for the companies in each country in the Forbes data set, and find the number of companies in each country with profits above 5 billion US dollars. -->
+
+ 
+
+# Example: Malignant Melanoma in the USA
+
+Fisher and Belle (1993) report mortality rates due to malignant melanoma of the skin for white males during the period 1950-1969, for each state on the US mainland. 
+
+
+```{r}
+data("USmelanoma",package="HSAUR2")
+library(knitr)
+kable(USmelanoma)
+```
+
+A data consists of 48 observations on the following 5 variables.
+
+  * `mortality`: number of white males died due to malignant melanoma 1950-1969 per one million inhabitants.
+
+  * `latitude`: latitude of the geographic centre of the state.
+
+  * `longitude`: longitude of the geographic centre of each state.
+
+  * `ocean`: a binary variable indicating contiguity to an ocean at levels `no` or `yes`.
+
+
+## Plotting mortality rates
+
+```{r}
+xr <- range(USmelanoma$mortality) * c(0.9, 1.1)
+```
+
+Let us plot mortality rates in 
+
+```{r,fig.align='center'}
+#layout(matrix(1:2, nrow = 2))
+boxplot(USmelanoma$mortality, ylim = xr, horizontal = TRUE,xlab = "Mortality")
+hist(USmelanoma$mortality, xlim = xr, xlab = "", main = "",axes = FALSE, ylab = "")
+axis(1)
+```
+
+Malignant melanoma mortality rates by contiguity to an ocean
+
+```{r,fig.align='center'}
+plot(mortality ~ ocean, data = USmelanoma, xlab = "Contiguity to an ocean", ylab = "Mortality")
+```
+
+Histograms can often be misleading for displaying distributions because of their dependence on the number of classes chosen. An alternative is to formally estimate the density function of a variable and then plot the resulting estimate.
+
+The estimated densities of malignant melanoma mortality rates by contiguity to an ocean looks like this:
+
+```{r,fig.width=12,fig.height=10,fig.align='center'}
+dyes <- with(USmelanoma, density(mortality[ocean == "yes"]))
+dno <- with(USmelanoma, density(mortality[ocean == "no"]))
+plot(dyes, lty = 1, xlim = xr, main = "", ylim = c(0, 0.018))
+lines(dno, lty = 2)
+legend("topright", lty = 1:2, legend = c("Coastal State","Land State"), bty = "n")
+```
+
+
+Now we might move on to look at how mortality rates are related to the geographic location of a state as represented by the latitude and longitude of the centre of the state. 
+
+```{r,fig.align='center'}
+layout(matrix(1:2, ncol = 2))
+plot(mortality ~ -longitude, data = USmelanoma)
+plot(mortality ~ latitude, data = USmelanoma)
+```
+
+## Mapping mortality rates
+
+The data contains the longitude and latitude of the centroids 
+
+```{r,fig.align='center',message=FALSE,warning=FALSE}
+plot(-USmelanoma$longitude,USmelanoma$latitude,asp=1.5,cex=.3,pch=19,col="blue")
+```
+
+
+```{r,fig.align='center',message=FALSE,warning=FALSE}
+library("sp")
+library("maps")
+library("maptools")
+library("RColorBrewer")
+map("state")
+points(-USmelanoma$longitude,USmelanoma$latitude,asp=1.5,cex=.3,pch=19,col="blue")
+```
+
+```{r,fig.align='center',message=FALSE,warning=FALSE}
+#qplot(-USmelanoma$longitude,USmelanoma$latitude,colour=USmelanoma$mortality,asp=1.5)+scale_color_gradient(low="blue", high="red")+geom_point()
+
+#Create a function to generate a continuous color palette
+rbPal <- colorRampPalette(c('blue','grey','red'))
+#This adds a column of color values
+# based on the y values
+USmelanoma$Col <- (rbPal(10)[as.numeric(cut(USmelanoma$mortality,breaks = 10))])
+map("state",xlim=c(-135,-65))
+points(-USmelanoma$longitude,USmelanoma$latitude,col=USmelanoma$Col,asp=1.5,pch=19,cex=1.2)
+legend("topleft",title="Decile",legend=quantile(USmelanoma$mortality,seq(0.1,1,l=10)),col =rbPal(10),pch=15,cex=1.,box.col = NA)
+```
+
+```{r,fig.width=12,fig.height=10,fig.align='center',message=FALSE,warning=FALSE}
+states <- map("state", plot = FALSE, fill = TRUE)
+IDs <- sapply(strsplit(states$names, ":"), function(x) x[1])
+rownames(USmelanoma) <- tolower(rownames(USmelanoma))
+
+us1 <- map2SpatialPolygons(states, IDs=IDs,proj4string = CRS("+proj=longlat +datum=WGS84"))
+us2 <- SpatialPolygonsDataFrame(us1, USmelanoma)
+
+col <- colorRampPalette(c('blue', 'gray80','red'))
+
+spplot(us2, "mortality", col.regions = col(200),par.settings = list(axis.line = list(col =  'transparent')),main="Map of the US showing malignant melanoma mortality rates")
+```
+
