@@ -54,10 +54,15 @@ No background knowledge about `R` or advance programming is needed. Some backgro
 
   [4. Probability distributions in `R`](http://idaejin.github.io/bcam-courses/R/2017/Ch4.html) [*.pdf](http://idaejin.github.io/bcam-courses/R/2017/Ch4.pdf)
   
-  5. Basic Statistical Modelling in `R`
+  [5. Basic Statistical Modelling in `R`](http://idaejin.github.io/bcam-courses/R/2017/Ch5.html) [*.pdf](http://idaejin.github.io/bcam-courses/R/2017/Ch5.pdf)
   
   6. Case studies and examples
+      
+       * [The German Credit data set](http://idaejin.github.io/bcam-courses/R/2017/GermanCreditData.R) contains observations on 30 variables for 1000 past applicants for credit. Each applicant was rated as “good credit” (700 cases) or “bad credit” (300 cases).
   
+      * [Boston Housing data](http://www.cs.toronto.edu/~delve/data/boston/bostonDetail.html) contains information collected by the U.S Census Service concerning housing in the area of Boston Mass. Load `library(MASS)` and `data("Boston")`, see `?Boston` for details.
+      
+      * [Wine data](https://archive.ics.uci.edu/ml/datasets/wine) is the result of a chemical analysis of wines grown in the same region in Italy but derived from three different cultivars. The analysis determined the quantities of 13 constituents found in each of the three types of wines. Load `library(rattle)` and `data(wine)`, see `?wine` for details.
 
 # Complementary material
 
@@ -71,6 +76,7 @@ No background knowledge about `R` or advance programming is needed. Some backgro
       
       + [RSeek](http://rseek.org/) - a Google search engine for R documentation and help. A MUST see!
       
+
 -----------------------------------------------------
 
 **Contact**
