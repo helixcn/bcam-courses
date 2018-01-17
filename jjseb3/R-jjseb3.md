@@ -5,7 +5,7 @@ BCAM - Basque Center for Applied Mathematics
 
 ***********
 
-Slides [here](http://idaejin.github.io/bcam-courses/jjseb3/JJSEB3.pdf)
+Slides <a href="http://idaejin.github.io/bcam-courses/jjseb3/JJSEB3.pdf" rel="nofollow" title="title&quot; target=&quot;_blank">here</a>
 
 Install some `R` libraries
 
@@ -13,8 +13,6 @@ Install some `R` libraries
 ```r
 install.packages(c("car","SemiPar","KernSmooth","nlme","MortalitySmooth","Matrix","svcm"))
 ```
-
-Download `wood.txt` data files [here](http://idaejin.github.io/bcam-courses/jjseb3/data/wood.txt)
 
 
 # Penalized splines 
@@ -1676,6 +1674,9 @@ lines(dens.g,fit2.V$fit-1.96*fit2.V$se.fit,col=4,lwd=2,lty=2)
 
 ## Correlated data
 
+
+Download `wood.txt` data 
+<a href="http://idaejin.github.io/bcam-courses/jjseb3/data/wood.txt" rel="nofollow" title="title&quot; target=&quot;_blank">here</a>
 
 The data were analyzed in @Pandit83. They present  a  dataset (`wood.txt`) describing  320  measurements  of  a  block of wood that was subject to grinding. Next Figure shows the profile (depth) height at different distances. The profile variation follows a curve determined by the radius of the grinding stone. 
 
