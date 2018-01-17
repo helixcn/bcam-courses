@@ -1225,7 +1225,7 @@ anova(cor.gamm0$lme,cor.gamm1$lme,cor.gamm2$lme)
 ## Smoothing and Forecasting Poisson Counts with P-Splines: `MortalitySmooth`
 
 
-@Camarda12 [Journal of Stat Software](http://www.jstatsoft.org/v50/i01/)
+@Camarda12 [Journal of Statistical Software](http://www.jstatsoft.org/v50/i01/)
 
 
 **Description:** 
