@@ -1,0 +1,6 @@
+\beamer@endinputifotherversion {3.36pt}
+\select@language {spanish}
+\beamer@sectionintoc {1}{Introduction}{3}{0}{1}
+\beamer@sectionintoc {2}{Splines, regression splines and Smoothing splines}{7}{0}{2}
+\beamer@sectionintoc {3}{Penalized regression and semi-parametric models}{34}{0}{3}
+\beamer@sectionintoc {5}{Penalized splines in {\bf R}}{54}{0}{4}

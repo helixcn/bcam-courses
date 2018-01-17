@@ -46,7 +46,7 @@ No background knowledge about `R` or advance programming is needed. Some backgro
   
   [5. Basic Statistical Modelling in `R`](http://idaejin.github.io/bcam-courses/R/2017/Ch5.html) [*.pdf](http://idaejin.github.io/bcam-courses/R/2017/Ch5.pdf)
   
-  6. Case studies and examples
+  6. Case studies and examples:
       
        * [The German Credit data set](http://idaejin.github.io/bcam-courses/R/2017/GermanCreditData.R) contains observations on 30 variables for 1000 past applicants for credit. Each applicant was rated as “good credit” (700 cases) or “bad credit” (300 cases).
   
