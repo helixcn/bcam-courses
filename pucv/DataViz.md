@@ -1,7 +1,6 @@
 ---
 title: '**Data Science con `R`**'
 author: "Dae-Jin Lee < dlee@bcamath.org >"
-date: '**Visualización de Datos**'
 output:
   html_document:
     df_print: kable
