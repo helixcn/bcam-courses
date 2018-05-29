@@ -1,0 +1,868 @@
+---
+title: '**Data Science con `R`**'
+author: "Dae-Jin Lee < dlee@bcamath.org >"
+output:
+  html_document:
+    df_print: kable
+    fig_caption: yes
+    highlight: tango
+    keep_md: yes
+    theme: cerulean
+    toc: yes
+    toc_depth: 1
+  pdf_document:
+    toc_depth: '1'
+subtitle: Instituto de Estadística PUCV - Magister en Estadística
+---
+
+
+
+[Presentación ``Data Visualization in Social Sciences''](files/DataVisSS.pdf)
+
+
+--------------------------------------
+
+**Chambers et al. (1983)**
+
+
+_``No existe una herramienta estadística tan poderosa como un gráfico bien escogido''_
+
+
+# Visualización de datos
+
++ Una de las principales razones por las que los analistas de datos recurren a `R` es por su gran capacidad gráfica.
+ 
++ Esta sección proporciona una introducción completa sobre cómo representar datos mediante el sistema de gráficos por defecto de `R`.
+
++ Las posibilidades gráficas de `R` son enormes (_casi infinitas_).
+
++ Muchas librerías disponen de representaciones gráficas muy útiles para la representación de datos y de modelos.
+
++ Veamos a continuación algunos ejemplos.
+
+
+## Objetivos de este tema
+
++ Conocer las capacidades gráficas básicas de `R`
+
++ Aprender a personalizar gráficos, y conocer los tipos de gráficos más complejos desde el punto de vista estadístico. 
+
++ Trabajar con datos reales y realizar análisis descriptivos y gráficos.
+
++ Realizar gráficos con librerías como `ggplot2`
+
++ Guardar gráficos en los diferentes formatos para utilizarlos posteriormente en presentaciones, informes etc ...
+
+
+## Preliminares
+
++ Instalar las siguientes librerías de `R
+
+```{r, eval=FALSE}
+install.packages("DAAG")
+install.packages("calibrate")
+install.packages("corrplot")
+install.packages("gplots")
+install.packages("HSAUR2")
+install.packages("sp")
+install.packages("maps")
+install.packages("maptools")
+install.packages("RColorBrewer")
+install.packages("RgoogleMaps")
+```
+
+
+
+## Datos cuantitativos
+
+
+Vamos a comenzar con el conjunto de datos en el `data.frame`: `pressure` (ver `?pressure`)
+
+```{r,echo=TRUE}
+?pressure
+head(pressure)
+```
+
+Función `plot`
+
+```{r,echo=TRUE}
+plot(pressure)
+```
+
+Función `text`
+
+```{r,echo=TRUE}
+plot(pressure)
+text(150, 600, 
+     "Pressure (mm Hg)\nversus\nTemperature (Celsius)")
+```
+
+
+La opción `cex` permite aumentar el tamaño de la fuente
+
+```{r,echo=TRUE}
+plot(pressure)
+text(150, 600, cex = 2,
+     "Pressure (mm Hg)\nversus\nTemperature (Celsius)")
+```
+
+La opción `log = "y"`, representa la variable `y` en escala logarítmica. 
+
+`xlab` e `ylab` permite añadir texto a los ejes y `main` el título del gráfico.
+
+```{r}
+plot(pressure, xlab = "Temperature (deg C)",  log = "y",
+     ylab = "Pressure (mm of Hg)",
+     main = "pressure data: Vapor Pressure of Mercury")
+```
+
+## Datos `mtcars`
+
+
+`?mtcars`
+
+```{r,echo=TRUE}
+head(mtcars)
+names(mtcars)
+```
+
+
+### Scatterplot ó gráfico X-Y
+
+```{r,echo=TRUE, fig.width=7.25,fig.height=3.55,fig.align='center'}
+attach(mtcars)
+plot(wt, mpg);
+abline(lm(mpg~wt)); title("Regression of MPG on Weight")
+```
+
+### Scatterplot matrix (ver`?pairs`)
+
+```{r, echo = TRUE, fig.align='center', fig.width=6.25,fig.height=3.25}
+pairs(~mpg+disp+drat+wt,data=mtcars,
+       main="Simple Scatterplot Matrix")
+```
+
+### Diagrama de barras (ver `?barplot`)
+
+```{r, echo=TRUE, fig.align='center'}
+tab <- table(mtcars[,c("cyl")]) # convertir a tabla
+barplot(tab)
+```
+
+
+### Piechart o diagrama de tarta (ver `?pie`)
+
+```{r, echo=TRUE, fig.align='center'}
+pie(tab)
+```
+
+
+### Datos `VADeaths`
+
+
+  + El `data.frame` `VADeaths` contiene las tasas de mortalidad por cada 1000 habitantes en Virginia (EEUU) en 1940
+
+  + Las tasas de mortalidad se miden cada 1000 habitantes por año. Se encuentran clasificadas por grupo de edad (filas) y grupo de población (columnas). 
+  
+  + Los grupos de edad son: 50-54, 55-59, 60-64, 65-69, 70-74 y los grupos de población: `Rural/Male`, `Rural/Female`, `Urban/Male` and `Urban/Female`.
+  
+
+  
+```{r, echo = TRUE}
+data(VADeaths)
+VADeaths
+```  
+
+  + Calcula la media por grupo de edad y la media por grupo de población (**Pista:** puedes usar la función `apply`)
+
+
+Función `apply`
+
+  +  **Resultado** 
+  
+```{r,echo=TRUE}
+apply(VADeaths,1,mean)
+```
+
+```{r,echo=TRUE}
+apply(VADeaths,2,mean)
+```
+
+### Data `rainforest`
+
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+library(DAAG)
+head(rainforest)
+```
+
++ Crear una tabla de conteos para cada `species` y realiza un gráfico descriptivo. 
+
++ **Resultado:**
+
+\small
+```{r,echo=TRUE}
+table(rainforest$species)
+```
+
+
+### Diagrama de barras
+
+```{r,echo=TRUE, fig.align='center', fig.width=6,fig.height=4}
+barplot(table(rainforest$species))
+```
+
+ `?subset`
+
++ El `data.frame` `Acmena` está  creado a partir de `rainforest` mediante la función `subset`. 
+
+```{r, echo = TRUE}
+Acmena <- subset(rainforest, species == "Acmena smithii")
+```
+
++ Vamos a realizar un gráfico que relacione la biomasa de la madera (`wood`) y el diámetro a la altura del pecho (`dbh`). 
+
++ Utiliza también la escala logarítmica.
+
+ `par` y `mfrow`
+
+\footnotesize
+```{r,echo=TRUE, fig.align='center'}
+par(mfrow=c(1,2))
+plot(wood~dbh,data=Acmena,pch=19, main="plot of dbh vs wood")
+plot(log(wood)~log(dbh),data=Acmena,pch=19,main="log transformation")
+```
+
+### Histograma 
+
+```{r,echo=TRUE, fig.align='center'}
+hist(Acmena$dbh,col="grey")
+```
+
+
+Más sobre gráficos XY
+
++ Datos `mammals`
+
+
+```{r, message= FALSE, warning=FALSE}
+library(MASS)
+data("mammals")
+?mammals
+head(mammals)
+attach(mammals)
+species <- row.names(mammals)
+x <- body
+y <- brain
+```
+
+
+```{r,fig.align='center'}
+library(calibrate)
+# scatterplot
+plot(x,y, xlab = "body weight in kgr", ylab = "brain weight in gr", 
+     main="Body vs Brain weight \n for 62 Species of Land Mammals",xlim=c(0,8500))
+textxy(x,y,labs=species,col = "blue",cex=0.85) 
+```
+
+
+`identify`
+
+Identificar un punto en el scatterplot
+
+```{r, eval=FALSE, echo = TRUE}
+identify(x,y,species)
+```
+
+En escala logarítmica
+
+```{r,fig.align='center'}
+plot(log(x),log(y), xlab = "log body weight in kgr", ylab = "log brain weight in gr", 
+     main="log Body vs log Brain weight \n for 62 Species of Land Mammals")
+textxy(log(x),log(y),labs=species,col = "blue",cex=0.85) 
+```
+
+## Matrices de correlación
+
++ La función `corrplot` de la librería `corrplot` permite visualizar una matriz de correlaciones calculada mediante la función `cor`
+
++ Vamos a generar unos datos de manera aleatoria.
+
++ Mediante `set.seed(1234)` generaremos números aleatorios a partir de la misma semilla. 
+
+\footnotesize
+```{r, echo = TRUE}
+set.seed(1234)
+uData <- rnorm(20)
+vData <- rnorm(20,mean=5)
+wData <- uData + 2*vData + rnorm(20,sd=0.5)
+xData <- -2*uData+rnorm(20,sd=0.1)
+yData <-  3*vData+rnorm(20,sd=2.5)
+d <- data.frame(u=uData,v=vData,w=wData,x=xData,y=yData)
+```
+
+`pairs`
+\footnotesize
+```{r, echo = TRUE, fig.align='center'}
+pairs(d)
+```
+
+
+`corrplot`
+
+\footnotesize
+```{r, echo = TRUE, fig.align='center'}
+library(corrplot)
+M <- cor(d)
+M
+```
+
+ 
+
+```{r, echo = TRUE, fig.align='center'}
+corrplot(M, method="circle",type="upper")
+```
+
+
+```{r, echo = TRUE, fig.align='center'}
+corrplot(M, method="circle",type="upper", diag = FALSE, 
+         addCoef.col = "red")
+```
+
+## `UCBAdmissions` 
+
++  El conjunto de datos de `R`, `UCBAdmissions`contiene los datos agregadps de los solicitantes a universidad de Berkeley a los seis departamentos más grandes en 1973 clasificados por sexo y admisión.
+
+```{r, echo = TRUE}
+data("UCBAdmissions")
+?UCBAdmissions
+apply(UCBAdmissions, c(2,1), sum)
+```
+
+```{r, echo = TRUE}
+prop.table(apply(UCBAdmissions, c(2,1), sum))
+ftable(UCBAdmissions)
+```
+
+Con `ftable` podemos presentar la información con mayor claridad
+
+
+```{r, echo = TRUE}
+ftable(round(prop.table(UCBAdmissions), 3),
+       row.vars="Dept", col.vars = c("Gender", "Admit"))
+```
+
+
+Resulta más intereseante mostrar la información por género `Gender` y `Dept` combinados (dimensiones 2 y 3 del array). Nótese que las tasas de admisión por `male` y `female` son más o menos similares en todos los departamentos, excepto en "A", donde las tasas de las mujeres es mayor.
+
+
+
+```{r, echo = TRUE}
+ftable(round(prop.table(UCBAdmissions, c(2,3)), 2),
+       row.vars="Dept", col.vars = c("Gender", "Admit"))
+```
+
+
+**Datos de admisiones agregados por Sexo/Departamento**
+
+
+```{r, echo = TRUE}
+apply(UCBAdmissions, c(1, 2), sum)
+apply(UCBAdmissions, c(1, 2), sum)
+````
+
+### Representación gráfica datos categóricos (`spineplot`)
+
+
+
+```{r, echo = TRUE, fig.align='center'}
+par(mfrow=c(1,2))
+spineplot(margin.table(UCBAdmissions, c(3, 2)),
+           main = "Applications at UCB")
+spineplot(margin.table(UCBAdmissions, c(3, 1)),
+           main = "Admissions at UCB")
+```
+
+### Paradoja de Simpson
+
+  + Estos datos ilustran la denominada *paradoja de Simpson*.
+
+  + Este hecho ha sido analizado como un posible caso de discriminación por sexo en las tasas de admisión en Berkeley. 
+  
+  + De los 2691 hombres que solicitaron se admitidos, 1198 (44.5%) fueron admitidos, comparado con las 1835 mujeres de las cuales tan sólo 557 (30.4%) fueron admitidas. 
+  
+  + Se podría por tanto concluir que los hombres tienes tasas de admisi?n mayores que las mujeres. 
+  
+  + [**Wikipedia:** _Gender Bias UC Berkeley_](https://en.wikipedia.org/wiki/Simpson%27s_paradox#UC_Berkeley_gender_bias). 
+  
+  + Ver animación en [_link_](http://vudlab.com/simpsons/) 
+
+
+
+### Datos `faithful`
+
++ Consideremos los datos del geyse Old Faithful en el parque nacional de Yellowstone, EEUU. 
+
+
+```{r, echo = TRUE}
+head(faithful)
+```
+
+```{r, echo=TRUE, fig.align="center", fig.width=6, fig.height=4}
+plot(faithful)
+```
+
+### Histograma (`hist`)
+
+ 
+```{r, echo = TRUE, fig.align='center', fig.width=6}
+hist(faithful$eruptions,50)
+```
+
+
+### Estimación de densidades
+
++ **Estimación de densidad** construye una estimación dada una distribucion de probabilidad para una muestra dada.
+
+\footnotesize
+```{r, echo = TRUE, fig.align='center', fig.width=6}
+library(graphics)
+d <- density(faithful$eruptions)
+d
+```
+
+```{r, echo = TRUE, fig.align='center'}
+plot(d)
+```
+
+### Histograma y Densidad
+
+
+```{r, echo = TRUE, fig.align='center'}
+hist(faithful$eruptions,freq=FALSE, col = "lightblue", xlim = c(1,6))
+lines(d, col = "red", lwd = 2)
+```
+
+###  Histograma bivariante
+
+
+```{r,message=FALSE,warning=FALSE, echo = TRUE, fig.align='center'}
+library(gplots)
+h2 <- hist2d(faithful, nbins=30,xlab="Duration in minutes",ylab="Waiting")
+h2
+```
+
+ 
+```{r, echo = TRUE, eval = TRUE}
+class(h2)
+names(h2)
+```
+
+### Estimación de densidades bivariantes (`kde2d`)
+
+
+```{r, echo = TRUE, fig.align='center'}
+Dens2d<-kde2d(faithful$eruptions,faithful$waiting)
+image(Dens2d,xlab="eruptions",ylab="waiting")
+contour(Dens2d,add=TRUE,col="black",lwd=2,nlevels=5)
+```
+
+### `persp`
+
+
+```{r, echo = TRUE, fig.align='center'}
+persp(Dens2d,phi=30,theta=20,d=5,xlab="eruptions",ylab="waiting",zlab="",shade=.2,col="lightblue",expand=.85,ticktype = "detailed")
+```
+
+
+# Ejemplo: Forbes 2000 (ranking de las empresas líderes en 2004)
+
++ La lista Forbes 2000 para el año 2004 recogida por la revista Forbes. Esta lista está disponible originalmente en `www.forbes.com`
+
+
+```{r,echo=TRUE,message=FALSE,warning=FALSE}
+library("HSAUR2")
+data("Forbes2000")
+dim(Forbes2000)
+names(Forbes2000)
+```
+
+
+```{r, echo = TRUE, message=FALSE, warning=FALSE}
+library(knitr)
+kable(head(Forbes2000))
+```
+
+Los datos consisten en 2000 observaciones sobre las 8 variables siguientes.
+    
+  * `rank`: el ranking de la empresa.
+  * `name`: el nombre de la empresa.
+  * `country`: un factor que determina el país en el que está situada la empresa.
+  * `category`: un factor que describe los productos que produce la empresa.
+  * `sales`: el importe de las ventas de la empresa en miles de millones de dólares.
+  * `profits`: los beneficios de la empresa en miles de millones de dólares. 
+  * `assets`: los activos de la empresa en miles de millones de dólares.
+  * `marketvalue`: el valor de mercado de la empresa en miles de millones de dólares.
+    
+
+```{r,echo=TRUE}
+str(Forbes2000)
+```
+
++ ¿Cuántos países diferentes están en el ranking del año 2000?
+
+
+```{r,echo=TRUE}
+nlevels(Forbes2000[,"country"])
+```
+
+
++ Cuáles son éstos países?
+
+
+```{r,echo=TRUE}
+levels(Forbes2000[,"country"])
+```
+ 
+
++ Cuáles en el top 20?
+
+
+
+```{r,echo=TRUE}
+top20 <- droplevels(subset(Forbes2000,rank<=20))
+levels(top20[,"country"])
+```
+
+
+ + As a simple summary statistic, the frequencies of the levels of such a factor variable can be found from
+
+
+```{r,echo=TRUE}
+table(top20[,"country"])
+```
+
++ Which type of companies?
+
+\footnotesize
+```{r,echo=TRUE}
+levels(Forbes2000[,"category"])
+```
+
+ + How many of each category?
+
+
+```{r,echo=TRUE}
+table(Forbes2000[,"category"])
+```
+
+ + A simple summary statistics such as the mean, median, quantiles and range can be found from continuous variables such as `sales`
+
+\footnotesize
+```{r,echo=TRUE}
+summary(Forbes2000[,"sales"])
+```
+
+
+  + Histogramas y boxplots
+
+
+```{r,echo=TRUE, fig.align='center'}
+par(mfrow=c(1,2))
+hist(Forbes2000$marketvalue, col="lightgrey",main="Histogram of market value")
+boxplot(Forbes2000$marketvalue, col="lightgrey",main="Boxplot of market value")
+```
+
+```{r,echo=TRUE,fig.align='center'}
+par(mfrow=c(1,2))
+hist(log(Forbes2000$marketvalue),col="lightgrey",
+     main="Histogram of log(market value)")
+boxplot(log(Forbes2000$marketvalue),col="lightgrey",
+        main="Boxplot of log(market value)")
+```
+
+
+```{r,echo=TRUE,fig.width=6.5,fig.height=3.5, fig.align='center'}
+par(mfrow=c(1,2))
+plot(marketvalue ~ sales, data = Forbes2000, pch = ".")
+plot(log(marketvalue) ~ log(sales), data = Forbes2000, pch = ".")
+```
+
+
+```{r,echo=TRUE,message=FALSE,warning=FALSE}
+library(calibrate)
+profits_all = na.omit(Forbes2000$profits)  # all_profts without No data
+order_profits = order(profits_all)     # index of the profitable companies 
+                                       #    in decreasing order
+top_50 = rev(order_profits)[1:50]      # top 50 profitable companies
+
+sales = Forbes2000$sales[top_50]       # sales of the 50 top profitable companies
+assets = Forbes2000$assets[top_50]     # assets of the 50 top profitable companies
+countries = Forbes2000$country[top_50] # countries where the 50 top profitable 
+                                       #    companies are found
+
+plot(assets,sales,pch =1)
+textxy(assets,sales, abbreviate(countries,2),col = "blue",cex=0.5)  # used to put the 
+                                                                    # countries where the companies are found
+title(main = "Sales and Assets in billion 
+              USD \n of the 50 most profitable companies ", col.main = "gray")
+```
+
+**Gráficos por factor**
+
+Boxplots de los logaritmos del valor de mercado para cuatro países seleccionados, el ancho de las cajas es proporcional a las raíces cuadradas del número de empresas.
+
+```{r, echo=TRUE}
+tmp <- subset(Forbes2000,
+        country %in% c("United Kingdom", "Germany",
+                       "India", "Turkey"))
+tmp$country <- tmp$country[,drop = TRUE]
+plot(log(marketvalue) ~ country, data = tmp, col = 3:6,
+       ylab = "log(marketvalue)", varwidth = TRUE)
+```
+
+Scatterplots by country
+
+```{r,echo=TRUE, warning=FALSE}
+library(lattice)
+xyplot(log(marketvalue)~log(sales)|country,data=tmp)
+```
+
+**Preguntas**
+
+1. Calcular el beneficio medio de las empresas en EE.UU. y el beneficio medio de las empresas en el Reino Unido, Francia y Alemania.
+
+2. Encuentre todas las empresas alemanas con beneficios negativos.
+
+3. ¿A qué categoría de negocios pertenecen la mayoría de las compañías de las islas Bermuda?
+
+
+4. Encuentre el valor promedio de las ventas de las compañías en cada país en el conjunto de datos de Forbes, y encuentre el número de compañías en cada país con ganancias superiores a 5 mil millones de dólares estadounidenses.
+
+
+
+
+## Melanoma maligno en los Estados Unidos
+
+Fisher y Belle (1993) reportan tasas de mortalidad por melanoma maligno de la piel en hombres blancos durante el período 1950-1969, en cada estado del territorio continental de los Estados Unidos. 
+
+
+```{r,echo=TRUE}
+data("USmelanoma",package="HSAUR2")
+```
+Los datos consisten en 48 observaciones sobre las siguientes 5 variables.
+
+  + `mortality` número de varones blancos muertos por melanoma maligno entre 1950 y 1969 por cada millón de habitantes.
+
+  + `latitude`: latitud del centro geográfico del estado.
+
+  + `longitude`: longitud del centro geográfico de cada estado.
+
+  + `ocean`: variable binaria que indica la contigüidad a un océano a niveles 'no' o 'sí'.
+
+
+**Gráficos de las tasas de mortalidad**
+
+```{r}
+xr <- range(USmelanoma$mortality) * c(0.9, 1.1)
+```
+
+Boxplot
+
+```{r,fig.align='center',echo=TRUE}
+#layout(matrix(1:2, nrow = 2))
+boxplot(USmelanoma$mortality, ylim = xr, horizontal = TRUE,xlab = "Mortality")
+hist(USmelanoma$mortality, xlim = xr, xlab = "", main = "",axes = FALSE, ylab = "")
+axis(1)
+```
+
+Tasas de mortalidad por melanoma maligno por contigüidad a un océano
+
+```{r,fig.align='center'}
+plot(mortality ~ ocean, data = USmelanoma, xlab = "Contiguity to an ocean", ylab = "Mortality")
+```
+Los histogramas a menudo pueden ser engañosos a la hora de mostrar distribuciones debido a su dependencia del número de clases elegidas. Una alternativa es estimar formalmente la función de densidad de una variable y luego graficar la estimación resultante.
+
+Las densidades estimadas de las tasas de mortalidad por melanoma maligno por contigüidad a un océano se ven así:
+
+```{r,echo=TRUE,fig.width=12,fig.height=10,fig.align='center'}
+dyes <- with(USmelanoma, density(mortality[ocean == "yes"]))
+dno <- with(USmelanoma, density(mortality[ocean == "no"]))
+plot(dyes, lty = 1, xlim = xr, main = "", ylim = c(0, 0.018))
+lines(dno, lty = 2)
+legend("topright", lty = 1:2, legend = c("Coastal State","Land State"), bty = "n")
+```
+
+Ahora podríamos pasar a ver cómo se relacionan las tasas de mortalidad con la ubicación geográfica de un estado representada por la latitud y longitud del centro del estado. 
+
+```{r,echo=TRUE,fig.align='center'}
+layout(matrix(1:2, ncol = 2))
+plot(mortality ~ -longitude, data = USmelanoma)
+plot(mortality ~ latitude, data = USmelanoma)
+```
+
+Los datos contienen la longitud y latitud de los centroides. 
+
+```{r,echo=TRUE,fig.align='center',message=FALSE,warning=FALSE}
+plot(-USmelanoma$longitude,USmelanoma$latitude,asp=1.5,cex=.3,pch=19,col="blue")
+```
+
+
+```{r,echo=TRUE,fig.align='center',message=FALSE,warning=FALSE}
+library("sp")
+library("maps")
+library("maptools")
+library("RColorBrewer")
+map("state")
+points(-USmelanoma$longitude,USmelanoma$latitude,asp=1.5,cex=.3,pch=19,col="blue")
+```
+
+```{r,fig.align='center',message=FALSE,warning=FALSE,echo=TRUE}
+# Crear una función para generar una paleta de colores continua
+rbPal <- colorRampPalette(c('blue','grey','red'))
+# Esto añade una columna de valores de color
+# basado en los valores de y
+USmelanoma$Col <- (rbPal(10)[as.numeric(cut(USmelanoma$mortality,breaks = 10))])
+map("state",xlim=c(-135,-65))
+points(-USmelanoma$longitude,USmelanoma$latitude,col=USmelanoma$Col,asp=1.5,pch=19,cex=1.2)
+legend("topleft",title="Decile",legend=quantile(USmelanoma$mortality,seq(0.1,1,l=10)),col =rbPal(10),pch=15,cex=1.,box.col = NA)
+```
+
+```{r,fig.width=12,fig.height=10,fig.align='center',message=FALSE,warning=FALSE,echo=TRUE}
+states <- map("state", plot = FALSE, fill = TRUE)
+IDs <- sapply(strsplit(states$names, ":"), function(x) x[1])
+rownames(USmelanoma) <- tolower(rownames(USmelanoma))
+
+us1 <- map2SpatialPolygons(states, IDs=IDs,proj4string = CRS("+proj=longlat +datum=WGS84"))
+us2 <- SpatialPolygonsDataFrame(us1, USmelanoma)
+
+col <- colorRampPalette(c('blue', 'gray80','red'))
+
+spplot(us2, "mortality", col.regions = col(200),par.settings = list(axis.line = list(col =  'transparent')),main="Map of the US showing malignant melanoma mortality rates") 
+```
+
+
+
+# Gráficos avanzados con la librería `ggplot2`
+
+  + Toma como referencia una metodología de visualización de datos llamada
+The Grammar of Graphics, (Wilkinson, 2005).
+
+  + La idea es describir los mapeos visuales para poder armar visualizaciones complejas sin preocuparnos por la parte dificil.
+  +  Gramática consistente basada en grammar of graphics (Wilkinson, 2005)
+  +  Librería muy flexible
+  +  Mantenimiento muy activo de la librería
+  +  Gran lista de distribución y con mucha participación
+  +  Es posible crear gráficos visualmente atractivos y elegantes
+  +  Simple gestión de leyendas
+
+
+[Más información](http://rstudio-pubs-static.s3.amazonaws.com/2795_901030c4ef944c7797f39bcdac099d74.html)
+
+
+
+  
+```{r,message=FALSE,warning=FALSE}
+library(ggplot2)
+?qplot
+qplot(displ, hwy, data = mpg, colour = factor(cyl))
+qplot(mpg, wt, data = mtcars)
+qplot(mpg, wt, data = mtcars, colour = cyl)
+qplot(mpg, wt, data = mtcars, size = cyl)
+qplot(mpg, wt, data = mtcars, size = cyl, alpha = I(0.7))
+qplot(mpg, wt, data = mtcars, facets = vs ~ am)
+
+qplot(displ, hwy, data=mpg, facets = . ~ year) + geom_smooth()
+
+p <- ggplot(mtcars)
+p <- p + aes(wt, hp)
+p
+p + geom_point(aes(colour = factor(cyl)))
+
+p + geom_point(aes(y = disp))
+p
+
+p <- ggplot(mtcars, aes(mpg, wt))
+p + geom_point(colour = "darkblue")
+```
+
+```{r}
+filepath <- "http://idaejin.github.io/bcam-courses/azti-2016/introR/data/ggplot2_data.txt"
+
+myData<-read.table(file=url(filepath),header=TRUE,sep="\t")
+
+str(myData)
+
+qplot(data=myData,x=BM,main="Histogram of BodyMass")
+
+qplot(data=myData,x=BM,y=var1,log="xy",color=Tribe)
+```
+
+
+## Maps
+
+Paquetes para Regresión Espacial / Geoestadística / Métodos de Patrones de Puntos Espaciales 
+
+* `sp`, `maptools`, `spatstat`
+* `maps`
+
+```{r, message=FALSE,warning=FALSE}
+library(maps)
+```
+
+Sintaxis básica
+
+```{r, message=FALSE,warning=FALSE}
+map(database = "world",regions=".")
+```
+Hay bases de datos disponibles para EE.UU., Francia, Italia y Nueva Zelanda. Para otros países, es necesario importar una base de datos con el mapa correspondiente.
+
+```{r, message=FALSE,warning=FALSE}
+map(database = "usa")
+map("state")
+```
+
+Con el paquete `RgoogleMaps`, puedes dibujar un fondo desde Google Maps! 
+
+```{r,message=FALSE,warning=FALSE}
+library(RgoogleMaps)
+lat <- -33.447487
+lon <- -70.673676
+center <- c(lat, lon)
+zoom <- 18
+MyMap <- GetMap(center=center, zoom=zoom)
+PlotOnStaticMap(MyMap)
+text(lat,lon, "X") 
+```
+
+`ggmap` ofrece capacidades gráficas como `ggplot2``.
+
+```{r,eval=FALSE,message=FALSE,warning=FALSE}
+library(ggmap)
+geocode("Alameda, Santiago de Chile, Chile")
+qmap("Santiago, Chile", zoom = 14)
+mapdist("Valparaíso", "Santiago")
+route("Valparaíso, Chile", "Santiago, Chile", alternatives = FALSE)
+```
+
+
+**Ejemplo de uso de `qmap` y `ggplot2`**
+
+```{r, eval=FALSE}
+desde <- 'Valparaíso, Chile'
+hasta <- 'Santiago, Chile'
+
+rutas <- route(desde, hasta, alternatives = FALSE)
+head(rutas)
+
+ggplot() +
+  geom_segment(aes(x = startLon, y = startLat, xend = endLon, yend = endLat, colour = route), size = 1.5, data = rutas)
+
+```
+
+```{r,eval=FALSE,echo=FALSE,message=FALSE}
+library(knitr)
+purl("IntroSM.Rmd",output="IntroSM.R")
+```
+
+
