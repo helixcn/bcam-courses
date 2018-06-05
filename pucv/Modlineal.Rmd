@@ -1,0 +1,1279 @@
+---
+title: '**Data Science con `R`**'
+author: "Dae-Jin Lee < dlee@bcamath.org >"
+output:
+  html_document:
+    df_print: kable
+    fig_caption: yes
+    highlight: tango
+    keep_md: yes
+    theme: cerulean
+    toc: yes
+    toc_depth: 1
+  pdf_document:
+    toc_depth: '1'
+subtitle: Instituto de Estadística PUCV - Magister en Estadística
+---
+
+
+--------------------------------------
+
+
+```{r, eval=FALSE}
+install.packages("visreg")
+install.packages("car")
+install.packages("leaps")
+install.packages("InformationValue")
+install.packages("ROCR")
+```
+
+# Modelo Lineal General
+
+
+
+# Modelos lineales en `R` 
+
+
+## Regresión lineal simple
+
+- La regresión es un método estadístico utilizado para predecir el valor de una variable de respuesta basada en los valores de un conjunto de variables explicativas.
+
+- Cualquier modelo estadístico intenta aproximar la variable de respuesta o variable dependiente $y$ como una función matemática de las variables explicativas o regresores $X$ (también llamadas covariables o variables independientes).
+
+- La forma más sencilla y más común es la **regresión lineal**
+
+$$
+    y = \beta_0 + \beta_1 x_1 + \beta_2 x_p + \epsilon,
+$$
+donde $\beta_i$ con $i=0,1,2$ son parametros *desconocidos*. $\beta_0$ se llama el intercepto. Por lo tanto, el problema se reduce a la estimación de cuatro valores. $\epsilon$ es un término de error aleatorio que se asume Normal de media $0$ y varianza $\sigma^2$. El modelo lineal asume que los errores son además homocedásticos (varianza constante).
+
+- Un modelo lineal simple con una sola variable explicativa se define como:
+
+$$
+         \hat{y} = \beta_0 + \beta_1 x
+$$
+
+donde $\hat y$ son los valores ajustados para $\beta_0$ (intercepto) y $\beta_1$ (pendiente). Entonces para un $x_i$ dado obtenemos un $\hat{y}_i$ que se aproxima a $y_i$
+
+
+<!-- Supongamos el siguiente ejemplo simulado (con $p=1$): -->
+
+<!-- ```{r} -->
+<!-- set.seed(1) -->
+<!-- n <- 50  -->
+
+<!-- x <- seq(1,n) -->
+<!--  beta0 <- 15 -->
+<!--  beta1 <- 0.5 -->
+
+<!-- sigma <- 3 # standar deviation of the errors -->
+<!-- eps <- rnorm(n,mean=0,sd=3) # generate gaussian random errors -->
+
+<!-- # Generate random data -->
+<!--  y <- beta0 + beta1*x  +  eps -->
+<!-- ``` -->
+
+<!-- Plot de los datos -->
+
+<!-- ```{r,fig.width=8,fig.height=6} -->
+<!-- plot(x,y,ylim = c(8,45), cex=1.3, xlab = "x", ylab="y",pch=19) -->
+<!-- ``` -->
+<!-- Procedimiento matemático para encontrar la curva que mejor se ajuste a un conjunto de puntos dado, resulta de minimizar la suma de los cuadrados de los residuos de los puntos de la línea ajustada. Ilustración del ajuste de mínimos cuadrados -->
+
+<!-- ```{r,echo=FALSE,fig.width=8,fig.height=6} -->
+<!--   sel <- 25 -->
+<!--   plot(x, y, xlab = "x", ylab = "y", ylim=c(8,45), cex=.65,pch=19) -->
+<!--    text(x[sel], 8.1, "x=25",cex=2) -->
+<!--    abline(v = x[sel], lty = 2) -->
+<!--     points(x[sel], y[sel], pch = 16, col = "red",cex=1.2) -->
+<!--     text(sel-8, 35,paste("y = ",paste(round(y[sel],2))),cex=2) -->
+<!--     abline(h=y[sel],lty=2) -->
+<!--    lines(x,fitted(lm(y~x)),col="blue",lwd=2) -->
+<!--    points(x[sel],fitted(lm(y~x))[sel],col="blue",lwd=2,pch=15,cex=1.2) -->
+<!--     #text(36, 24,paste("y.hat =", paste(round(fitted(lm(y~x))[sel],2))),cex=2) -->
+<!--    text(36,24,substitute(paste(hat(y),"=",p),list(p=round(fitted(lm(y~x))[sel],2))),cex=2) -->
+<!--    points(cbind(rep(sel,10),seq(y[sel],fitted(lm(y~x))[sel],l=10)),col="grey",t='l',lwd=2,lty=2) -->
+<!--    points(cbind(rep(40,10),seq(y[sel],fitted(lm(y~x))[sel],l=10)),col=1,t='l',lwd=4,lty=1) -->
+<!--    points(cbind(seq(sel,40,l=10),rep(fitted(lm(y~x))[sel],10)),col=1,t='l',lwd=1,lty=2) -->
+<!--    text(46,29, (expression(hat(y)-y)),cex=1.55) -->
+<!-- # abline(h = coefficients(lm(y~x))[1],v=0,lty=2) -->
+<!-- ``` -->
+
+
+
+
+<!-- ```{r, message=FALSE, warning=FALSE} -->
+<!-- library(faraway) -->
+<!-- data(gala, package = "faraway") -->
+<!-- ?gala -->
+<!-- head(gala) -->
+<!-- lmod <- lm(Species ~ Area + Elevation + Nearest + Scruz + Adjacent, data = gala) -->
+<!-- summary(lmod) -->
+<!-- ``` -->
+
+Por ejemplo, en el conjunto de datos `faithful`, contiene datos de ejemplo de dos variables aleatorias denominadas `waiting` y `eruptions`. La variable `waiting` indica el tiempo de espera hasta las próximas erupciones, y` eruptions` denota la duración.
+ 
+```{r, fig.align='center'}
+plot(eruptions~waiting,data=faithful)
+```
+
+El modelo lineal viene dado por:
+
+$$
+Eruptions = \beta_0 + \beta_1*Waiting + \epsilon
+$$
+
+
+Si seleccionamos los parámetros $\beta_0$ y $\beta_1$ en el modelo de regresión lineal simple para minimizar la suma de cuadrados del término de error $\epsilon$. Supongamos que para el conjunto de datos `faithful`, pretendemos estimar la siguiente duración de la erupción si el tiempo de espera desde la última erupción ha sido de 80 minutos.
+Aplicamos la función `lm` a una fórmula que describe la variable erupciones por la variable waiting, y guardamos el modelo de regresión lineal en una nueva variable `eruption.lm`. 
+
+
+```{r}
+data("faithful")
+eruption.lm <- lm(eruptions~waiting,data=faithful)
+```
+
+Extraemos los parámetros de la ecuación de regresión estimada con la función de coeficientes. 
+
+```{r}
+coeffs <- coefficients(eruption.lm); coeffs 
+```
+
+Ahora ajustamos la duración de la erupción usando la ecuación de regresión estimada.
+
+```{r}
+waiting = 80           # the waiting time 
+duration = coeffs[1] + coeffs[2]*waiting 
+duration 
+```
+
+En base al modelo de regresión lineal simple, si el tiempo de espera desde la última erupción ha sido de 80 minutos, esperamos que los próximos minutos de duración `r duration`. 
+
+
+Podemos incluir el valor de `waiting=80` en `newdata` como un `data.frame`
+```{r}
+newdata = data.frame(waiting=80) # wrap the parameter 
+```
+Y aplicar la función `predict` a modelo `eruption.lm` con `newdata`. 
+
+```{r}
+predict(eruption.lm, newdata)    # apply predict 
+```
+
+
+<!-- Podemos calcular directamente las cantidades de interés, es decir, la solución de mínimos cuadrados ordinarios consiste en: -->
+
+<!-- $$ -->
+<!-- \min_{\beta_0,\beta_1} = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2   -->
+<!-- $$ -->
+
+<!-- Por tanto -->
+<!-- $\hat{\beta}_1  = \frac{\sum_{i=1}^{n}x_iy_i}{\sum_{i=1}^n x_i^2}$ and  -->
+<!-- $\hat{\beta}_0 = \bar{y} - \hat{\beta}_1\bar{x}$ -->
+
+<!-- En forma de matricial, con $X=[1:x_1:...:x_p]$ -->
+
+<!-- $$ -->
+<!-- \hat{\beta}  = (X^\prime X)^{-1} X^\prime -->
+<!-- $$ -->
+
+<!-- donde $\hat{\beta} = (\hat{\beta}_0,\hat{\beta}_1)$ -->
+
+
+## Definir modelos en `R`
+
+Para completar una regresión lineal usando `R` es necesario primero entender la sintaxis para definir modelos.
+
+|     Syntax        |                  Model                    |                               Comments                               |
+|:------------------:|:----------------------------------------:|:--------------------------------------------------------------------:|
+| `y ~ x`           | $y = \beta_0+\beta_1x$                    | Linea recta con intercepto                             |
+| `y ~ -1 + x`      | $y = \beta_1x$                            | Linea recta sin intercepto, i.e. la recta pasa por (0,0) |  
+| `y ~ x + I(x^2) ` | $y = \beta_0+\beta_1x+\beta_2x^2$         | Modelo polinomial; `I()` permite incluir símbolos matemáticos
+| `y ~ x + z`       | $y = \beta_0+\beta_1x+\beta_2z$           | Model de regresión múltiple           |        
+| `y ~ x:z`         | $y = \beta_0+\beta_1xz$                   | Modelo con interacción entre $x$ y $z$                           |        
+| `y ~ x*z`         | $y = \beta_0+\beta_1x+\beta_2z+\beta_3xz$ | Equivale a `y~x+z+x:z`                                            |  
+
+
+<!-- En `R` la función `model.matrix` permite crear la matriz de diseño $X$. -->
+
+<!-- ```{r} -->
+<!-- x <- model.matrix(~waiting, data = faithful) -->
+<!-- y <- faithful$eruptions -->
+<!-- xtxi <- solve(t(x) %*% x) -->
+<!-- betas <- xtxi %*% t(x) %*% y -->
+<!-- betas -->
+<!-- ``` -->
+
+<!-- o -->
+
+<!-- ```{r} -->
+<!-- solve(crossprod(x, x), crossprod(x, y)) -->
+<!-- ``` -->
+
+
+La función `lm()` permite calcular internamente el modelo lineal de regresión. 
+
+
+<!-- Se puede obtener la matrix de varianzas y covarianzas $(X^\prime X)^{-1}$ como -->
+<!-- ```{r} -->
+<!-- summary(eruption.lm)$cov.unscaled -->
+<!-- ``` -->
+
+Con el comando `names()` podemos ver los componentes de un objeto de `R`
+
+
+```{r}
+names(eruption.lm)
+```
+
+Por ejemplo:
+
+- Valores ajustados (o predichos) ($\hat{y}$):
+
+```{r,eval=FALSE}
+eruption.lm$fitted.values
+```
+
+- Residuos ($y-\hat{y}$)
+
+```{r,eval=FALSE}
+eruption.lm$residuals
+```
+
+Podemos estimar $\sigma$ como $\sigma = \frac{(y_i-\hat{y}_i)^2}{n-p}$ en `R`
+
+
+```{r}
+eruption.lm.sum <- summary(eruption.lm)
+names(eruption.lm.sum)
+
+sqrt(deviance(eruption.lm)/df.residual(eruption.lm))
+# is obtained directly as
+eruption.lm.sum$sigma
+```
+
+<!-- También podemos obtener los errores estándar para los coeficientes. También `diag()` devuelve la diagonal de un -->
+<!-- matriz: -->
+
+<!-- ```{r} -->
+<!-- xtxi  -->
+<!-- sqrt(diag(xtxi)) * eruption.lm.sum$sigma -->
+
+<!-- eruption.lm.sum$coef[, 2] -->
+<!-- ``` -->
+
+
+## Coeficiente de determinación
+
+El **coeficiente de determinación** de un modelo de regresión lineal es el cociente de las varianzas de los valores ajustados y los valores observados de la variable dependiente. Si denotamos $y_i$ como los valores observados de la variable dependiente, $\bar{y}$ como su media, y $\bar{y}_i$ como el valor ajustado, entonces el coeficiente de determinación es:
+
+$$
+    R^2 = \frac{\sum (\hat{y}_i-\bar{y})^2}{(y_i - \bar{y})^2}
+$$
+
+```{r}
+summary(eruption.lm)$r.squared 
+```
+
+<!-- o -->
+
+<!-- ```{r} -->
+<!-- 1-sum(eruption.lm$res^2)/sum((faithful$eruptions-mean(faithful$eruptions))^2) -->
+<!-- ``` -->
+
+Más opciones:
+
+  - `fitted.values()` o  `fitted()` valores ajustados
+
+  - `predict()`: valores predichos $\hat{y}_*$ para valores de $x_*$
+
+  - `confint()`: intervalos de confianza para los parámetros del modelo
+
+  - `resid()`: residuos del modelo
+
+  - `anova()`: Tabla de analisis de la varianza para los residuos
+
+  - `deviance()`: devianza del modelo ajustado, en el caso de la regresión lineal $\sum_i^{n}(\hat{y}_i - y_i)^2$
+
+*Ver libro de Faraway (2002) book (Chapters 1-7)* [aquí](http://www.maths.bath.ac.uk/~jjf23/book/)
+
+
+## Prueba de significatividad para la regresión lineal
+
+Supongamos que el término de error en el modelo de regresión lineal es independiente de $x$, y se distribuye normalmente, con media cero y varianza constante. Podemos decidir si existe alguna relación significativa entre $x$ e $y$ probando la hipótesis nula de que $\beta_1 = 0$.
+
+El resultado del test es el estadístico $F$
+```{r}
+summary(eruption.lm) 
+```
+
+## Intervalo de confianza para la regresión lineal
+
+Supongamos que el término de error $\epsilon$ en el modelo de regresión lineal es independiente de $x$, y se distribuye normalmente, con media cero y varianza constante. Para un valor dado de $x$, la estimación de intervalo para la media de la variable dependiente, $\bar{y}$, se llama intervalo de confianza.
+
+Un intervalo de confianza del 95% de la duración media de la erupción para el tiempo de espera de 80 minutos está dado por
+
+```{r}
+predict(eruption.lm, newdata, interval="confidence") 
+```
+
+El intervalo de confianza del 95% de la duración media de la erupción para el tiempo de espera de 80 minutos está entre 4.1048 y 4.2476 minutos.
+
+
+##  Intervalo de predicción para la regresión lineal
+
+Para un valor dado de $x$, la estimación de intervalo de la variable dependiente $y$ se denomina intervalo de predicción.
+
+```{r}
+predict(eruption.lm, newdata, interval="predict") 
+```
+
+El intervalo de predicción del 95% de la duración de la erupción para el tiempo de espera de 80 minutos está entre 3.1961 y 5.1564 minutos.
+
+
+
+**NOTA:**
+
+
+* Un **intervalo de predicción** es un intervalo asociado con una variable aleatoria aún no observada (predicción).
+
+* Un **intervalo de confianza** es un intervalo asociado a un parámetro y es un concepto de frecuentista.
+ 
+
+## Gráfico de residuos
+
+Los residuos del modelo de regresión lineal simple son la diferencia entre los datos observados de la variable dependiente $y$ y los valores ajustados $\hat{y}$.
+
+$$
+    Residuos = y -\hat{y}
+$$
+
+```{r}
+eruption.res = resid(eruption.lm) 
+```
+
+
+```{r, fig.align='center'}
+plot(faithful$waiting,
+    eruption.res, 
+    ylab="Residuals", xlab="Waiting Time", 
+    main="Old Faithful Eruptions") 
+abline(0, 0)
+```
+
+
+## Residuo estandarizado
+
+El residuo estandarizado es el residuo dividido por su desviación estándar.
+
+$$
+\mbox{Standardized residual}_i =  \frac{Residual_i}{SD.of.Residual_i}
+$$
+
+```{r}
+eruption.stdres <- rstandard(eruption.lm) 
+```
+
+```{r, fig.align='center'}
+plot(faithful$waiting, eruption.stdres, 
+      ylab="Standardized Residuals", 
+      xlab="Waiting Time", 
+      main="Old Faithful Eruptions") 
+abline(0, 0)
+```
+
+
+Como el p-valor es mucho menor que $0.05$, rechazamos la hipótesis nula de que $\beta_1 = 0$. Por lo tanto, existe una relación significativa entre las variables en el modelo de regresión lineal del conjunto de datos `faithful`.
+
+
+## Gráfico de normalidad de los residuos
+
+El gráfico de probabilidad normal es una herramienta gráfica para comparar un conjunto de datos con la distribución normal. Podemos usarlo con el residuo estandarizado del modelo de regresión lineal y ver si el término de error $\epsilon$ es realmente distribuido normalmente.
+
+```{r}
+eruption.lm = lm(eruptions ~ waiting, data=faithful) 
+eruption.stdres = rstandard(eruption.lm) 
+```
+
+Ahora creamos el gráfico de probabilidad normal con la función `qqnorm` y añadimos` qqline` para una comparación posterior.
+
+```{r, fig.align='center'}
+ qqnorm(eruption.stdres, 
+     ylab="Standardized Residuals", 
+     xlab="Normal Scores", 
+     main="Old Faithful Eruptions") 
+ qqline(eruption.stdres) 
+```
+
+
+## Regresión lineal múltiple
+
+Un modelo de regresión lineal múltiple describe una variable dependiente $y$ por variables independientes $x_1, x_2, ..., x_p$ $(p> 1)$ se expresa mediante la ecuación:
+
+$$
+    y  = \beta_0 + \sum_{k}^{p} x_k \beta_k + \epsilon
+$$
+donde $\beta_0$ y $\beta_k$ ($k = 1, 2, ..., p$) son los parámetros y $\epsilon$ el término de error. 
+
+
+
+**Ejemplo: `data(stackloss)`**
+
+Datos de funcionamiento de una planta de oxidación de amoniaco a ácido nítrico. Los datos se han obtenido a partir de 21 días de operación de una planta de oxidación de amoniaco (NH3) a ácido nítrico (HNO3). Los óxidos nítricos producidos se absorben en una torre de absorción de contracorriente.
+
+El flujo de aire (`Air.Flow`) representa la tasa de operación de la planta. `Water.Temp` es la temperatura del agua de refrigeración que circula a través de los serpentines de la torre de absorción. `Acid.Conc.` es la concentración del ácido que circula, menos 50, por 10: es decir, 89 corresponde al 58,9 por ciento de ácido. 
+
+`stack.loss` es la pérdida por acumulación (la variable dependiente) es 10 veces el porcentaje del amoníaco entrante a la planta que escapa de la columna de absorción no absorbida; es decir, una medida (inversa) de la eficiencia general de la planta.
+
+La regresión multiple sería:
+
+$$
+      stack.loss = \beta_0 + \beta_1 * Air.Flow + \beta_2 * Water.Temp + \beta_3 * Acid.Conc + \epsilon
+$$
+
+```{r}
+data("stackloss")
+?stackloss
+head(stackloss)
+```
+
+El modelo de regresión multiple en `R` vendría dado por:
+
+```{r}
+stackloss.lm = lm(stack.loss ~ Air.Flow + Water.Temp + Acid.Conc., data=stackloss) 
+stackloss.lm
+summary(stackloss.lm)
+```
+
+La función `termplot` permite representar los términos de la regresión frente a las variables predictoras:
+
+```{r,fig.width=10,fig.height=10, fig.align='center'}
+?termplot
+par(mfrow=c(2,2))
+termplot(stackloss.lm, partial.resid = TRUE, se=TRUE,col.se = "blue")
+```
+
+
+**¿Cuál es la pérdida de la chimenea si el flujo de aire es 72, la temperatura del agua es 20 y la concentración de ácido es 85?**
+
+Crear un nuevo `data.frame`:
+
+```{r}
+newdata <- data.frame(Air.Flow=72,Water.Temp=20,Acid.Conc.=85)
+```
+
+Con `predict`
+
+```{r}
+predict(stackloss.lm, newdata) 
+```
+
+Basado en el modelo de regresión lineal múltiple y los parámetros dados, la pérdida prevista es `r predict(stackloss.lm, newdata)`.
+
+Para obtener el coeficiente de determinación múltiple
+
+```{r}
+summary(stackloss.lm)$r.squared 
+```
+
+### Coeficiente de determinación ajustado
+
+El coeficiente de determinación ajustado de un modelo de regresión lineal múltiple se define en términos del coeficiente de determinación como sigue, donde $n$ es el número de observaciones en el conjunto de datos y $p$ es el número de variables independientes.
+
+$$
+R^2_{adj} = 1-(1-R^2)\frac{n-1}{n-p-1}
+$$
+
+```{r}
+summary(stackloss.lm)$adj.r.squared 
+```
+
+### Pruebas de significación e intervalos de confianza / predicción
+
+```{r}
+summary(stackloss.lm)
+```
+
+Como los p-valores de `Air.Flow` y` Water.Temp` son inferiores a 0,05, ambos son estadísticamente significativos en el modelo de regresión lineal múltiple de `stackloss`.
+
+El intervalo de confianza al 95\% de `stackloss` es
+
+```{r}
+predict(stackloss.lm, newdata, interval="confidence")
+```
+
+Y el invervalo de predicción al 95\%
+
+```{r}
+predict(stackloss.lm, newdata, interval="prediction")
+```
+
+
+
+## Regresión lineal con variables factor
+
+Supongamos el conjunto de datos `mtcars`.
+
+```{r}
+data(mtcars)
+t.test(mpg ~ am, data=mtcars) 
+```
+
+
+Los resultados de las pruebas estadísticas se centran en `mpg` y` am` solamente, sin controlar las influencias de otras variables.
+
+```{r}
+fit0 <- lm(mpg ~ factor(am), data = mtcars)
+summary(fit0)
+```
+
+
+Si aplicamos una regresión multiple para controlar ciertas variables disponibles de diseño y rendimiento, el impacto marginal de los automóviles de transmisión automática o manual no resulta significativo. Las variables de confusión incluyen desplazamiento (`disp`), relación del eje trasero (`drat`) y peso del coche (`wt`). Supongamos el peso del coche (`wt`) por ejemplo. La regresión sugiere que, manteniendo constantes otras variables (ceteris paribus), los automóviles traídos por tracción consumen -0.024 galones más de gas por milla y los resultados ya no son estadísticamente significativos. Un análisis similar se puede observar para las otras dos variables: `drat` y `wt`.
+
+
+```{r}
+fit1 <- lm(mpg ~ factor(am) + wt, data = mtcars)
+summary(fit1)
+```
+
+```{r}
+fit2 <- lm(mpg ~ factor(am) + drat, data = mtcars)
+summary(fit2)
+
+fit3 <- lm(mpg ~ factor(am) + disp, data = mtcars)
+summary(fit3)
+```
+
+Con `termplot` 
+
+```{r, fig.align='center'}
+termplot(fit0,partial.resid = TRUE,se=TRUE)
+```
+
+```{r, fig.align='center'}
+par(mfrow=c(1,2))
+termplot(fit1,partial.resid = TRUE,se=TRUE)
+termplot(fit2,partial.resid = TRUE,se=TRUE)
+```
+
+
+<!-- ## Inferencia de modelos lineales -->
+
+<!-- **Comparación de modelos: test de razón de verosimitudes** -->
+
+<!-- Es una prueba estadística utilizada para comparar la bondad de ajuste de dos modelos, uno de los cuales (el modelo nulo) es un caso especial del otro (el modelo alternativo). La prueba se basa en la razón de verosimilitud, que expresa cuántas veces más probabilidades de que los datos estén bajo un modelo que el otro. -->
+
+<!-- La comparación de dos modelos ajustados a los mismos datos se puede configurar como un problema de prueba de hipótesis. Sea $M_0$ y $M_1$ los modelos. -->
+
+<!-- Consideremos como la hipótesis nula *"$ M_1 $ no es una mejora significativa en $ M_0 $"*, y la alternativa la negación. Esta hipótesis se puede formular a menudo de modo que un estadístico se pueda generar de los dos modelos. -->
+
+<!-- Normalmente, los modelos se anidan en que las variables en $M_0$ son un subconjunto de los de $M_1$. La estadística a menudo involucra los valores $RSS$ (suma residual de cuadrados) para ambos modelos, ajustados por el número de parámetros utilizados. En la regresión lineal esto se convierte en una prueba de `anova` (comparando las varianzas). -->
+
+<!-- <!-- -->
+<!-- More robust is a likelihood ratio test for nested models.  When models are sufficiently specific to define a probability distribution for -->
+<!-- $y$, the model will report the log-likelihood, $\hat{L}$.  Under some mild assumptions, $-2(\hat{L}_0 - \hat{L}_1)$ follows a Chi-squared distribution with degrees of freedom = difference in number of parameters on the two models. -->
+
+<!-- The utility of a single model $M_1$ is often assessed by comparing it with the null model, that reflects no dependence of $y$ on the explanatory variables. The model formula for the null model is `y~1`, i.e. we use a constant to approximate `y` (e.g.: the mean of `y`). The likelihood ratio test is implemented in the function `anova`: -->
+<!-- -->
+
+<!-- ```{r} -->
+<!-- M0 <- lm(mpg ~ 1, data = mtcars) -->
+<!-- M1 <- lm(mpg ~ factor(am), data = mtcars) -->
+<!-- summary(M0) -->
+<!-- summary(M1) -->
+<!-- anova(M0,M1) -->
+<!-- ``` -->
+<!-- La prueba/test de razón de verosimilitud también puede probar la significación de los predictores. Por lo tanto, podemos comparar el modelo `fit0` (donde` am` es significativo) con `fit1`,` fit2` o `fit3`, es decir: -->
+
+<!-- ```{r} -->
+<!-- anova(fit0, fit1) -->
+<!-- anova(fit0, fit2) -->
+<!-- anova(fit0, fit3) -->
+<!-- ``` -->
+
+<!-- Sin embargo, las pruebas de razón de verosimilitud sugieren que es importante considerar estas dimensiones (es decir, el desplazamiento, la relación del eje trasero y el peso) ya que estas variables aumentan el ajuste del modelo. -->
+
+
+## Example: Boston Housing data
+
+[Youtube animation (*Boston-area housing price animated heat-map*)](https://www.youtube.com/watch?v=F8nqxJ7YFic)
+
+La libraría `MASS` contiene el conjunto de datos de `Boston`, que registra el `medv` (valor mediano de la casa) de 506 vecindarios alrededor de Boston. Trataremos de predecir el `medv` usando 13 predictores tales como `rm` (número promedio de habitaciones por casa), `age` (edad promedio de las casas), y `lstat (porcentaje de hogares con bajo estatus socioeconómico).
+
+
+```{r,fig.width=12,fig.height=8, warning=FALSE}
+library(MASS)
+data("Boston")
+?Boston
+names(Boston)
+str(Boston)
+```
+
+```{r,fig.width=12,fig.height=8, warning=FALSE, fig.align='center'}
+# Some plots
+
+attach(Boston)
+plot(crim,medv,col=1+chas)
+legend('topright', legend = levels(factor(chas)), col = 1:2, cex = 0.8, pch = 1)
+
+# boxplots 
+ boxplot(crim,data=Boston)
+ boxplot(crim ~ factor(chas), data = Boston,xlab="CHAS",ylab="crim",col=c(4,2),varwidth=TRUE)
+ boxplot(medv ~ factor(chas), data = Boston,xlab="CHAS",ylab="crim",col=c(4,2),varwidth=TRUE)
+```
+
+```{r,fig.width=12,fig.height=8, warning=FALSE, fig.align='center'}
+library(ggplot2)
+
+qplot(crim,medv,data=Boston, colour=factor(chas))
+qplot(crim,medv,data=Boston, colour=tax)
+```
+
+
+```{r,fig.width=12,fig.height=8, warning=FALSE, fig.align='center'}
+library(lattice)
+xyplot(medv~crim,groups=factor(chas),auto.key = TRUE,data=Boston)
+xyplot(medv~crim|factor(chas),auto.key = TRUE,data=Boston)
+```
+
+
+Comenzaremos usando la función `lm()` para ajustar un modelo de regresión lineal simple, con `medv` como variable respuesta y `lstat` como predictor. 
+
+
+```{r}
+lm.fit <- lm(medv ~ lstat, data=Boston)
+```
+
+
+```{r}
+lm.fit
+summary(lm.fit)
+```
+Ahora dibujaremos `medv` y `lstat` junto con la línea de regresión de mínimos cuadrados usando las funciones `plot()` y `abline()`.
+
+```{r,fig.align='center', fig.align='center'}
+plot(medv ~ lstat, data = Boston)
+abline(lm.fit)
+```
+Para obtener un intervalo de confianza para las estimaciones del coeficiente, podemos usar el comando `confint()`.
+
+```{r}
+confint(lm.fit, level = 0.95)
+```
+
+Consideramos la posibilidad de construir un intervalo de confianza para $\beta_1$ utilizando la información proporcionada por el resumen de `lm.fit`:
+
+```{r}
+summary(lm.fit)$coefficients
+```
+La función `predict()` puede ser usada para producir intervalos de confianza e intervalos de predicción para la predicción de `medv` para un valor dado de `lstat`.
+
+
+```{r}
+CI <- predict(object = lm.fit, newdata = data.frame(lstat = c(5, 10, 15)), 
+              interval = "confidence")
+CI
+```
+
+```{r}
+PI <- predict(object = lm.fit, newdata = data.frame(lstat = c(5, 10, 15)), 
+              interval = "predict")
+PI
+```
+
+Por ejemplo, el intervalo de confianza del 95% asociado con un valor `lstat` de $10$ es $(24.474132, 25.6325627)$ y el intervalo de predicción del 95% es $(12.8276263, 37.2790683)$. Como se esperaba, los intervalos de confianza y predicción se centran alrededor del mismo punto (un valor predicho de `25.0533473` para `medv cuando `lstat` es igual a 10), pero estos últimos son sustancialmente más amplios.
+
+Ahora trazaremos `medv` y `lstat` junto con la línea de regresión de mínimos cuadrados usando las funciones `plot()` y `abline()`.
+
+
+```{r, fig.align='center'}
+plot(medv ~ lstat, data = Boston)
+abline(lm.fit)
+```
+
+
+Con `ggplot2`
+
+```{r, fig.align='center'}
+library(ggplot2)
+ggplot(data = Boston, aes(x = lstat, y = medv)) +
+  geom_point() + 
+  geom_smooth(method = "lm") + 
+  theme_bw()
+```
+
+
+La librería `car` tiene una función `residualPlots` para evaluar los residuos (calcula una prueba de curvatura para cada una de las parcelas añadiendo un término cuadrático y probando que la cuadrática sea cero). Ver `?residualPlots`
+
+```{r,fig.width=12,fig.height=8, warning=FALSE, fig.align='center'}
+library(car)
+residualPlots(lm.fit)
+```
+
+## Regresión Lineal Múltiple
+
+Para encajar un modelo de regresión lineal múltiple usando mínimos cuadrados, volvemos a usar la función `lm()`. La sintaxis `lm(y ~ x1 + x2 + x3)` se usa para encajar un modelo con tres predictores, `x1`, `x2`, y `x3`. La función `summary()` ahora produce los coeficientes de regresión para todos los predictores.
+
+
+```{r}
+ls.fit <- lm(medv ~ lstat + age, data = Boston)
+summary(ls.fit)
+```
+
+El conjunto de datos `Boston` contiene 13 variables, por lo que sería engorroso tener que escribirlas todas para poder realizar una regresión usando todos los predictores. En su lugar, podemos utilizar la siguiente abreviatura:
+
+```{r}
+Boston$chas <- as.factor(Boston$chas)
+ls.fit <- lm(medv ~ ., data = Boston)
+summary(ls.fit)
+```
+Podemos acceder a los componentes individuales de un objeto de resumen por nombre (escriba `?summary.lm` para ver lo que está disponible). Por lo tanto `summary(lm.fit)$r.sq` nos da los $R^2$, y `summary(lm.fit)$sigma` nos da $\hat{sigma}$. 
+
+Si queremos realizar una regresión usando todas las variables pero excepto una, podemos eliminarla usando `-`. Por ejemplo, en la salida de regresión anterior, `age` tiene un alto p-valor. Así que tal vez queramos hacer una regresión excluyendo este predictor. La siguiente sintaxis resulta en una regresión usando todos los predictores excepto `age`.
+
+```{r}
+ls.fit1 <- lm(medv ~ . - age, data = Boston)
+summary(ls.fit1)
+```
+
+
+#### Términos de interacción
+
+Es fácil incluir términos de interacción en un modelo lineal usando la función `lm()`. La sintaxis `lstat:black` le dice a `R` que incluya un término de interacción entre `lstat` y `black`. La sintaxis `lstat*age` incluye simultáneamente `lstat`,`age`, y el término de interacción `lstat` $\times$`age` como predictores; es una abreviatura de `lstat + age + lstat:age`.
+
+```{r}
+summary(lm(medv ~ lstat*age, data = Boston))
+```
+
+#### Transformaciones no lineales para las variables predictoras
+
+La función `lm()` también puede acomodar transformaciones no lineales de los predictores. Por ejemplo, dado un predictor $X$
+podemos crear un predictor $X^2$ usando `I(X^2)`. La función `I()` es necesaria ya que `^` tiene un significado especial en una fórmula; envolviendo como lo hacemos permite el uso estándar en `R`, que es `I()` para elevar $X$ a la potencia 2. Ahora realizamos una regresión de `medv` sobre `lstat` y `lstat`$^2$ .
+
+
+```{r, fig.align='center', warning=FALSE}
+lm.fit2 <- lm(medv ~ lstat + I(lstat^2), data = Boston)
+summary(lm.fit2)
+
+# plot
+library(visreg)
+visreg(lm.fit2)
+```
+El p-valor cercano a cero asociado con el término cuadrático sugiere que conduce a un modelo mejorado. Usamos la función `anova()` para cuantificar aún más hasta qué punto el ajuste cuadrático es superior al ajuste lineal.
+
+```{r}
+anova(lm.fit, lm.fit2)
+```
+
+Aquí el Modelo 1 (`lm.fit`) representa el submodelo lineal que contiene sólo un predictor, `lstat`, mientras que el Modelo 2 (`lm.fit2`) corresponde al modelo cuadrático más grande que tiene dos predictores, `lstat` y `I(lstat^2)`. La función `anova()` realiza una prueba de hipótesis comparando los dos modelos. La hipótesis nula es que los dos modelos se ajustan a los datos igualmente bien, y la hipótesis alternativa es que el modelo completo es superior. Aquí la estadística F es `135.1998221` y el valor p asociado es virtualmente cero. Esto proporciona una evidencia muy clara de que el modelo que contiene los predictores `lstat` y `I(lstat^2)` es muy superior al modelo que sólo contiene el predictor `lstat`. Esto no es sorprendente, ya que antes vimos evidencia de no linealidad en la relación entre `medv` y `lstat`. Si escribimos
+
+
+```{r, fig.width=12,fig.height=8, fig.align='center'}
+par(mfrow = c(2,2))
+plot(lm.fit2)
+par(mfrow = c(1, 1))
+```
+entonces vemos que cuando el término `I(lstat^2)` se incluye en el modelo, hay poco patrón discernible en los residuos. 
+
+Para crear un ajuste cúbico, podemos incluir un predictor de la forma `I(X^3)`. Sin embargo, este enfoque puede empezar a ser engorroso para los polinomios de orden superior. Un mejor enfoque implica usar la función `poly()` para crear el polinomio dentro de `lm()`. Por ejemplo, el siguiente comando produce un ajuste polinómico de quinto orden:
+
+```{r}
+lm.fit5 <- lm(medv ~ poly(lstat, 5), data = Boston)
+summary(lm.fit5)
+```
+
+Esto sugiere que incluir términos polinómicos adicionales, hasta el quinto orden, conduce a una mejora en el ajuste del modelo. Sin embargo, la investigación adicional de los datos revela que ningún término polinómico más allá del quinto orden tiene p-valores significativos en un ajuste de regresión.
+
+```{r, fig.align='center'}
+library(ggplot2)
+ggplot(data = Boston, aes(x = lstat, y = medv)) + 
+  geom_point() + 
+  theme_bw() + 
+  stat_smooth(method = "lm", formula = y ~ poly(x, 5))
+```
+
+
+Por supuesto, no estamos de ninguna manera restringidos a usar transformaciones polinómicas de los predictores. Aquí probamos una transformación logarítmica de la variable respuesta.
+
+```{r}
+summary(lm(medv ~ log(rm), data = Boston))
+```
+
+```{r}
+ggplot(data = Boston, aes(x = log(rm), y = medv)) +
+  geom_point() +
+  theme_bw() + 
+  stat_smooth(method = "lm")
+```
+
+
+#### Selección de modelos: librería `leaps`
+
+```{r,warning=FALSE}
+library(leaps)
+leaps <- regsubsets(medv~.,data=Boston,nbest=10)
+summary(leaps)
+```
+
+Para ver los modelos clasificados de acuerdo con los criterios ajustados R-cuadrado y BIC, respectivamente:
+
+```{r, fig.align='center',fig.width=12}
+plot(leaps, scale="adjr2")
+plot(leaps, scale="bic")
+```
+
+
+Métodos automáticos son útiles cuando el número de variables explicativas es grande y no es posible ajustar todos los modelos posibles. En este caso, es más eficaz utilizar un algoritmo de búsqueda (p. ej., forward selection, backward elimination y stepwise regression ) para encontrar el mejor modelo.
+
+La función R `step()` sirve para realizar la selección de variables. Para realizar selección hacia adelante (forward selection) necesitamos empezar por especificando un modelo inicial y la gama de modelos que queremos examinar en la búsqueda. 
+
+
+```{r}
+null <- lm(medv ~ 1, data=Boston)
+full <- lm(medv ~ ., data=Boston)
+```
+Esto le dice a R que comience con el modelo nulo y busque a través de los modelos que se encuentran en el rango entre el modelo nulo y el modelo completo usando el algoritmo de selección hacia adelante.
+
+```{r}
+step(null, scope=list(lower=null, upper=full), direction="forward")
+```
+
+*Backward elimination*:
+
+```{r}
+step(full, direction="backward")
+```
+
+Y paso a paso *stepwise regression*:
+
+```{r}
+step(null, scope = list(upper=full), data=Boston, direction="both")
+```
+
+
+<!-- `stepAIC` es un comando de la librería MASS que automáticamente realizará una búsqueda restringida del "mejor" modelo, medido por AIC o BIC (criterio de Información Bayesiana). `stepAIC acepta variables categóricas y numéricas. No busca todos los subconjuntos posibles de variables, sino que busca en una secuencia específica determinada por el orden de las variables en la fórmula del objeto modelo. (Esto puede ser un problema si un diseño está severamente desequilibrado, en cuyo caso puede ser necesario intentar más de una secuencia. La secuencia de búsqueda obedece a ciertas restricciones en cuanto a la inclusión de interacciones y efectos principales, tales como: -->
+
+<!--  * Un término cuadrático `x^2` no se ajusta a menos que `x` también esté presente en el modelo. -->
+
+<!--  * La interacción `a:b` no se ajusta a menos que `a` y `b` también estén presentes. -->
+
+<!--  * La interacción de tres vías `a:b:c no se ajusta a menos que todas las interacciones bidireccionales de a, b, c, estén también presentes. -->
+
+<!--   * y así sucesivamente.  -->
+
+
+<!--   `stepAIC` se enfoca en encontrar el mejor modelo, y no produce una lista de todos los modelos que son casi equivalentes a los mejores.  -->
+
+<!-- ```{r} -->
+<!-- step.lm <- stepAIC(lm(medv~.,data=Boston),direction="both") -->
+<!-- summary(step.lm) -->
+<!-- plot(step.lm) -->
+<!-- anova(step.lm) -->
+<!-- ``` -->
+
+<!-- Ahora, para interpretar el resultado de stepAIC. Empiece por arriba y siga la secuencia de pasos que el procedimiento ha llevado a cabo. Primero, se ajusta al modelo completo que usted le dio e imprime el valor AIC. Luego se enumeran los valores AIC que resultan cuando se abandona cada término, uno a la vez, dejando todas las demás variables en el modelo. (Comienza con las interacciones de orden más alto, si ha incluido alguna.) Elige el mejor modelo del grupo probado (el que tiene el AIC más bajo) y luego comienza de nuevo. En cada iteración también puede agregar variables una a la vez para ver si el AIC se reduce aún más. El proceso continúa hasta que ni la adición ni la eliminación de un solo término resulta en un AIC más bajo. -->
+
+<!-- Para utilizar el criterio BIC con `stepAIC`, modifique la opción `k` al log del tamaño de la muestra. -->
+
+
+
+# Regresión Logística
+
+Normalmente se utiliza una regresión logística cuando hay una variable de resultado dicotómica (como ganar/perder, sano/enfermo) y una variable predictora continua que está relacionada con la probabilidad o las probabilidades de la variable de resultado. También puede usarse con predictores categóricos y con múltiples predictores.
+
+Si usamos una regresión lineal para modelar una variable dicotómica (como $Y$), el modelo resultante podría no restringir los $Y$'s previstos dentro de $0$ y $1$. Además, otros supuestos de regresión lineal como la normalidad de errores pueden ser violados. Así que en su lugar, modelamos las probabilidades $\log$ del evento $\ln (\frac{p}{1-p})$ o logit, donde, $p$ es la probabilidad del evento.
+
+$$
+    z_i = \ln (\frac{p_i}{1-p_i}) =   \beta_0 + \beta_1 x_1 + ... + \beta_p x_p
+$$
+
+
+La ecuación anterior se puede modelar usando `glm()` con el argumento `family`  `"binomial"`. Pero estamos más interesados en la probabilidad del evento, que en las probabilidades logarítmicas del evento. Por lo tanto, los valores predichos del modelo anterior, es decir, las probabilidades logarítmicas del evento, se pueden convertir en probabilidad de evento como sigue (antilogit):
+
+$$
+  p_i = 1- \frac{1}{1 + \exp(z_i)}
+$$
+Esta conversión se logra utilizando la función `plogis()`.
+
+<!-- La función `logit` tiene la forma -->
+
+
+<!-- <center>![](pics/logit.png){width=65%}</center> -->
+
+
+
+
+<!-- ## ESR y proteínas de plasma -->
+
+
+<!-- La velocidad de sedimentación de eritrocitos (ESR - *erythrocyte sedimentation rate*) es la velocidad a la que los glóbulos rojos (eritrocitos) se asientan fuera de suspensión en el plasma sanguíneo, cuando se miden en condiciones estándar. Si la ESR aumenta cuando el nivel de ciertas proteínas en el plasma sanguíneo se eleva en asociación con afecciones tales como enfermedades reumáticas, infecciones crónicas y enfermedades malignas, su determinación podría ser útil en el cribado de muestras de sangre tomadas de personas sospechosas de padecer una de las condiciones mencionados. El valor absoluto de la ESR no es de gran importancia; más bien, menos de 20mm/hr indica un individuo "sano". Para evaluar si la ESR es una herramienta de diagnóstico útil, la cuestión de interés es si existe alguna asociación entre la probabilidad de una lectura de ESR mayor de 20mm/hr y los niveles de las dos proteínas plasmáticas. Si no es así, la determinación de ESR no sería útil para fines de diagnóstico. Un marco de datos con 32 observaciones sobre las 3 variables siguientes. -->
+
+<!--   * `fibrinogen` el nivel de fibrinógeno en la sangre. -->
+<!--   * `globulin`   el nivel de globulina en la sangre. -->
+<!--   * `ESR`  la velocidad de sedimentación de los eritrocitos, sea menor o mayor de 20 mm/hora. -->
+
+<!-- ```{r} -->
+<!-- data("plasma", package = "HSAUR") -->
+<!-- head(plasma) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- layout(matrix(1:2, ncol = 2)) -->
+<!-- boxplot(fibrinogen ~ ESR, data = plasma, varwidth = TRUE, main="Fibrinogen level in the blood") -->
+<!-- boxplot(globulin ~ ESR, data = plasma, varwidth = TRUE, main="Globulin level in the blood") -->
+<!-- ``` -->
+
+<!-- La cuestión de interés es si existe alguna asociación entre la probabilidad de una lectura ESR superior a 20 mm / hr y los niveles de las dos proteínas plasmáticas. Si no es así, la determinación de ESR no sería útil para fines de diagnóstico. -->
+
+Dado que la variable de respuesta es binaria, un modelo de regresión múltiple no es adecuado para un análisis de regresión.
+
+Podemos escribir
+$$
+\mathbb{P}\mbox{r}(y_i=1)=\pi_i \qquad \mathbb{P}\mbox{r}(y_i=0)=1-\pi_i
+$$
+
+El modelo
+
+$$
+  \mbox{logit}(\pi) = \mbox{logit}\left(\frac{\pi}{1-\pi}\right) = \beta_0 + \beta_1x_1 + ... + \beta_p x_p
+$$
+
+El logit de una probabilidad es simplemente el log de las probabilidades de la respuesta tomando el valor una transformación logit o de p: $logit(p) = \log(p/1-p)$. Propiedades
+
+  *  Si `odds(y=1) = 1`, entonces `logit(p) = 0`.
+  *  Si `odds(y=1) < 1`, entonces `logit(p) < 0`.
+  *  Si `odds(y=1) > 1`, entonces `logit(p) > 0`.
+  
+
+Cuando la respuesta es una variable binaria (dicotómica), y $x$ es numérica, la regresión logística ajusta una curva logística a la relación entre $x$ y $y$. Por lo tanto, la regresión logística es la regresión lineal en la transformación logit de y, donde y es la proporción (o probabilidad) de éxito en cada valor de $x$. Sin embargo, se evitar la tentación de hacer una regresión lineal, ya que ni la normalidad ni la suposición de homoscedasticidad se satisfacen.
+
+```{r, fig.align='center'}
+x <- seq(-6,6,0.01)
+logistic <- exp(x)/(1+exp(x))
+plot(x,logistic,t='l',main="Logistic curve",ylab="p",xlab="log(p(1-p)")
+abline(h=c(0,0.5,1),v=0,col="grey")
+points(0,0.5,pch=19,col=2)
+```
+
+
+
+### German credit Data
+
+Cuando un banco recibe una solicitud de préstamo, basado en el perfil del solicitante, el banco tiene que tomar una decisión sobre si seguir adelante con la aprobación del préstamo o no. Dos tipos de riesgos están asociados con la decisión del banco -
+
+  * Si el solicitante tiene un buen riesgo de crédito, es decir, es probable que pague el préstamo, entonces no aprobar el préstamo a la persona resulta en una pérdida de negocio para el banco.
+  
+  * Si el solicitante tiene un riesgo de crédito malo, es decir, no es probable que pague el préstamo, entonces aprobar el préstamo a la persona resulta en una pérdida financiera para el banco.
+
+
+**Minimización del riesgo y maximización de la rentabilidad por parte del banco.**
+
+Para minimizar las pérdidas desde la perspectiva del banco, el banco necesita una regla de decisión con respecto a a quién dar la aprobación del préstamo y a quién no. Los perfiles demográficos y socioeconómicos de un solicitante son considerados por los administradores de préstamos antes de que se tome una decisión con respecto a su solicitud de préstamo.
+
+
+Los datos de crédito alemanes contienen datos sobre 20 variables y la clasificación de si un solicitante se considera un riesgo de crédito `Bueno` o `Malo` para 1000 solicitantes de préstamo. Se espera que un modelo predictivo desarrollado a partir de estos datos proporcione una guía al gerente del banco para tomar la decisión de aprobar un préstamo a un posible solicitante basándose en sus perfiles.
+
+```{r}
+
+data <- read.table("http://ftp.ics.uci.edu/pub/machine-learning-databases/statlog/german/german.data", header = FALSE)
+
+colnames(data)<-c("account.status","months",
+				"credit.history","purpose","credit.amount",
+				"savings","employment","installment.rate","personal.status",
+				"guarantors","residence","property","age","other.installments",
+				"housing","credit.cards","job","dependents","phone","foreign.worker","credit.rating")
+
+head(data)
+
+levels(data$account.status) <- c("<0DM","<200DM",">200DM","NoStatus")
+levels(data$credit.history) <- c("No","Allpaid","Allpaidtillnow","Delayinpaying","Critical")
+levels(data$purpose) <- c("car(new)","car(used)","furniture/equipment","radio/television","domesticappliances",
+"repairs","education","vacation-doesnotexist?","retraining","business","others")
+
+```
+
+Vamos a dividir el conjunto de datos en 0.7: 0.3 para el entrenamiento y la prueba del modelo. Para la regresión logística, también necesitamos transformar el marco de datos con factores en la matriz con valor biométrico.
+
+```{r}
+mat1 <- model.matrix(credit.rating ~ . , data = data)
+n<- dim(data)[1]
+
+set.seed(1234)
+train<- sample(1:n , 0.7*n)
+xtrain<- mat1[train,]
+xtest<- mat1[-train,]
+
+ytrain<- data$credit.rating[train]
+ytrain <- as.factor(ytrain-1) # convert to 0/1 factor
+ ytest<- data$credit.rating[-train]
+ytest  <- as.factor(ytest-1) #  convert to 0/1 factor
+```
+
+Build the logistic Regression model
+
+```{r}
+m1 <- glm(credit.rating ~ . , family = binomial, data= data.frame(credit.rating= ytrain, xtrain))
+```
+
+Key Variables for the regression model.
+
+```{r}
+sig.var<- summary(m1)$coeff[-1,4] <0.01
+names(sig.var)[sig.var == T]
+```
+
+Predict outcome with Logistic Regression model, then use the test dataset to evaluate the model.
+
+```{r}
+pred1<- predict.glm(m1,newdata = data.frame(ytest,xtest), type="response")
+result1<- table(ytest, floor(pred1+1.5))
+result1
+```
+
+```{r}
+error1<- sum(result1[1,2], result1[2,1])/sum(result1)
+error1
+```
+
+Curva ROC con el paquete `ROCR`
+
+```{r, warning=FALSE}
+library(ROCR)
+pred = prediction(pred1,ytest)
+perf <- performance(pred, "tpr", "fpr")
+plot(perf)
+AUCLog1=performance(pred, measure = "auc")@y.values[[1]]
+cat("AUC: ",AUCLog1,"n")
+```
+
+
+## **Ejemplo**
+
+Supongamos el fichero de datos `adult.csv` disponible [aquí](data/adult.csv)
+
+
+Vamos a tratar de predecir la variable respuesta `ABOVE50k` (sueldo >50k) a través de una regresión logistica en base a variables explicativas demográficas.
+
+
+```{r}
+inputData <- read.csv("http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/data/adult.csv")
+names(inputData)
+```
+
+## Sesgo de clase
+Idealmente, la proporción de eventos y no eventos en la variable $Y$ debe ser aproximadamente la misma. Por lo tanto, primero vamos a comprobar la proporción de clases en la variable dependiente `ABOVE50K`.
+
+Claramente, hay un *sesgo de clase*, una condición observada cuando la proporción de eventos es mucho menor que la proporción de no-eventos. Por lo tanto, debemos muestrear las observaciones en proporciones aproximadamente iguales para obtener mejores modelos.
+```{r}
+table(inputData$ABOVE50K)
+```
+
+## Crear muestra de entrenamiento y de validación (o test)
+
+Una forma de abordar el problema del sesgo de clase es dibujar los 0 y 1 para el trainingData (muestra de desarrollo) en proporciones iguales. Al hacerlo, pondremos el resto del inputData no incluido en el entrenamiento en testData (muestra de validación). Como resultado, el tamaño de la muestra de desarrollo será menor que la validación, lo que está bien, porque, hay un gran número de observaciones (> 10K).
+
+```{r, echo=FALSE,warning=FALSE}
+# Crear datos de entrenamiento
+ input_ones <- inputData[which(inputData$ABOVE50K == 1), ]  # 1's
+input_zeros <- inputData[which(inputData$ABOVE50K == 0), ]  # 0's
+
+set.seed(100)
+
+ input_ones_training_rows <- sample(1:nrow(input_ones), 0.7*nrow(input_ones))   # 1's training
+input_zeros_training_rows <- sample(1:nrow(input_zeros), 0.7*nrow(input_ones))  # 0's training. Pick as many 0's as 1's
+
+ training_ones <- input_ones[input_ones_training_rows, ]
+training_zeros <- input_zeros[input_zeros_training_rows, ]
+
+trainingData <- rbind(training_ones, training_zeros)  # row bind the 1's and 0's
+write.csv(trainingData,file="data/trainingData.csv",row.names = FALSE)
+
+# Crear datos de test
+ test_ones <- input_ones[-input_ones_training_rows, ]
+test_zeros <- input_zeros[-input_zeros_training_rows, ]
+testData <- rbind(test_ones, test_zeros)  # row bind
+write.csv(testData,file="data/testData.csv",row.names = FALSE)
+```
+
+```{r}
+logitMod <- glm(ABOVE50K ~ RELATIONSHIP + AGE + CAPITALGAIN 
+                + OCCUPATION + EDUCATIONNUM, data=trainingData, 
+                family=binomial(link="logit"))
+
+predicted <- plogis(predict(logitMod, testData))  # predicted scores or
+# or
+# predicted <- predict(logitMod, testData,type="response")  # predicted scores
+```
+
+Cuando usamos la función `predict()` en este modelo, se predice el `log(odds)` de la variable $Y$ ($log(\frac{1}{1-p})$). Esto no es lo que queremos en última instancia porque, los valores predichos pueden no estar dentro del rango 0 y 1 como se esperaba. Por lo tanto, para convertirlo en puntajes de probabilidad de predicción que están enlazados entre 0 y 1, usamos el `plogis()` o *type="response"* como argumento de `predict()`.
+
+## Decidir el límite óptimo de probabilidad de predicción para el modelo
+
+La puntuación de probabilidad de predicción de corte por defecto es `0,5` o la proporción de 1 y 0 en los datos de entrenamiento. Pero a veces, afinar el límite de probabilidad puede mejorar la precisión tanto en el desarrollo como en las muestras de validación. La función del paquete `InformationValue` llamada `optimalCutoff` proporciona maneras de encontrar el punto de corte óptimo para mejorar la predicción de 1's, 0's, tanto 1 como 0's y o reducir el error de clasificación errónea.
+
+```{r,warning=FALSE}
+library(InformationValue)
+optCutOff <- optimalCutoff(testData$ABOVE50K, predicted)[1]
+optCutOff
+```
+
+## Error de clasificación errónea
+
+El error de clasificación errónea es el porcentaje de desajuste de los valores reales predichos, independientemente de los 1 o los 0. Cuanto menor sea el error de clasificación errónea, mejor será su modelo.
+
+```{r}
+misClassError(testData$ABOVE50K, predicted, threshold = optCutOff)
+```
+
+## Curva ROC
+
+La curva ROC (Receiver Operating Characteristics) es una representación gráfica de la sensibilidad frente a la especificidad para un sistema clasificador binario según se varía el umbral de discriminación.
+
+Otra interpretación de este gráfico es la representación de la razón o ratio de verdaderos positivos (VPR = Razón de Verdaderos Positivos) frente a la razón o ratio de falsos positivos (FPR = Razón de Falsos Positivos) también según se varía el umbral de discriminación (valor a partir del cual decidimos que un caso es un positivo).
+
+Proporciona herramientas para seleccionar los modelos posiblemente óptimos y descartar modelos subóptimos independientemente de (y antes de especificar) el coste de la distribución de las dos clases sobre las que se decide.
+
+
+  - Verdaderos Positivos (VP) o también éxitos
+
+  - Verdaderos Negativos (VN) o también rechazos correctos
+
+  - Falsos Positivos (FP) o también falsas alarmas o Error tipo I
+
+  - Falsos Negativos (FN) o también, Error de tipo II
+
+  - Sensibilidad o Razón de Verdaderos Positivos (VPR) o también razón de éxitos y, recuerdo en recuperación de información,
+
+$$
+VPR=VP/P=VP/(VP+FN)
+$$
+
+  - Especificidad o Razón de Verdaderos Negativos
+
+$$
+\mbox{ESPECIFICIDAD}=VN/N=VN/(FP+VN)=1-FPR
+$$
+
+```{r}
+plotROC(testData$ABOVE50K, predicted)
+```
+
+# Modelos Aditivos Generalizados
+
+Un modelo aditivo generalizado (GAM) es un modelo lineal generalizado (GLM) en el que el predictor lineal está dado por una suma especificada por el usuario de funciones suaves de las covariables más una componente paramétrica convencional del predictor lineal. 
+
+```{r,fig.align='center'}
+set.seed(123)
+x = seq(0,1,l=500)
+mu = sin(2*(4*x-2)) + 2*exp(-(16^2)*((x-.5)^2))
+y = rnorm(500, mu, .3)
+d = data.frame(x,y) 
+plot(d)
+```
+
+**La regresión polinómica es problemática**
+
+Una regresión lineal estándar definitivamente no va a capturar esta relación. Como en el caso anterior, podríamos intentar utilizar la regresión polinómica aquí, por ejemplo, ajustando una función cuadrática o cúbica dentro del marco de regresión estándar. Sin embargo, esto es poco realista en el mejor de los casos y en el peor no es útil para relaciones complejas. A continuación, incluso con un polinomio de grado 15, el ajuste es bastante pobre en muchas áreas, y 'se mueve' en algunos lugares donde no parece haber necesidad de hacerlo.
+
+ 
+```{r, fig.align='center'}
+plot(x,y, col="grey", pch=15,cex=.33)
+lines(x,fitted(lm(y~poly(x,2))),col=2,lwd=2)
+lines(x,fitted(lm(y~poly(x,3))),col=3,lwd=2)
+lines(x,fitted(lm(y~poly(x,15))),col=4,lwd=2)
+legend("topleft",c("grade = 2","grade = 3","grade = 15"),col=2:4,lty=1,lwd=2)
+```
+En esencia, un GAM es un GLM. Lo que lo distingue de los que usted conoce es que, a diferencia de un GLM estándar, se compone de una suma de funciones suaves de covariables en lugar de o además de los efectos de covariables lineales estándar. Considere el estándar (g)lm
+
+
+Para el GAM, podemos especificarlo generalmente de la siguiente manera:
+
+$$
+      y = f(x) + \epsilon,
+$$
+
+Ahora se trata de alguna función específica (aditiva) de las entradas, que no requerirá que la $y$ (posiblemente transformada) sea una función lineal de $x$. Se trata de elegir una base, lo que en términos técnicos significa elegir un espacio de funciones para el que $f$ es algún elemento de ella. 
+
+
+Desde el punto de vista práctico, es un medio para captar las relaciones no lineales. Como veremos más adelante, un ejemplo sería elegir un spline cúbico como base. Elegir una base también significa que estamos seleccionando funciones de base, que en realidad se incluirán en el análisis. Podemos añadir más detalles de la siguiente manera:
+
+$$
+ y = f(x) + \epsilon = \sum_{j=1}^d B_j(x)\alpha_j + \epsilon 
+$$
+cada $B_j$ es una función base que es la $x$ transformada dependiendo del tipo de base considerada, y los $\alpha$ son los coeficientes de regresión correspondientes. Esto puede sonar complicado, hasta que te des cuenta de que lo has hecho antes. Volvamos al polinomio cuadrático, que usa la base polinómica.
+
+$$
+f(x)=\alpha_0 + \alpha_1 x_1   + \alpha_2 x_2 + ... + + \alpha_d x_d
+$$
+
+En ese caso, $d=2$ y tenemos nuestra regresión estándar con un término cuadrático, pero de hecho, podemos usar este enfoque para producir las bases para cualquier polinomio.
+
+```{r}
+pisa <- read.csv("https://bit.ly/2sMIlAv")
+
+library(mgcv)
+mod.gam.0 <- gam(Overall ~ Income, data = pisa)
+summary(mod.gam.0)
+```
+
+Lo interesante es que gam permite introducir términos especiales para modelar efectos no lineales. Por ejemplo, en estos datos, los ingresos. El gráfico generado ilustra el impacto (no lineal) del ingreso sobre la variable objetivo.
+
+
+```{r}
+mod_gam1 <- gam(Overall ~ s(Income, bs="cr"), data=pisa)
+summary(mod_gam1)
+```
+
+Lo primero a tener en cuenta es que, aparte de la parte suave, nuestro código de modelo es similar a lo que estamos acostumbrados con las funciones principales de R como `lm` y `glm`. 
+
+En el resumen, primero vemos la distribución asumida, así como la función de enlace utilizada, en este caso normal e identidad. Después vemos que la salida se separa en partes paramétricas y suaves, o no paramétricas.
+
+
+```{r,fig.align='center'}
+plot(mod_gam1)
+```
+
+GAM multiple
+
+
+```{r}
+mod_lm2 <- gam(Overall ~ Income + Edu + Health, data=pisa)
+summary(mod_lm2)
+
+mod_gam2 <- gam(Overall ~ s(Income) + s(Edu) + s(Health), data=pisa)
+summary(mod_gam2)
+```
+
+Hay de nuevo un par de cosas de las que hay que tomar nota. En primer lugar, estadísticamente hablando, llegamos a la misma conclusión que el modelo lineal con respecto a los efectos individuales. Hay que tener especialmente en cuenta el efecto del índice de salud. Los grados efectivos de libertad con el valor 1 sugieren que se ha reducido esencialmente a un simple efecto lineal. A continuación se actualizará el modelo para modelar explícitamente el efecto como tal, los resultados son idénticos.
+
+```{r}
+mod_gam2B = update(mod_gam2, .~.-s(Health) + Health)
+summary(mod_gam2B)
+```
+
+```{r}
+visreg(mod_gam2)
+```
+
+
+El GAM nos da un sentido para un predictor, pero ahora vamos a echar un vistazo a los ingresos y la educación al mismo tiempo.`vis.gam`, nos permite visualizar superficies en 2d. 
+
+Tiene una versión correspondiente de `visreg` que se verá un poco mejor por defecto, visreg2d. El siguiente código producirá un gráfico de contorno con `Ingresos` en el eje $x$, `Educación` en el eje $y$, con valores en la escala de respuesta dados por los contornos, con un color más claro que indica valores más altos. El gráfico real que se proporciona en su lugar representa un mapa de calor. 
+
+
+```{r, fig.align='center'}
+vis.gam(mod_gam2, type='response', plot.type='contour')
+```
+
+```{r, fig.align='center'}
+visreg2d(mod_gam2, xvar='Income', yvar='Edu', scale='response')
+```
+
+
+
+```{r,eval=FALSE,echo=FALSE,message=FALSE}
+library(knitr)
+purl("IntroSM.Rmd",output="IntroSM.R")
+```
+
+
