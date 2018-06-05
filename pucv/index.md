@@ -20,7 +20,7 @@ subtitle: 'Instituto de Estadística PUCV - Magister en Estadística'
 # Bloque II
 
  * [Visualización de datos](DataViz.html)
- * [Modelos Lineales, regresión logística, Modelos Aditivos Generalizados](Modlineal.html)
+ * [Modelos Lineales, regresión logística, Modelos Aditivos Generalizados](Modlineal.html), [versión pdf](Modlineal.pdf)
  * [Redes Neuronales Artificiales]
  * [Máquinas de Vector Soporte]
  * [Casos de estudio]
