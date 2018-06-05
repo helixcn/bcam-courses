@@ -778,7 +778,7 @@ R^2_{adj} = 1-(1-R^2)\frac{n-1}{n-p-1}
 <div id="example-boston-housing-data" class="section level2">
 <h2>Example: Boston Housing data</h2>
 <p><a href="https://www.youtube.com/watch?v=F8nqxJ7YFic">Youtube animation (<em>Boston-area housing price animated heat-map</em>)</a></p>
-<p>La libraría <code>MASS</code> contiene el conjunto de datos de <code>Boston</code>, que registra el <code>medv</code> (valor mediano de la casa) de 506 vecindarios alrededor de Boston. Trataremos de predecir el <code>medv</code> usando 13 predictores tales como <code>rm</code> (número promedio de habitaciones por casa), <code>age</code> (edad promedio de las casas), y `lstat (porcentaje de hogares con bajo estatus socioeconómico).</p>
+<p>La libraría <code>MASS</code> contiene el conjunto de datos de <code>Boston</code>, que registra el <code>medv</code> (valor mediano de la casa) de 506 vecindarios alrededor de Boston. Trataremos de predecir el <code>medv</code> usando 13 predictores tales como <code>rm</code> (número promedio de habitaciones por casa), <code>age</code> (edad promedio de las casas), y <code>lstat</code> (porcentaje de hogares con bajo estatus socioeconómico).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MASS)
 <span class="kw">data</span>(<span class="st">&quot;Boston&quot;</span>)
 ?Boston
@@ -960,7 +960,7 @@ ls.fit &lt;-<span class="st"> </span><span class="kw">lm</span>(medv <span class
 ## Residual standard error: 4.745 on 492 degrees of freedom
 ## Multiple R-squared:  0.7406, Adjusted R-squared:  0.7338 
 ## F-statistic: 108.1 on 13 and 492 DF,  p-value: &lt; 2.2e-16</code></pre>
-<p>Podemos acceder a los componentes individuales de un objeto de resumen por nombre (escriba <code>?summary.lm</code> para ver lo que está disponible). Por lo tanto <code>summary(lm.fit)$r.sq</code> nos da los <span class="math inline">\(R^2\)</span>, y <code>summary(lm.fit)$sigma</code> nos da <span class="math inline">\(\hat{sigma}\)</span>.</p>
+<p>Podemos acceder a los componentes individuales de un objeto de resumen por nombre (escriba <code>?summary.lm</code> para ver lo que está disponible). Por lo tanto <code>summary(lm.fit)$r.sq</code> nos da los <span class="math inline">\(R^2\)</span>, y <code>summary(lm.fit)$sigma</code> nos da <span class="math inline">\(\hat{\sigma}\)</span>.</p>
 <p>Si queremos realizar una regresión usando todas las variables pero excepto una, podemos eliminarla usando <code>-</code>. Por ejemplo, en la salida de regresión anterior, <code>age</code> tiene un alto p-valor. Así que tal vez queramos hacer una regresión excluyendo este predictor. La siguiente sintaxis resulta en una regresión usando todos los predictores excepto <code>age</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ls.fit1 &lt;-<span class="st"> </span><span class="kw">lm</span>(medv <span class="op">~</span><span class="st"> </span>. <span class="op">-</span><span class="st"> </span>age, <span class="dt">data =</span> Boston)
 <span class="kw">summary</span>(ls.fit1)</code></pre></div>
@@ -1020,7 +1020,7 @@ ls.fit &lt;-<span class="st"> </span><span class="kw">lm</span>(medv <span class
 </div>
 <div id="transformaciones-no-lineales-para-las-variables-predictoras" class="section level4">
 <h4>Transformaciones no lineales para las variables predictoras</h4>
-<p>La función <code>lm()</code> también puede acomodar transformaciones no lineales de los predictores. Por ejemplo, dado un predictor <span class="math inline">\(X\)</span> podemos crear un predictor <span class="math inline">\(X^2\)</span> usando <code>I(X^2)</code>. La función <code>I()</code> es necesaria ya que <code>^</code> tiene un significado especial en una fórmula; envolviendo como lo hacemos permite el uso estándar en <code>R</code>, que es <code>I()</code> para elevar <span class="math inline">\(X\)</span> a la potencia 2. Ahora realizamos una regresión de <code>medv</code> sobre <code>lstat</code> y <code>lstat</code><span class="math inline">\(^2\)</span> .</p>
+<p>La función <code>lm()</code> también puede acomodar transformaciones no lineales de los predictores. Por ejemplo, dado un predictor <span class="math inline">\(X\)</span> podemos crear un predictor <span class="math inline">\(X^2\)</span> usando <code>I(X^2)</code>. La función <code>I()</code> es necesaria ya que <code>^</code> tiene un significado especial en una fórmula; envolviendo como lo hacemos permite el uso estándar en <code>R</code>, que es <code>I()</code> para elevar <span class="math inline">\(X\)</span> a la potencia 2. Ahora realizamos una regresión de <code>medv</code> sobre <code>lstat</code> y <code>I(lstat^2)</code> .</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lm.fit2 &lt;-<span class="st"> </span><span class="kw">lm</span>(medv <span class="op">~</span><span class="st"> </span>lstat <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(lstat<span class="op">^</span><span class="dv">2</span>), <span class="dt">data =</span> Boston)
 <span class="kw">summary</span>(lm.fit2)</code></pre></div>
 <pre><code>## 
