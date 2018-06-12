@@ -2021,9 +2021,9 @@ ytrain&lt;-<span class="st"> </span>data<span class="op">$</span>credit.rating[t
 ytrain &lt;-<span class="st"> </span><span class="kw">as.factor</span>(ytrain<span class="op">-</span><span class="dv">1</span>) <span class="co"># convert to 0/1 factor</span>
  ytest&lt;-<span class="st"> </span>data<span class="op">$</span>credit.rating[<span class="op">-</span>train]
 ytest  &lt;-<span class="st"> </span><span class="kw">as.factor</span>(ytest<span class="op">-</span><span class="dv">1</span>) <span class="co">#  convert to 0/1 factor</span></code></pre></div>
-<p>Build the logistic Regression model</p>
+<p>Construimos el modelo de regresión logística</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m1 &lt;-<span class="st"> </span><span class="kw">glm</span>(credit.rating <span class="op">~</span><span class="st"> </span>. , <span class="dt">family =</span> binomial, <span class="dt">data=</span> <span class="kw">data.frame</span>(<span class="dt">credit.rating=</span> ytrain, xtrain))</code></pre></div>
-<p>Key Variables for the regression model.</p>
+<p>Variables más significativas</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sig.var&lt;-<span class="st"> </span><span class="kw">summary</span>(m1)<span class="op">$</span>coeff[<span class="op">-</span><span class="dv">1</span>,<span class="dv">4</span>] <span class="op">&lt;</span><span class="fl">0.01</span>
 <span class="kw">names</span>(sig.var)[sig.var <span class="op">==</span><span class="st"> </span>T]</code></pre></div>
 <pre><code>## [1] &quot;account.statusNoStatus&quot;    &quot;months&quot;                   
@@ -2031,7 +2031,7 @@ ytest  &lt;-<span class="st"> </span><span class="kw">as.factor</span>(ytest<spa
 ## [5] &quot;purposeradio.television&quot;   &quot;purposedomesticappliances&quot;
 ## [7] &quot;savingsA64&quot;                &quot;savingsA65&quot;               
 ## [9] &quot;installment.rate&quot;</code></pre>
-<p>Predict outcome with Logistic Regression model, then use the test dataset to evaluate the model.</p>
+<p>Predecimos el resultado con el modelo de Regresión Logística, y posteriormente utilizaremos el conjunto de datos de prueba para evaluar el modelo.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred1&lt;-<span class="st"> </span><span class="kw">predict.glm</span>(m1,<span class="dt">newdata =</span> <span class="kw">data.frame</span>(ytest,xtest), <span class="dt">type=</span><span class="st">&quot;response&quot;</span>)</code></pre></div>
 <pre><code>## Warning in predict.lm(object, newdata, se.fit, scale = 1, type =
 ## ifelse(type == : prediction from a rank-deficient fit may be misleading</code></pre>
@@ -2062,7 +2062,7 @@ perf &lt;-<span class="st"> </span><span class="kw">performance</span>(pred, <sp
 </div>
 <div id="ejemplo" class="section level2">
 <h2><strong>Ejemplo</strong></h2>
-<p>Supongamos el fichero de datos <code>adult.csv</code> disponible <a href="data/adult.csv">aquí</a></p>
+<p>Supongamos el fichero de datos <code>adult.csv</code> disponible <a href="http://idaejin.github.io/bcam-courses/pucv/data/adult.csv">aquí</a></p>
 <p>Vamos a tratar de predecir la variable respuesta <code>ABOVE50k</code> (sueldo &gt;50k) a través de una regresión logistica en base a variables explicativas demográficas.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">inputData &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;http://idaejin.github.io/bcam-courses/R/datahack/Modulo1/data/adult.csv&quot;</span>)
 <span class="kw">names</span>(inputData)</code></pre></div>
@@ -2080,9 +2080,9 @@ perf &lt;-<span class="st"> </span><span class="kw">performance</span>(pred, <sp
 ##     0     1 
 ## 24720  7841</code></pre>
 </div>
-<div id="crear-muestra-de-entrenamiento-y-de-validacion-o-test" class="section level2">
-<h2>Crear muestra de entrenamiento y de validación (o test)</h2>
-<p>Una forma de abordar el problema del sesgo de clase es dibujar los 0 y 1 para el trainingData (muestra de desarrollo) en proporciones iguales. Al hacerlo, pondremos el resto del inputData no incluido en el entrenamiento en testData (muestra de validación). Como resultado, el tamaño de la muestra de desarrollo será menor que la validación, lo que está bien, porque, hay un gran número de observaciones (&gt; 10K).</p>
+<div id="crear-muestra-de-entrenamiento-y-de-validacion-prueba-o-test" class="section level2">
+<h2>Crear muestra de entrenamiento y de validación (prueba o test)</h2>
+<p>Una forma de abordar el problema del sesgo de clase es dibujar los 0 y 1 para el <code>trainingData</code> (muestra de entrenamiento) en proporciones iguales. Al hacerlo, pondremos el resto del <code>inputData</code> no incluido en el entrenamiento en <code>testData</code> (muestra de validación). Como resultado, el tamaño de la muestra de desarrollo será menor que la validación, lo que está bien, porque, hay un gran número de observaciones (<code>&gt; 10K</code>).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">logitMod &lt;-<span class="st"> </span><span class="kw">glm</span>(ABOVE50K <span class="op">~</span><span class="st"> </span>RELATIONSHIP <span class="op">+</span><span class="st"> </span>AGE <span class="op">+</span><span class="st"> </span>CAPITALGAIN 
                 <span class="op">+</span><span class="st"> </span>OCCUPATION <span class="op">+</span><span class="st"> </span>EDUCATIONNUM, <span class="dt">data=</span>trainingData, 
                 <span class="dt">family=</span><span class="kw">binomial</span>(<span class="dt">link=</span><span class="st">&quot;logit&quot;</span>))</code></pre></div>
