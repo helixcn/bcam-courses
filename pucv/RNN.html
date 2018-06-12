@@ -530,13 +530,9 @@ Matrix.RMSE =<span class="st"> </span><span class="kw">do.call</span>(cbind, Lis
 <p>El boxplot muestra que la mediana de RMSE a través de 100 muestras cuando la duración del conjunto de entrenamiento está fijada en <span class="math inline">\(65\)</span> es de <span class="math inline">\(5,70\)</span>. En la siguiente visualización estudiamos la variación de RMSE con la duración del conjunto de entrenamiento. Calculamos la mediana de RMSE para cada una de las longitudes del conjunto de entrenamiento y las graficamos.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Variation of median RMSE 
 
-<span class="kw">library</span>(matrixStats)</code></pre></div>
-<pre><code>## 
-## Attaching package: 'matrixStats'</code></pre>
-<pre><code>## The following object is masked from 'package:plyr':
-## 
-##     count</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">med =<span class="st"> </span><span class="kw">colMedians</span>(Matrix.RMSE)
+<span class="kw">library</span>(matrixStats)
+
+med =<span class="st"> </span><span class="kw">colMedians</span>(Matrix.RMSE)
 
 X =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">10</span>,<span class="dv">65</span>)
 
