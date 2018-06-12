@@ -2032,10 +2032,8 @@ ytest  &lt;-<span class="st"> </span><span class="kw">as.factor</span>(ytest<spa
 ## [7] &quot;savingsA64&quot;                &quot;savingsA65&quot;               
 ## [9] &quot;installment.rate&quot;</code></pre>
 <p>Predecimos el resultado con el modelo de Regresión Logística, y posteriormente utilizaremos el conjunto de datos de prueba para evaluar el modelo.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred1&lt;-<span class="st"> </span><span class="kw">predict.glm</span>(m1,<span class="dt">newdata =</span> <span class="kw">data.frame</span>(ytest,xtest), <span class="dt">type=</span><span class="st">&quot;response&quot;</span>)</code></pre></div>
-<pre><code>## Warning in predict.lm(object, newdata, se.fit, scale = 1, type =
-## ifelse(type == : prediction from a rank-deficient fit may be misleading</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">result1&lt;-<span class="st"> </span><span class="kw">table</span>(ytest, <span class="kw">floor</span>(pred1<span class="op">+</span><span class="fl">1.5</span>))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred1&lt;-<span class="st"> </span><span class="kw">predict.glm</span>(m1,<span class="dt">newdata =</span> <span class="kw">data.frame</span>(ytest,xtest), <span class="dt">type=</span><span class="st">&quot;response&quot;</span>)
+result1&lt;-<span class="st"> </span><span class="kw">table</span>(ytest, <span class="kw">floor</span>(pred1<span class="op">+</span><span class="fl">1.5</span>))
 result1</code></pre></div>
 <pre><code>##      
 ## ytest   1   2
