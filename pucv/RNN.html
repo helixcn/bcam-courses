@@ -196,14 +196,14 @@ $(document).ready(function () {
 <p>Las neuronas que componen una RNA se organizan de forma jerárquica formando capas. Una capa o nivel es un conjunto de neuronas cuyas entradas de información provienen de la misma fuente (que puede ser otra capa de neuronas) y cuyas salidas de información se dirigen al mismo destino (que puede ser otra capa de neuronas). En este sentido, se distinguen tres tipos de capas: la capa de entrada recibe la información del exterior; la o las capas ocultas son aquellas cuyas entradas y salidas se encuentran dentro del sistema y, por tanto, no tienen contacto con el exterior; por último, la capa de salida envía la respuesta de la red al exterior.</p>
 <p>En función de la organización de las neuronas en la red formando capas o agrupaciones podemos encontrarnos con dos tipos de arquitecturas básicas: redes multicapa (multi-layer) y redes monocapa (single-layer).</p>
 <!-- http://dni-institute.in/blogs/neural-network-tutorial/ -->
-<div id="ejemplo-de-red-neuronal" class="section level2">
-<h2>Ejemplo de red neuronal</h2>
-<p>Un departamento de marketing de un banco lleva a cabo varias campañas de marketing para productos de venta cruzada, retención de clientes y servicios al cliente. En este ejercicio, vamos a utilizar una muestra de datos de marketing. En este ejemplo, el banco quería realizar ventas cruzadas de productos de depósito a plazo a sus clientes.</p>
-<p>Contactar a todos los clientes es costoso y no crea una buena experiencia para el cliente. Por lo tanto, el banco quería construir un modelo predictivo que identificará a los clientes que son más propensos a responder a la campaña de venta cruzada de deportación a plazo.</p>
-<p><a href="https://archive.ics.uci.edu/ml/datasets/Bank+Marketing">Data</a></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">### Load data
-df &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data/bank-additional/bank-additional-full.csv&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">sep =</span> <span class="st">&quot;;&quot;</span>)</code></pre></div>
-</div>
+<!-- ## Ejemplo de red neuronal -->
+<!-- Un departamento de marketing de un banco lleva a cabo varias campañas de marketing para productos de venta cruzada, retención de clientes y servicios al cliente. En este ejercicio, vamos a utilizar una muestra de datos de marketing. En este ejemplo, el banco quería realizar ventas cruzadas de productos de depósito a plazo a sus clientes. -->
+<!-- Contactar a todos los clientes es costoso y no crea una buena experiencia para el cliente. Por lo tanto, el banco quería construir un modelo predictivo que identificará a los clientes que son más propensos a responder a la campaña de venta cruzada de deportación a plazo. -->
+<!-- [Data](https://archive.ics.uci.edu/ml/datasets/Bank+Marketing) -->
+<!-- ```{r} -->
+<!-- ### Load data -->
+<!-- df <- read.csv("data/bank-additional/bank-additional-full.csv", header = TRUE, sep = ";") -->
+<!-- ``` -->
 <div id="datos-boston-housing" class="section level2">
 <h2>Datos Boston housing</h2>
 <p>Vamos a utilizar el conjunto de datos de <code>Boston</code> en el paquete <code>MASS</code>. Recordemos que el conjunto de datos de <code>Boston</code> es una colección de datos sobre valores de vivienda en los suburbios de Boston. Nuestro objetivo es predecir el valor medio de las viviendas ocupadas por sus propietarios (`medv) utilizando todas las demás variables continuas disponibles.</p>
@@ -438,7 +438,7 @@ Boston.nn.<span class="dv">8</span> &lt;-<span class="st"> </span><span class="k
 </ul></li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Read the Data</span>
-data =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data/cereals.csv&quot;</span>, <span class="dt">header=</span>T)
+data =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;http://idaejin.github.io/bcam-courses/pucv/data/cereals.csv&quot;</span>, <span class="dt">header=</span>T)
 
 <span class="co"># Random sampling</span>
 samplesize =<span class="st"> </span><span class="fl">0.60</span> <span class="op">*</span><span class="st"> </span><span class="kw">nrow</span>(data)
@@ -447,7 +447,7 @@ index =<span class="st"> </span><span class="kw">sample</span>( <span class="kw"
 
 <span class="co"># Create training and test set</span>
 datatrain =<span class="st"> </span>data[ index, ]
-datatest =<span class="st"> </span>data[ <span class="op">-</span>index, ]</code></pre></div>
+ datatest =<span class="st"> </span>data[ <span class="op">-</span>index, ]</code></pre></div>
 <p>Ahora ajustaremos una red neuronal en a los datos. Utilizamos la librería <code>neuralnet</code> para el análisis.</p>
 <p>El primer paso es escalar el conjunto de datos de cereales. El escalamiento de los datos es esencial porque, de lo contrario, una variable puede tener un gran impacto en la variable de predicción sólo debido a su escala. El uso sin escala puede conducir a resultados sin sentido.</p>
 <p>Las técnicas comunes para escalar los datos son: <em>normalización mín-máx</em>, <em>normalización del Z-score</em>, <em>mediana</em> y <em>MAD</em> (mean absolute deviation), y estimadores tan-h. La normalización mín-máx transforma los datos en un rango común, eliminando así el efecto de escala de todas las variables.</p>
