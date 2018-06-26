@@ -856,7 +856,7 @@ svm.tune</code></pre></div>
 ## Tuning parameter 'sigma' was held constant at a value of 0.01514804
 ## ROC was used to select the optimal model using  the largest value.
 ## The final values used for the model were sigma = 0.01514804 and C = 1.</code></pre>
-<p>En la segunda etapa, una vez vistos los valores de los parámetros seleccionados en la primera etapa, utilizamos el parámetro <code>tuneGrid</code> de <code>train()</code> para realizar un análisis de sensibilidad alrededor de los valores <code>C = 1</code> y <code>sigma = 0.015</code> que produjeron el modelo con el mejor valor ROC. La función <code>expandir.grid()</code> de <code>R se utiliza para construir un</code>data.frame<code>que contiene todas las combinaciones de</code>C<code>y</code>sigma` que queremos probar.</p>
+<p>En la segunda etapa, una vez vistos los valores de los parámetros seleccionados en la primera etapa, utilizamos el parámetro <code>tuneGrid</code> de <code>train()</code> para realizar un análisis de sensibilidad alrededor de los valores <code>C = 1</code> y <code>sigma = 0.015</code> que produjeron el modelo con el mejor valor ROC. La función <code>expand.grid()</code> de <code>R</code> se utiliza para construir un <code>data.frame</code> que contiene todas las combinaciones de <code>C</code> y <code>sigma</code> que queremos probar.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Second pass</span>
 <span class="co"># Look at the results of svm.tune and refine the parameter space</span>
  
@@ -1552,7 +1552,7 @@ y &lt;-<span class="st"> </span>Species</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred &lt;-<span class="st"> </span><span class="kw">predict</span>(svm_model1,x)
 <span class="kw">system.time</span>(pred &lt;-<span class="st"> </span><span class="kw">predict</span>(svm_model1,x))</code></pre></div>
 <pre><code>##    user  system elapsed 
-##   0.001   0.000   0.002</code></pre>
+##   0.001   0.000   0.001</code></pre>
 <p>Veamos el resultado de la matriz de confusión de la predicción, usando la tabla de comandos para comparar el resultado de la predicción SVM y los datos de clase en la variable <code>y</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(pred,y)</code></pre></div>
 <pre><code>##             y
@@ -1603,7 +1603,7 @@ y &lt;-<span class="st"> </span>Species</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred &lt;-<span class="st"> </span><span class="kw">predict</span>(svm_model_after_tune,x)
 <span class="kw">system.time</span>(<span class="kw">predict</span>(svm_model_after_tune,x))</code></pre></div>
 <pre><code>##    user  system elapsed 
-##   0.002   0.000   0.002</code></pre>
+##   0.003   0.000   0.007</code></pre>
 <p>Veamos el resultado de la matriz de confusión de la predicción, usando la <code>table</code> para comparar el resultado de la predicción SVM y los datos de clase en la variable y.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(pred,y)</code></pre></div>
 <pre><code>##             y
