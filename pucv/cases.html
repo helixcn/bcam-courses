@@ -165,15 +165,8 @@ $(document).ready(function () {
 <p>Los datos para este ejemplo consisten en información de 4601 mensajes de correo electrónico, en un estudio para tratar de predecir si el correo electrónico era correo no deseado o “spam”. El objetivo era diseñar un detector automático de spam que pudiera filtrar el spam antes de obstruir los buzones de correo de los usuarios. Para todos los 4601 mensajes de correo electrónico, el verdadero resultado (tipo de correo electrónico) de correo electrónico o spam está disponible, junto con las frecuencias relativas de 57 de las palabras más comunes y signos de puntuación en el mensaje de correo electrónico. Este es un problema de aprendizaje supervisado, con el resultado de la variable de clase email/spam. También se le llama problema de clasificación.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(kernlab)
 <span class="kw">library</span>(caret)</code></pre></div>
-<pre><code>## Loading required package: lattice</code></pre>
 <pre><code>## Warning: package 'lattice' was built under R version 3.3.2</code></pre>
-<pre><code>## Loading required package: ggplot2</code></pre>
 <pre><code>## Warning: package 'ggplot2' was built under R version 3.3.2</code></pre>
-<pre><code>## 
-## Attaching package: 'ggplot2'</code></pre>
-<pre><code>## The following object is masked from 'package:kernlab':
-## 
-##     alpha</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">12345</span>)
 <span class="kw">data</span>(spam)
 ?spam

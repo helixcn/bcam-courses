@@ -669,33 +669,12 @@ ypred =<span class="st"> </span><span class="kw">predict</span>(bestmod, testdat
 <p><a href="http://topepo.github.io/caret/">Ver más información</a></p>
 <p>Como ejemplo, utilizaremos el conjunto de datos de segmentación desde el paquete caret y usando la función <code>createDataPartition()</code> de <code>caret</code> para producir conjuntos de datos de entrenamiento y prueba.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Training SVM Models</span>
-<span class="kw">library</span>(caret)</code></pre></div>
-<pre><code>## Loading required package: lattice</code></pre>
-<pre><code>## Warning: package 'lattice' was built under R version 3.3.2</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)         <span class="co"># Used by caret</span></code></pre></div>
-<pre><code>## Warning: package 'dplyr' was built under R version 3.3.2</code></pre>
-<pre><code>## 
-## Attaching package: 'dplyr'</code></pre>
-<pre><code>## The following objects are masked from 'package:stats':
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(kernlab)       <span class="co"># support vector machine </span></code></pre></div>
-<pre><code>## 
-## Attaching package: 'kernlab'</code></pre>
-<pre><code>## The following object is masked from 'package:ggplot2':
-## 
-##     alpha</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(pROC)          <span class="co"># plot the ROC curves</span></code></pre></div>
-<pre><code>## Type 'citation(&quot;pROC&quot;)' for a citation.</code></pre>
-<pre><code>## 
-## Attaching package: 'pROC'</code></pre>
-<pre><code>## The following objects are masked from 'package:stats':
-## 
-##     cov, smooth, var</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">### Get the Data
+<span class="kw">library</span>(caret)
+<span class="kw">library</span>(dplyr)         <span class="co"># Used by caret</span>
+<span class="kw">library</span>(kernlab)       <span class="co"># support vector machine </span>
+<span class="kw">library</span>(pROC)          <span class="co"># plot the ROC curves</span>
+ 
+### Get the Data
 <span class="co"># Load the data and construct indices to divide it into training and test data sets.</span>
 <span class="kw">data</span>(segmentationData)      <span class="co"># Load the segmentation data set</span>
 trainIndex &lt;-<span class="st"> </span><span class="kw">createDataPartition</span>(segmentationData<span class="op">$</span>Case,<span class="dt">p=</span>.<span class="dv">5</span>,<span class="dt">list=</span><span class="ot">FALSE</span>)
@@ -1552,7 +1531,7 @@ y &lt;-<span class="st"> </span>Species</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred &lt;-<span class="st"> </span><span class="kw">predict</span>(svm_model1,x)
 <span class="kw">system.time</span>(pred &lt;-<span class="st"> </span><span class="kw">predict</span>(svm_model1,x))</code></pre></div>
 <pre><code>##    user  system elapsed 
-##   0.001   0.000   0.001</code></pre>
+##   0.002   0.000   0.001</code></pre>
 <p>Veamos el resultado de la matriz de confusión de la predicción, usando la tabla de comandos para comparar el resultado de la predicción SVM y los datos de clase en la variable <code>y</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(pred,y)</code></pre></div>
 <pre><code>##             y
@@ -1603,7 +1582,7 @@ y &lt;-<span class="st"> </span>Species</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred &lt;-<span class="st"> </span><span class="kw">predict</span>(svm_model_after_tune,x)
 <span class="kw">system.time</span>(<span class="kw">predict</span>(svm_model_after_tune,x))</code></pre></div>
 <pre><code>##    user  system elapsed 
-##   0.003   0.000   0.007</code></pre>
+##   0.003   0.000   0.003</code></pre>
 <p>Veamos el resultado de la matriz de confusión de la predicción, usando la <code>table</code> para comparar el resultado de la predicción SVM y los datos de clase en la variable y.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(pred,y)</code></pre></div>
 <pre><code>##             y
